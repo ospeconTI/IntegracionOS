@@ -1,0 +1,206 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Perguntas frecuentes</title>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <link rel="apple-touch-icon" href="./single-page-icon.png" />
+
+        <style>
+            body {
+                padding: 0;
+                margin: 0;
+                background-color: var(--color-gris-fondo);
+                display: grid;
+            }
+            #home {
+                height: 100vh;
+                width: 100vw;
+                display: grid;
+                grid-template-rows: 2fr 8fr;
+            }
+            #header {
+                display: grid;
+                align-content: center;
+                justify-items: center;
+                background-color: var(--color-blanco);
+            }
+
+            #cuerpo {
+                display: grid;
+                grid-auto-flow: row;
+                align-content: start;
+                justify-self: center;
+                overflow-y: auto;
+            }
+            .boton {
+                color: var(--color-blanco);
+                background-color: var(--primary-color);
+                padding: 0.4rem;
+                border-radius: 3px;
+            }
+
+            ul li {
+                padding: 1rem;
+            }
+            a {
+                color: var(--color-azul-oscuro);
+                text-decoration: none;
+            }
+            section {
+                height: 100vh;
+                overflow-y: auto;
+                display: grid;
+                grid-template-rows: auto auto auto 1fr auto;
+                align-content: start;
+                gap: 1rem;
+                padding: 2rem;
+                box-sizing: border-box;
+            }
+
+            .instrucciones {
+                display: grid;
+                grid-auto-flow: row;
+                align-content: start;
+                gap: 1rem;
+            }
+            h2 {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="home">
+            <div id="header">
+                <h3 id="lblTitulo">Sistema de Integración Os.Pe.Con.</h3>
+                <div id="">Preguntas frecuentes</div>
+            </div>
+            <div id="cuerpo">
+                <ul>
+                    <li><a href="#1">¿Como veo el estado mis autorizaciones?</a></li>
+                    <li><a href="#2">¿Como genero autorizaciones para el periodo actual/próximo?</a></li>
+                    <li><a href="#3">¿Como consulto mis expedientes?</a></li>
+                    <li><a href="#4">¿Como llego a la presentación de una factura.?</a></li>
+                    <li><a href="#5">¿Como conformo y presento una factura?</a></li>
+                    <li><a href="#6">¿Como hago el seguimiento de las facturas presentadas?</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="secciones">
+            <section id="1">
+                <a href="#home" class="boton">Volver</a>
+                <div></div>
+                <h2>¿Como veo el estado mis autorizaciones?</h2>
+                <div class="instrucciones">
+                    <div>Selecciona el punto de menu "Presentar Facturas".</div>
+                    <div>Ahí podras visualizar la lista de tus autorizaciones filtradas por período y estado.</div>
+                    <div>Pudes modificar el filtro introduciendo un nuevo período (yyyymm) y/o nuevo estado de la lista desplegable.</div>
+                    <div>Presiona el boton "Consultar Autorizaciones".</div>
+                    <div>La lista se actualizará mostrando los datos que coincidan con la selección.</div>
+                    <div>En caso de no encontrarse autorizaciones que cumplan las condiciones, se mostrara una lista vacía.</div>
+                </div>
+                <div></div>
+            </section>
+            <section id="2">
+                <a href="#home" class="boton">Volver</a>
+                <div></div>
+                <h2>¿Como genero autorizaciones para el periodo actual/próximo?</h2>
+                <div class="instrucciones">
+                    <div>Selecciona el punto de menu "Autorizaciones".</div>
+                    <div>Presiona el boton "Generar autorizaciones para el período actual".</div>
+                    <div>Luego de unos segundos se desplegara una ventana presentando un detalle de las autorizaciones creadas y/o rechazadas.</div>
+                    <div>Puedes presionar el boton de "Consultar autorizaciones" para seguir consultando el estado de tus autorizaciones.</div>
+                    <div>Si no hubiere prestaciones pendientes de autorización, se mostrará una lista vacía.</div>
+                    <div>Sigue los mismos pasos para generar autorizaciones para el próximo período presionando el boton "Generar autorizaciones para el período próximo."</div>
+                </div>
+                <div></div>
+            </section>
+            <section id="3">
+                <a href="#home" class="boton">Volver</a>
+                <div></div>
+                <h2>¿Como consulto mis expedientes?</h2>
+                <div class="instrucciones">
+                    <div>Selecciona el punto de menu "Autorizaciones".</div>
+                    <div>Selecciona de la lista desplegable el año por el cual deseas filtrar tus expedientes.</div>
+                    <div>Se mostrará automaticamente una lista de beneficiarios que tengan expedientes para ese período.</div>
+                    <div>Si no hubiere expedientes para ese período se mostrará una lista vacía.</div>
+                    <div>Presionando el boton en la parte superior izquierda de cada tarjeta de beneficiario podras desplegar/ocultar la lista de expedientes activos para ese beneficiario.</div>
+                </div>
+                <div></div>
+            </section>
+            <section id="4">
+                <a href="#home" class="boton">Volver</a>
+                <div></div>
+                <h2>¿Como llego a la presentación de una factura?</h2>
+                <div class="instrucciones">
+                    <div>El sistema cuenta con dos formas de acceder a la presentación de una factura.</div>
+                    <div>Puedes usar la que más te convenga de acuerdo a tu flujo de trabajo.</div>
+                    <div><b>Opción de menu "Autorizaciones".</b></div>
+                    <div>Simplemente selecciona el período que desees facturar, busca el beneficiario en la lista que aparece automaticamente.</div>
+                    <div>Si no hubiere expedientes para ese período se mostrará una lista vacía.</div>
+                    <div>Presionando el boton en la parte superior izquierda de cada tarjeta de beneficiario podras desplegar/ocultar la lista de expedientes activos para ese beneficiario.</div>
+                    <div>En parte derecha de cada tarjeta de expediente aparecerá un boton "Presentar factura".</div>
+                    <div>Si el expediente no tuviere autorizaciones pendientes de facturación, el boton "Presentar factura" no se mostrará.</div>
+                    <div><b>Opción de menu "Presentar facturas".</b></div>
+                    <div>Selecciona el período (yyyymm) y el estado APROBADO ó RECHAZADO de la lista desplegable.</div>
+                    <div>Presiona el boton "Consultar autorizaciones".</div>
+                    <div>Se desplegará una lista de autorizaciones y un boton "Presentar factura" en cada tarjeta que se encuentre habilitada para hacer la presentación.</div>
+                    <div>Las autorizaciones que ya tengan factura presentada no presentarán el boton "Presentar factura".</div>
+                    <div>Si la factura fue presentada y rechazada por la obra social, la autorización volverá a presentar el boton "Presentar factura".</div>
+                </div>
+                <a href="#5">ver ¿Como conformo y presento una factura?</a>
+            </section>
+            <section id="5">
+                <a href="#home" class="boton">Volver</a>
+                <a href="#4">ver antes ¿Como llego a la presentación de una factura.?</a>
+                <h2>¿Como conformo y presento una factura?</h2>
+                <div class="instrucciones">
+                    <div><b>Paso 1: Elegí el período autorizado.</b></div>
+                    <div>Selecciona el período la lista desplegable.</div>
+                    <div>Presiona el boton "Continuar".</div>
+                    <div><b>Paso 2: Ingresá los datos de la factura.</b></div>
+                    <div>Introduce los datos en el formulario.</div>
+                    <div>El sistema permitirá introducir los datos libremente pero al momento de continuar, estos seran validados y no se podrá continuar hasta que todos los datos pasen la validación correspondiente.</div>
+                    <div>Presiona el boton "Continuar".</div>
+                    <div>Observa los mensajes de error en la validación y corrige si fuera necesario.</div>
+                    <div><b>Paso 3: Subí las imágenes correspondintes.</b></div>
+                    <div>En este paso deberas subir los archivos correspondientes a las imágenes de la factura,ddjj y certificado de asistencia.</div>
+                    <div>Presiona el boton que corresponda de acuerdoo a la imagen que quieras presentar. Recuerda que el limite máximo para cada uno de estos archivos es de 3 mega bytes.</div>
+                    <div>Presiona el boton "Continuar".</div>
+                    <div>Observa los mensajes de error en la validación y corrige si fuera necesario.</div>
+                    <div><b>Paso 4: Verificá los datos y presentá.</b></div>
+                    <div>En este paso te presentamos todos los datos conformados para que sean verificados por ultima vez antes de su presentación.</div>
+                    <div>Si bien la factura ya se encuentra conformada y guardada. (puedes continuar con la carga en otro momento), todavía no ha sido presentada a la Obra Social.</div>
+                    <div>Presiona el boton "Presentar".</div>
+                </div>
+                <div></div>
+            </section>
+            <section id="6">
+                <a href="#home" class="boton">Volver</a>
+                <div></div>
+                <h2>¿Como hago el seguimiento de las facturas presentadas?</h2>
+                <div class="instrucciones">
+                    <div>La obra social enviará un mail al prestador por cada cambio de estado que se produzca en una de sus facturas.</div>
+                    <div>De todas formas para consultar el estado de las facturas presentadas presiona el punto de menu "Consultar Facturas".</div>
+                    <div>Introduce el período (yyyymm) y selecciona el estado de la lista desplegable.</div>
+                    <div>Presiona el boton "Consultar Facturas".</div>
+                    <div>El sistema desplegará una lista con las facturas que cumplan el criterio seleccionado.</div>
+                    <div>Pudes observar los datos y el estado de cada factura.</div>
+                    <div>También puedes controlar los archivos de imágenes presentados haciendo click en el nombre del documento correspondiente.</div>
+                </div>
+                <div></div>
+            </section>
+        </div>
+    </body>
+</html>
