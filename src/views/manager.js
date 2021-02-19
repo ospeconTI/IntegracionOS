@@ -23,7 +23,7 @@ import { stepsComponent } from "../views/componentes/steps";
 import { pantallaCambioClave } from "../views/bodies/cambioClave";
 import { pantallaMiembro } from "./bodies/miembro";
 import { goTo } from "../redux/routing/actions";
-import {} from "./bodies/detalleFactura"
+import {detalleFactura} from "./bodies/detalleFactura"
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";

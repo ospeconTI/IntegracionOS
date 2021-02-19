@@ -31,6 +31,10 @@ export const gridLayout = css`
     .fit6 {
         grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
     }
+
+    .fit18 {
+        grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
     .fill {
         grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
     }

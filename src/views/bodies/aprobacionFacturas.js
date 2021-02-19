@@ -13,13 +13,15 @@ import { get as getFacturas, setSelected } from "../../redux/facturasPrestadores
 import { SEARCH } from "../../../assets/icons/svgs";
 import {filtrosFacturas} from "../componentes/filtrosFacturas"
 import { goTo } from "../../redux/routing/actions";
+import {set as setFiltro} from "../../redux/filtro/actions"
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const FACTURAS = "facturasPrestadores.timeStamp";
 const ESTADOS = "facturasPrestadoresEstados.timeStamp"
+const FILTROTS = "filtro.timeStamp"
 
-export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS)(LitElement) {
+export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
@@ -91,13 +93,30 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             .ordena{
                 cursor: pointer;
             }
+
+            filtros-facturas{
+                position: fixed;
+                top: 0px;
+                width: 40%;
+                height: 100vh;
+                z-index: 1000;
+                background-color: white;
+                left: -100%;
+                transition: all 0.5s ease 0s;
+
+            }
+
+            filtros-facturas[isOpen]{
+                left:0;
+            }
         `;
     }
     render() {
         if (this.facturas) {
             return html`
-                <div class="grid row">                  
-                     <filtros-facturas id="filtros" hidden estado="2"></filtros-facturas> 
+                <div class="grid row"> 
+                    <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>                 
+                     <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas> 
                      <div class="grid fit6 cabecera itemsCenter">
                          <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
                          <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Fecha de Ingreso</div>
@@ -137,6 +156,10 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
         }
     }
 
+    mostrarFiltros(){
+        this.shadowRoot.querySelector("#filtros").isOpen = true
+    }
+
     seleccionar(e){
         store.dispatch(setSelected(e.currentTarget.item))
         store.dispatch(goTo("detalleFactura"))
@@ -166,12 +189,11 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             const isCurrentScreen = ["aprobacionFacturas"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
+
+                let filtro = "IdFacturasPrestadoresEstado eq 2"
+                store.dispatch(setFiltro(filtro))
     
-                store.dispatch(getFacturas({
-                    top: 100,
-                    expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-                    filter: "IdFacturasPrestadoresEstado eq 2" , 
-                    orderby: " Id desc"}))
+
                 
             }
             this.update();
@@ -183,6 +205,14 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
 
         if (name==ESTADOS){
             this.estados = state.facturasPrestadoresEstados.entities
+        }
+        
+        if (name==FILTROTS){
+            store.dispatch(getFacturas({
+                top: 100,
+                expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                filter: state.filtro.value , 
+                orderby: " Id desc"}))
         }
     }
 

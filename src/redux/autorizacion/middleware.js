@@ -70,7 +70,7 @@ export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
             const periodos = [ actual, siguiente];
             dispatch(lista(periodos));
             dispatch(set(actual));
-            dispatch(goTo("main"));
+            dispatch(goTo("aprobacionFacturas"));
 
             let periodosMensuales = [];
 

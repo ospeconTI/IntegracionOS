@@ -130,24 +130,24 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 <div class="menuItem" @click=${this.click} .option=${"consultaFacturas"}>Consultar Facturas</div>
                 <div class="menuItem" @click=${this.click} .option=${"bonos"}>Presentar Facturas</div>
 
-                <div class="menuItem select" dark .option=${""}>
+<!--                 <div class="menuItem select" dark .option=${""}>
                     <label></label>
                     <select id="usuario" style="background-color:var(--primary-color)" @change="${this.cambioPrestador}">
                         ${this.usuario.map((item, index) => {
                             return html`<option ?selected="${index == 0}" value="${item.Lifnr}">${item.Name1}</option>`;
                         })}
                     </select>
-                </div>
+                </div> -->
                 <div class="menuItem" @click=${this.click} .option=${"ayuda"}>Ayuda</div>
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
         `;
     }
 
-    cambioPrestador(e) {
+/*     cambioPrestador(e) {
         store.dispatch(setPrestador(e.currentTarget.value));
         store.dispatch(getCurrentCabecera(e.currentTarget.value, store.getState().periodo.periodoActual));
-    }
+    } */
 
     gestos(e) {
         if (this.mediaSize != "large") {

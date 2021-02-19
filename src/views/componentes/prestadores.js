@@ -36,31 +36,22 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
                 display: grid;
                 grid-auto-flow: row;
                 align-content: start;
+                position:relative;
     
-                padding: 1vw;
+              
             }
 
             :host([hidden]) {
                 display: none;
             }
 
-            h1,
-            h2,
-            h3,
-            h4 {
-                margin: 0;
-            }
+           
 
             .oculto {
                 display: none !important;
             }
 
-            .tarjeta {
-                padding: 0.5rem;
-                background-color: white;
-                box-shadow: var(--shadow-elevation-2-box);
-                
-            }
+
             .sublabel {
                 color: var(--color-azul-oscuro);
                 font-size: 0.8rem;
@@ -77,14 +68,17 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
             .grilla{
                 display:grid;
                 grid-gap:.2rem;
-                grid-auto-flow: row;
                 max-height:50vh;
                 padding:.2rem;
-                box-shadow: var(--shadow-elevation-2-box);
-               
-                background-color:transparent;
+                box-shadow: var(--shadow-elevation-2-box);               
                 overflow-y: auto;
                 overflow-x: hidden;
+                display:none;
+                position:absolute;
+                top: 100%;
+                z-index:1000;
+                background-color: white;
+                
             }
 
             .titulos{
@@ -110,20 +104,21 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
     render() {
         
             return html`
-                <div class="grid row start">
-                    <div class="grid column start">
+               
+                    <div class="grid column start no-padding">
                         <div class="input">
                             <label>Ingrese Número o Nombre del prestador</label>
-                            <input type="text" id="txtPrestador" autocomplete="off" value="${this._value}" />                         
-                        </div>    
-
-                        <button btn3 @click="${this.buscar}">${SEARCH}</button>                       
-                    </div>
-                    <div id="nombrePrestador" style="display:none">
+                            <input type="text" id="txtPrestador" autocomplete="off" value="${this._value}" />   
+                            <div class="sublabel" id="nombrePrestador" style="display:none"></div>
+                        </div>  
+                        <button btn3 @click="${this.buscar}">${SEARCH}</button>     
                         
                     </div>
+                    
+                        
+                    
 
-                    <div class="grilla row" id="lista" style="display:none">                   
+                    <div class="grilla row" id="lista">                   
                         
                             ${this.prestadores.length==0?html `Sin datos`:this.prestadores.map(item=>{
                                 return html `                             
@@ -134,7 +129,7 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
                                 </div>`})}
                         
                     </div>
-                </div>
+               
 
 
             `;

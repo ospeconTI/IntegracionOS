@@ -15,6 +15,7 @@ import { reducer as facturasPrestadoresReducer } from "./facturasPrestadores/red
 import { reducer as facturasPrestadoresImagenesReducer } from "./facturasPrestadoresImagenes/reducer";
 import { reducer as facturasPrestadoresEstadosReducer } from "./facturasPrestadoresEstados/reducer";
 import { reducer as periodosMensualesReducer } from "./periodosMensuales/reducer";
+import { reducer as filtroReducer} from "./filtro/reducer"
 
 export const rootReducer = (state = {}, action) => {
     return {
@@ -32,7 +33,8 @@ export const rootReducer = (state = {}, action) => {
         facturasPrestadores: facturasPrestadoresReducer(state.facturasPrestadores, action),
         facturasPrestadoresImagenes: facturasPrestadoresImagenesReducer(state.facturasPrestadoresImagenes, action),
         facturasPrestadoresEstados: facturasPrestadoresEstadosReducer(state.facturasPrestadoresEstados, action),
-        periodosMensuales: periodosMensualesReducer(state.periodosMensuales, action)
+        periodosMensuales: periodosMensualesReducer(state.periodosMensuales, action),
+        filtro: filtroReducer(state.filtro, action)
 
     };
 };

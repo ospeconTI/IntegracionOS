@@ -11,6 +11,7 @@ import { isInLayout } from "../../redux/screens/screenLayouts";
 import {select } from "../css/select"
 import {prestadoresComponent} from "./prestadores"
 import { get as getFacturas } from "../../redux/facturasPrestadores/actions";
+import {set as setFiltro} from "../../redux/filtro/actions"
 
 import { SEARCH } from "../../../assets/icons/svgs";
 
@@ -20,6 +21,7 @@ const COMPROBANTES = "tipoComprobantes.timeStamp"
 const PERIODOS = "periodosMensuales.listaTimeStamp"
 const PERIODOSMES = "periodosMensuales.timeStamp"
 const ESTADOS = "facturasPrestadoresEstados.timeStamp";
+//const SETFILTRO = "filtro.timeStamp"
 
 export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIODOS, PERIODOSMES ,COMPROBANTES, ESTADOS)(LitElement) {
     constructor() {
@@ -29,6 +31,7 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
         this.periodos =[]
         this.estados =[]
         this.periodoActual = null
+        this.open = false
         
     }
     static get styles() {
@@ -39,18 +42,16 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
             ${input}
             ${select}
 
-            :host {
-                display: grid;
-                grid-auto-flow: row;
-                align-content: start;
+            :host{
                 overflow-y: auto;
-                width: 98vw;
-                padding: 1vw;
+
             }
 
             :host([hidden]) {
                 display: none;
             }
+
+            
 
             h1,
             h2,
@@ -91,84 +92,135 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
     render() {
         
             return html`                   
-                <div class="grid row " style="padding:0">
-                    <div class="grid column  start">
-                        <div class="input fit">
-                            <label>Orden</label>
-                            <input type="number" id="orden" autocomplete="off" maxlength="8" @input=${this.maxLength} />    
-                        </div>         
-                        <div class="input fit">
-                            <label>DNI</label>
-                            <input type="number" id="hiscli" autocomplete="off" maxlength="8" @input=${this.maxLength} />    
-                        </div>    
-                        <div class="input fit">
-                            <label>Expte</label>
-                            <input type="number" id="expediente" autocomplete="off" maxlength="8" @input=${this.maxLength} />    
-                        </div>                        
-                        <div class="select">
-                            <label>Período</label>
-                            <select id="periodo" >
-                            <option value=-1>Cualquier Período</option>
-                                ${this.periodos.map((c) => {
-                                    return html`<option ?selected="${this.periodoActual==c}"  value="${c}">${c}</option>`;
-                                })}
-                            </select>
-                        </div>
-                        <prestadores-component id="prestador"></prestadores-component>
+                <div class="grid fit" style="grid-gap:0" >  
+
+                    <div class="grid column">
+                        <button btn3 @click="${this.limpiar}">Limpiar Filtros</button>
+                        <button btn1 @click="${this.buscar}">Buscar</button> 
+                        <button btn1 @click="${this.cerrar}">Cerrar</button>
+                    </div>
+           
+                    <div class="input">
+                        <label>Orden</label>
+                        <input type="number" id="orden" autocomplete="off" maxlength="8" @input=${this.maxLength} />    
+                    </div>         
+                    <div class="input">
+                        <label>DNI</label>
+                        <input type="number" id="hiscli" autocomplete="off" maxlength="8" @input=${this.maxLength} />    
+                    </div>    
+                    <div class="input">
+                        <label>Expte</label>
+                        <input type="number" id="expediente" autocomplete="off" maxlength="8" @input=${this.maxLength} />    
+                    </div>                        
+                    <div class="select">
+                        <label>Período</label>
+                        <select id="periodo" >
+                        <option value=-1>Cualquier Período</option>
+                            ${this.periodos.map((c) => {
+                                return html`<option ?selected="${this.periodoActual==c}"  value="${c}">${c}</option>`;
+                            })}
+                        </select>
                     </div>
 
-
-                    <div class="grid column start ">
-                        <div class="select">
-                            <label>Tipo</label>
-                            <select id="tipo" >
-                                <option value="-1" selected>Todos</option>
-                                ${this.tipoComprobantes.map((c) => {
-                                    return html`<option  value="${c.Id}">${c.Nombre}</option>`;
-                                })}
-                            </select>
-                        </div>
-                        <div class="input fit">
-                            <label>Punto de venta</label>
-                            <input type="number" id="sucursal" autocomplete="off" maxlength="4" @input=${this.maxLength} />
-                        </div>
-                        <div class="input fit">
-                            <label>Número</label>
-                            <input type="number" id="numero" autocomplete="off" maxlength="8" @input=${this.maxLength} />
-                        </div>
-                        <div class="select">
-                            <label>Estados</label>
-                            <select id="estados" ?disabled=${this.estado!=0 && this.estado!=-1} >
-                                <option value="-1">Todos</option>
-                                ${this.estados.map((c) => {
-                                    return html`<option  value="${c.Id}" ?selected=${c.Id==this.estado}>${c.Descripcion}</option>`;
-                                })}
-                            </select>
-                        </div>
-                        <button btn3 @click="${this.limpiar}">Limpiar Filtros</button>
-                        <button btn1 @click="${this.buscar}">Buscar</button>
+                    <prestadores-component id="prestador"></prestadores-component>
+                
+                    <div class="select">
+                        <label>Tipo</label>
+                        <select id="tipo" >
+                            <option value="-1" selected>Todos</option>
+                            ${this.tipoComprobantes.map((c) => {
+                                return html`<option  value="${c.Id}">${c.Nombre}</option>`;
+                            })}
+                        </select>
+                    </div>
+                    <div class="input">
+                        <label>Punto de venta</label>
+                        <input type="number" id="sucursal" autocomplete="off" maxlength="4" @input=${this.maxLength} />
+                    </div>
+                    <div class="input">
+                        <label>Número</label>
+                        <input type="number" id="numero" autocomplete="off" maxlength="8" @input=${this.maxLength} />
+                    </div>
+                    <div class="select">
+                        <label>Estados</label>
+                        <select id="estados" ?disabled=${this.estado!=0 && this.estado!=-1} >
+                            <option value="-1">Todos</option>
+                            ${this.estados.map((c) => {
+                                return html`<option  value="${c.Id}" ?selected=${c.Id==this.estado}>${c.Descripcion}</option>`;
+                            })}
+                        </select>
                     </div>
                 </div>              
             `;
 
     }
 
-    limpiar(){
-        let orden = this.shadowRoot.querySelector("#orden")
-        let expediente = this.shadowRoot.querySelector("#expediente")
-        let hiscli = this.shadowRoot.querySelector("#hiscli")
-        let periodo = this.shadowRoot.querySelector("#periodo")
-        let tipo = this.shadowRoot.querySelector("#tipo")
-        let sucursal = this.shadowRoot.querySelector("#sucursal")
-        let numero = this.shadowRoot.querySelector("#numero")
+    cerrar(){
+        this.isOpen = false
+        this.update()
+    }
 
-        orden.value=""
-        hiscli.value=""
+    limpiar(){
+        const orden = this.shadowRoot.querySelector("#orden")
+        const expediente = this.shadowRoot.querySelector("#expediente")
+        const hiscli = this.shadowRoot.querySelector("#hiscli")
+        const periodo = this.shadowRoot.querySelector("#periodo")
+        const tipo = this.shadowRoot.querySelector("#tipo")
+        const sucursal = this.shadowRoot.querySelector("#sucursal")
+        const numero = this.shadowRoot.querySelector("#numero")
+        const estados = this.shadowRoot.querySelector("#estados")
+        const prestador = this.shadowRoot.querySelector("#prestador")
+        
+
+        orden.value =""
+        hiscli.value =""
         expediente.value = ""
-        periodo.value=-1
+        periodo.value = -1
         tipo.value = -1
         sucursal.value = ""
         numero.value=""
+        estados.value = this.estado
+        prestador.value = ""
+
+
+        let filtro = ""
+        
+
+        if (periodo.value!=-1){
+             filtro+= "Expediente_Bono/Periodo eq " + periodo.value + " and "
+        }
+
+        if (orden.value!=0 && orden.value!=""){
+            filtro+="Expediente_Bono/Id eq " + orden.value + " and "
+        }
+        
+        if (expediente.value!=0 && expediente.value!=""){
+            	filtro+="Expediente_Bono/Expediente eq " + expediente.value + " and "
+        }
+
+        if (prestador.value && prestador.value!=""){
+            filtro+= "IdPrestador eq "+ prestador.value + " and "
+        }
+        
+        if (tipo.value!=-1){
+            filtro+="IdTipoComprobante eq " + tipo.value + " and "
+        }
+
+        if (sucursal.value!=0){
+            filtro+="PuntoVenta eq " + sucursal.value + " and "
+        }
+
+        if (numero.value!=0){
+            filtro+=" NroComprobante eq " + numero.value + " and "
+        }
+
+        if (estados.value!=-1){
+            filtro+= " IdFacturasPrestadoresEstado eq " + estados.value + " and "
+        }
+
+        filtro = filtro.slice(0,-5)
+        store.dispatch(setFiltro(filtro))
+
         this.update()
         
     }
@@ -189,7 +241,7 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
         }
 
         if (orden!=0 && orden!=""){
-            filtro+="Expediente_Bono/Id eq " + orden + " and "
+            filtro+="Id eq " + orden + " and "
         }
         
         if (expediente!=0 && expediente!=""){
@@ -201,7 +253,7 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
         }
         
         if (tipo!=-1){
-            filtro+=IdTipoComprobante + " and "
+            filtro+= "IdTipoComprobante eq "+ tipo + " and "
         }
 
         if (sucursal!=0){
@@ -217,11 +269,13 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
         }
 
         filtro = filtro.slice(0,-5)
-        
-        store.dispatch(getFacturas({
+
+        store.dispatch(setFiltro(filtro))
+
+       /*  store.dispatch(getFacturas({
             expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
             filter: filtro , 
-            orderby: "NroComprobante desc"}))          
+            orderby: "NroComprobante desc"}))     */      
     }
     
 
@@ -298,6 +352,11 @@ export class filtrosFacturas extends connect(store,  MEDIA_CHANGE, SCREEN, PERIO
                 reflect: true,
                 value: 0,
 
+            },
+            isOpen:{
+                type: Boolean,
+                reflect: true,
+                value: false
             }
         };
     }
