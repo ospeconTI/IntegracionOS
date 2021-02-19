@@ -164,8 +164,12 @@ export class expedientesBody extends connect(store, EXPEDIENTES, MEDIA_CHANGE, S
                     </div> -->
                     <!-- <button btn3 @click="${this.filtrar}" style="width:3rem">${SEARCH}</button> -->
                     <button btn2 .periodo=${"ANTERIOR"} @click="${this.generar}">Generar autorizaciones para el período 01-2021</button>
-                    <button btn1 .periodo=${"ACTUAL"} @click="${this.generar}">Generar autorizaciones para el período ${this.periodoMensualActual.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</button>
-                    <button btn2 .periodo=${"PROXIMO"} @click="${this.generar}">Generar autorizaciones para el período ${this.periodosMensualSiguiente.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</button>
+                    <button btn1 .periodo=${"ACTUAL"} @click="${this.generar}">
+                        Generar autorizaciones para el período ${this.periodoMensualActual.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}
+                    </button>
+                    <button btn2 .periodo=${"PROXIMO"} @click="${this.generar}">
+                        Generar autorizaciones para el período ${this.periodosMensualSiguiente.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}
+                    </button>
                 </div>
 
                 <div class="grid">
@@ -190,7 +194,9 @@ export class expedientesBody extends connect(store, EXPEDIENTES, MEDIA_CHANGE, S
                                     ${item.expedientes.map((expe) => {
                                         return html`
                                             <div class="grid row detalle">
-                                                <button btn3 class="justify-self-end" ?hidden="${!this.puedePresentar(expe)}" .paciente="${item}" .expediente="${expe}" @click="${this.integrar}">Presentar Factura</button>
+                                                <button btn3 class="justify-self-end" ?hidden="${!this.puedePresentar(expe)}" .paciente="${item}" .expediente="${expe}" @click="${this.integrar}">
+                                                    Presentar Factura
+                                                </button>
                                                 <div class="grid fit">
                                                     <div class="grid column center">
                                                         <div>Expediente:</div>
@@ -200,8 +206,11 @@ export class expedientesBody extends connect(store, EXPEDIENTES, MEDIA_CHANGE, S
                                                     <div class="grid center">Fecha: ${new Date(expe.Fecha).toLocaleDateString()}</div>
                                                 </div>
                                                 <div class="grid fit sublabel itemsCenter">
-                                                    <div>Perido: desde ${expe.Detalle.Periodo_Desde.replace(/^(\d{4})(\d{2})/, "$2-$1")} hasta ${expe.Detalle.Periodo_Hasta.replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
-                                                    <div>Cantidad máxima autorizada: ${expe.Detalle.Sesiones?expe.Detalle.Sesiones:expe.Detalle.Cantidad}</div>
+                                                    <div>
+                                                        Perido: desde ${expe.Detalle.Periodo_Desde.replace(/^(\d{4})(\d{2})/, "$2-$1")} hasta
+                                                        ${expe.Detalle.Periodo_Hasta.replace(/^(\d{4})(\d{2})/, "$2-$1")}
+                                                    </div>
+                                                    <div>Cantidad máxima autorizada: ${expe.Detalle.Sesiones ? expe.Detalle.Sesiones : expe.Detalle.Cantidad}</div>
                                                     <div>Dependencia: ${expe.Detalle.Dependencia}</div>
                                                 </div>
                                             </div>
