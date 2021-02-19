@@ -99,11 +99,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             return html`
                
                 
-                <div class="grid column">
-                        <button btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
-                        <button btn1 id="rechazar" @click="${this.rechazar}" >Rechazar</button>
-                        <button btn1 id="volver"  @click="${this.volver}">Volver</button>
-                    </div>
+
                     <div class="grid fit18 tarjeta">
                         <div>
                            Orden: ${this.factura.Id}
@@ -137,7 +133,29 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                             Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}
                         </div>
                     </div>
+                    <div class="grid column">
+                        <button btn3 id="volver"  @click="${this.volver}">Volver</button>
+                        <button btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
+                        <button btn1 id="rechazar" @click="${this.rechazar}" >Rechazar</button>
 
+                        <div class="select no-padding" style="grid-template-rows:1fr">                              
+                            <select id="motivosRechazo" .value="${this.documentoActual}"  @change="${this.cambiaImagen}" >
+                                <option  disabled selected >Motivo de Rechazo</option>
+                                ${this.factura.FacturasPrestadoresImagenes.map((c) => {
+                                    return html`<option  value="${c.Documentacion.Id}">${c.Documentacion.Descripcion}</option>`;
+                                })}
+                            </select>
+                        </div>
+
+                        
+                        <div class="select no-padding" style="grid-template-rows:1fr">                              
+                                <select id="selectImagenes" .value="${this.documentoActual}"  @change="${this.cambiaImagen}">
+                                    ${this.factura.FacturasPrestadoresImagenes.map((c) => {
+                                        return html`<option ?selected=${c.Documentacion.Id==7} value="${c.Documentacion.Id}">${c.Documentacion.Descripcion}</option>`;
+                                    })}
+                                </select>
+                        </div>
+                    </div>
                     <div class="grid column columnas align-start">
                         <div class="grid fit ">
                             <div class="select">
@@ -178,14 +196,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                                 <input type="date" id="vtoCae" autocomplete="off" .value="${this.factura.VtoCAE.substr(0, 10)}" />
                             </div>
 
-                            <div class="select">
-                                <label>Imagenes</label>
-                                <select id="selectImagenes" .value="${this.documentoActual}"  @change="${this.cambiaImagen}">
-                                    ${this.factura.FacturasPrestadoresImagenes.map((c) => {
-                                        return html`<option ?selected=${c.Documentacion.Id==7} value="${c.Documentacion.Id}">${c.Documentacion.Descripcion}</option>`;
-                                    })}
-                                </select>
-                            </div>
+
 
 
 
