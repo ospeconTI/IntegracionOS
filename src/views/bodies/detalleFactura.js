@@ -86,7 +86,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                 padding: 0.5rem;
                 background-color: white;
                 box-shadow: var(--shadow-elevation-2-box);
+                font-size: .8rem;
             }
+            
             .columnas{
                 grid-template-columns: 1fr 2fr
             }
@@ -127,6 +129,12 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                         </div>
                         <div>
                             Prestador: ${this.factura.prestado.nombre + " - " + this.factura.IdPrestador}
+                        </div>
+                        <div>
+                            Cantidad Autorizada: ${this.factura.Expediente_Bono.Cabecera.Detalle.Cantidad}
+                        </div>
+                        <div>
+                            Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}
                         </div>
                     </div>
 
