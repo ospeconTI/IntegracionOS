@@ -111,14 +111,6 @@ export class bonosBody extends connect(store, BONOS, MEDIA_CHANGE, SCREEN)(LitEl
                         <button btn1 @click="${this.buscar}">Consultar autorizaciones</button>
                     </div>
 
-                    <!--                     <div class="grid column start">
-                        <div class="input">
-                            <label>Busqueda por Expediente</label>
-                            <input type="text" id="search" autocomplete="off" />
-                        </div>
-                        <button btn3 @click="${this.filtrar}">${SEARCH}</button>
-                    </div>
- -->
                     <div class="grid">
                         ${this.bonos.map((item) => {
                             return html`
@@ -189,7 +181,13 @@ export class bonosBody extends connect(store, BONOS, MEDIA_CHANGE, SCREEN)(LitEl
             const isCurrentScreen = ["bonos"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
-                store.dispatch(getBonos({ expand: "Cabecera($expand=Detalle($expand=SSS_Prestaciones)),FacturasPrestadores($expand=FacturasPrestadoresEstados,FacturasPrestadoresImagenes)", filter: "Cabecera/Prestador eq " + state.prestador.numero + " and Periodo eq " + this.periodoActual + " and Estado eq 'A'", orderby: "Id" }));
+                store.dispatch(
+                    getBonos({
+                        expand: "Cabecera($expand=Detalle($expand=SSS_Prestaciones)),FacturasPrestadores($expand=FacturasPrestadoresEstados,FacturasPrestadoresImagenes)",
+                        filter: "Cabecera/Prestador eq " + state.prestador.numero + " and Periodo eq " + this.periodoActual + " and Estado eq 'A'",
+                        orderby: "Id",
+                    })
+                );
             }
             this.update();
         }
@@ -201,10 +199,17 @@ export class bonosBody extends connect(store, BONOS, MEDIA_CHANGE, SCREEN)(LitEl
 
     buscar(e) {
         this.periodoActual = this.shadowRoot.querySelector("#search").value;
-        if (parseInt(this.periodoActual.substr(0,4),10)>=2021) {
-        const estado = this.shadowRoot.querySelector("#estados").value;
-        store.dispatch(getBonos({ expand: "Cabecera($expand=Detalle($expand=SSS_Prestaciones)),FacturasPrestadores($expand=FacturasPrestadoresEstados,FacturasPrestadoresImagenes)", filter: "Cabecera/Prestador eq " + store.getState().prestador.numero + " and Periodo eq " + this.periodoActual + " and Estado eq '" + estado + "'", orderby: "Id" }));} else {
-            alert ("El período a buscar debe ser mayor o igual al 2021")
+        if (parseInt(this.periodoActual.substr(0, 4), 10) >= 2021) {
+            const estado = this.shadowRoot.querySelector("#estados").value;
+            store.dispatch(
+                getBonos({
+                    expand: "Cabecera($expand=Detalle($expand=SSS_Prestaciones)),FacturasPrestadores($expand=FacturasPrestadoresEstados,FacturasPrestadoresImagenes)",
+                    filter: "Cabecera/Prestador eq " + store.getState().prestador.numero + " and Periodo eq " + this.periodoActual + " and Estado eq '" + estado + "'",
+                    orderby: "Id",
+                })
+            );
+        } else {
+            alert("El período a buscar debe ser mayor o igual al 2021");
         }
     }
 
