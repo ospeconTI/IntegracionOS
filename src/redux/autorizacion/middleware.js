@@ -32,7 +32,7 @@ export const login = ({ dispatch }) => (next) => (action) => {
         const success = action.auto ? action.loginSuccessAuto : action.loginSuccess;
 
         //reemplazar esto por lo qur corresponda para loguearse
-        dispatch(RESTAdd(loginFetch, { Username: action.email.toLowerCase(), Password: action.password }, success, action.loginError));
+        dispatch(RESTAdd(loginFetch, { Username: action.email.toLowerCase(), Password: action.password }, success, action.loginError, "", ""));
         //dispatch({ type: success, payload: { receive: {} } });
     }
 };
@@ -78,7 +78,7 @@ export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
             loginErroneo();
         } else {
             viewMode("main");
-            dispatch(setPrestador(getState().autorizacion.usuario[0].Lifnr));
+            /*    dispatch(setPrestador(getState().autorizacion.usuario[0].Lifnr));
             let actual = new Date();
             let mesActual = actual.getMonth() + 1;
             actual = actual.getFullYear();
@@ -87,7 +87,7 @@ export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
             //const periodos = [anterior, actual, siguiente];
             const periodos = [actual, siguiente];
             dispatch(lista(periodos));
-            dispatch(set(actual));
+            dispatch(set(actual)); */
             dispatch(goTo("aprobacionFacturas"));
 
             let periodosMensuales = [];
