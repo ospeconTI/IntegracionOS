@@ -1,10 +1,26 @@
 /** @format */
 
-import { GET, GET_SUCCESS, GET_ERROR, ADD, ADD_SUCCESS, ADD_ERROR, UPDATE, UPDATE_SUCCESS, UPDATE_ERROR, UPDATE_ESTADO, UPDATE_ESTADO_SUCCESS, APROBAR, RECHAZAR, APROBAR_SUCCESS, RECHAZAR_SUCCESS } from "./actions";
+import {
+    GET,
+    GET_SUCCESS,
+    GET_ERROR,
+    ADD,
+    ADD_SUCCESS,
+    ADD_ERROR,
+    UPDATE,
+    UPDATE_SUCCESS,
+    UPDATE_ERROR,
+    UPDATE_ESTADO,
+    UPDATE_ESTADO_SUCCESS,
+    APROBAR,
+    RECHAZAR,
+    APROBAR_SUCCESS,
+    RECHAZAR_SUCCESS,
+} from "./actions";
 
-import { facturasPrestadoresFetch } from "../fetchs";
+import { facturasPrestadoresFetch, RechazarFacturaFetch } from "../fetchs";
 
-import { apiAdd, apiRequest, apiUpdate } from "../api/actions";
+import { apiAdd, apiRequest, apiUpdate, apiAction, apiFunction } from "../api/actions";
 
 export const get = ({ dispatch }) => (next) => (action) => {
     next(action);
@@ -63,11 +79,11 @@ export const aprobar = ({ dispatch }) => (next) => (action) => {
     }
 };
 
-
 export const rechazar = ({ dispatch }) => (next) => (action) => {
     next(action);
     if (action.type === RECHAZAR) {
-        dispatch(apiUpdate(facturasPrestadoresFetch, action.entity, RECHAZAR_SUCCESS, UPDATE_ERROR));
+        //dispatch(apiUpdate(facturasPrestadoresFetch, action.entity, RECHAZAR_SUCCESS, UPDATE_ERROR));
+        dispatch(apiAction(RechazarFacturaFetch, null, "pId=" + action.id + ",pEstado=" + action.estado + ",pMotivo=" + action.motivo, "", RECHAZAR_SUCCESS, UPDATE_ERROR));
     }
 };
 

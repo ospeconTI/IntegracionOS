@@ -16,6 +16,7 @@ import { register as registerSW, activate as activateSW } from "./libs/serviceWo
 import { get as getTipoComprobantes } from "./redux/tipoComprobantes/actions";
 import { get as getDocumentacion } from "./redux/documentacion/actions";
 import { get as getFacturasEstados } from "./redux/facturasPrestadoresEstados/actions";
+import { get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -26,6 +27,7 @@ store.dispatch(captureMedia());
 store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
 
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
+store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
 
 if ("credentials" in navigator) {
     navigator.credentials

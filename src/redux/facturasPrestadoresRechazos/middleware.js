@@ -9,7 +9,7 @@ import { apiRequest } from "../api/actions";
 export const get = ({ dispatch }) => (next) => (action) => {
     next(action);
     if (action.type === GET) {
-        dispatch(apiRequest(facturasPrestadoresEstadosFetch, action.options, GET_SUCCESS, GET_ERROR));
+        dispatch(apiRequest(facturasPrestadoresRechazosFetch, action.options, GET_SUCCESS, GET_ERROR));
     }
 };
 

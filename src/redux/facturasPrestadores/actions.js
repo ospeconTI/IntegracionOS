@@ -32,7 +32,6 @@ export const RECHAZAR = "[facturasPrestadores] RECHAZAR";
 export const APROBAR_SUCCESS = "[facturasPrestadores] APROBAR_SUCCESS";
 export const RECHAZAR_SUCCESS = "[facturasPrestadores] RECHAZAR_SUCCESS";
 
-
 export const get = (options) => ({
     type: GET,
     options: options,
@@ -63,7 +62,9 @@ export const aprobar = (entity) => ({
     entity: entity,
 });
 
-export const rechazar = (entity) => ({
+export const rechazar = (id, Motivo) => ({
     type: RECHAZAR,
-    entity: entity,
+    id: id,
+    estado: 7,
+    motivo: Motivo,
 });
