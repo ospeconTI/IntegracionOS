@@ -285,20 +285,6 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
     }
 
-    buscar(e) {
-        this.periodoActual = this.shadowRoot.querySelector("#search").value;
-        const estado = this.shadowRoot.querySelector("#estados");
-        const filterEstado = estado.value == -1 ? "" : " and IdFacturasPrestadoresEstado eq " + estado.value;
-        store.dispatch(
-            getFacturas({
-                expand:
-                    "SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-                filter: "IdPrestador eq " + store.getState().prestador.numero + " and Expediente_Bono/Periodo eq " + this.periodoActual + filterEstado,
-                orderby: "NroComprobante desc",
-            })
-        );
-    }
-
     static get properties() {
         return {
             mediaSize: {

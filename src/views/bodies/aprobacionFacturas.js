@@ -11,15 +11,15 @@ import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, setSelected } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
-import {filtrosFacturas} from "../componentes/filtrosFacturas"
+import { filtrosFacturas } from "../componentes/filtrosFacturas";
 import { goTo } from "../../redux/routing/actions";
-import {set as setFiltro} from "../../redux/filtro/actions"
+import { set as setFiltro } from "../../redux/filtro/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const FACTURAS = "facturasPrestadores.timeStamp";
-const ESTADOS = "facturasPrestadoresEstados.timeStamp"
-const FILTROTS = "filtro.timeStamp"
+const ESTADOS = "facturasPrestadoresEstados.timeStamp";
+const FILTROTS = "filtro.timeStamp";
 
 export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS)(LitElement) {
     constructor() {
@@ -75,26 +75,26 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                 padding: 0.3rem;
                 border-radius: 4px;
             }
-            .cabecera{
+            .cabecera {
                 background-color: white;
                 color: var(--primary-color);
-                font-size: .7rem;
+                font-size: 0.7rem;
                 font-weight: bold;
             }
-            .datos{
+            .datos {
                 background-color: white;
                 color: var(--color-azul-oscuro);
-                font-size: .7rem;  
-                cursor: pointer;          
+                font-size: 0.7rem;
+                cursor: pointer;
             }
-            .datos:hover{
-                background-color: var(--primary-color)
+            .datos:hover {
+                background-color: var(--primary-color);
             }
-            .ordena{
+            .ordena {
                 cursor: pointer;
             }
 
-            filtros-facturas{
+            filtros-facturas {
                 position: fixed;
                 top: 0px;
                 width: 40%;
@@ -103,49 +103,48 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                 background-color: white;
                 left: -100%;
                 transition: all 0.5s ease 0s;
-
             }
 
-            filtros-facturas[isOpen]{
-                left:0;
+            filtros-facturas[isOpen] {
+                left: 0;
             }
         `;
     }
     render() {
         if (this.facturas) {
             return html`
-                <div class="grid row"> 
-                    <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>                 
-                     <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas> 
-                     <div class="grid fit6 cabecera itemsCenter">
-                         <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
-                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Fecha de Ingreso</div>
-                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Expediente"}">Expte</div>
-                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Hiscli"}">Documento</div>
-                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Nombre"}">Nombre</div>
-                         <div class="ordena" @click=${this.ordenar} .orden="${"IdPrestador"}">Prestador</div>
-                         <div  class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.prestado.nombre"}">Nombre Prestador</div>
-                         <div>Integracion</div>
-                         <div>Comprobante</div>
-                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
+                <div class="grid row">
+                    <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>
+                    <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas>
+                    <div class="grid fit6 cabecera itemsCenter">
+                        <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Fecha de Ingreso</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Expediente"}">Expte</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Hiscli"}">Documento</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Nombre"}">Nombre</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"IdPrestador"}">Prestador</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.prestado.nombre"}">Nombre Prestador</div>
+                        <div>Integracion</div>
+                        <div>Comprobante</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div>Importe</div>
-                     </div>
+                    </div>
                     <div class="inner-grid">
                         ${this.facturas.map((item) => {
                             return html`
                                 <div class="inner-grid fit6 datos itemsCenter" .item="${item}" @click="${this.seleccionar}">
-                                    <div >${item.Id}</div>
-                                    <div>${item.FechaIngreso?new Date(item.FechaIngreso).toLocaleDateString():""}</div>
+                                    <div>${item.Id}</div>
+                                    <div>${item.FechaIngreso ? new Date(item.FechaIngreso).toLocaleDateString() : ""}</div>
                                     <div>${item.Expediente_Bono.Expediente}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Hiscli}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Nombre}</div>
                                     <div>${item.IdPrestador}</div>
                                     <div>${item.prestado.nombre}</div>
-                                    <div>${item.Expediente_Bono.Cabecera.Evento==4?"SI":"NO"}</div>
-                                    <div>${item.SSS_TipoComprobantes.Nombre + " " + item.PuntoVenta.toString().padStart(4,"0") + "-" + item.NroComprobante.toString().padStart(8,"0")}</div>
+                                    <div>${item.Expediente_Bono.Cabecera.Evento == 4 ? "SI" : "NO"}</div>
+                                    <div>${item.SSS_TipoComprobantes.Nombre + " " + item.PuntoVenta.toString().padStart(4, "0") + "-" + item.NroComprobante.toString().padStart(8, "0")}</div>
                                     <div>${item.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
                                     <div>${item.Importe}</div>
-                                </div>                                                       
+                                </div>
                             `;
                         })}
                     </div>
@@ -156,29 +155,33 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
         }
     }
 
-    mostrarFiltros(){
-        this.shadowRoot.querySelector("#filtros").isOpen = true
+    mostrarFiltros() {
+        this.shadowRoot.querySelector("#filtros").isOpen = true;
     }
 
-    seleccionar(e){
-        store.dispatch(setSelected(e.currentTarget.item))
-        store.dispatch(goTo("detalleFactura"))
+    seleccionar(e) {
+        store.dispatch(setSelected(e.currentTarget.item));
+        store.dispatch(goTo("detalleFactura"));
     }
 
-    ordenar(e){
-        store.dispatch(getFacturas({
-            top: 100,
-            expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-            filter: "IdFacturasPrestadoresEstado eq 2" , 
-            orderby: e.currentTarget.orden}))
-        this.update()
+    ordenar(e) {
+        store.dispatch(
+            getFacturas({
+                top: 100,
+                expand:
+                    "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                filter: "IdFacturasPrestadoresEstado eq 2",
+                orderby: e.currentTarget.orden,
+            })
+        );
+        this.update();
     }
 
-    filtrar(e){
-        const filtros = this.shadowRoot.querySelector("#filtros")
-        filtros.hidden = false
+    filtrar(e) {
+        const filtros = this.shadowRoot.querySelector("#filtros");
+        filtros.hidden = false;
     }
-    
+
     stateChanged(state, name) {
         if (name == MEDIA_CHANGE) {
             this.mediaSize = state.ui.media.size;
@@ -190,11 +193,8 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
 
-                let filtro = "IdFacturasPrestadoresEstado eq 2"
-                store.dispatch(setFiltro(filtro))
-    
-
-                
+                let filtro = "IdFacturasPrestadoresEstado eq 2";
+                store.dispatch(setFiltro(filtro));
             }
             this.update();
         }
@@ -203,31 +203,22 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             this.update();
         }
 
-        if (name==ESTADOS){
-            this.estados = state.facturasPrestadoresEstados.entities
+        if (name == ESTADOS) {
+            this.estados = state.facturasPrestadoresEstados.entities;
         }
-        
-        if (name==FILTROTS){
-            store.dispatch(getFacturas({
-                top: 100,
-                expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-                filter: state.filtro.value , 
-                orderby: " Id desc"}))
+
+        if (name == FILTROTS) {
+            store.dispatch(
+                getFacturas({
+                    top: 100,
+                    expand:
+                        "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                    filter: state.filtro.value,
+                    orderby: " Id desc",
+                })
+            );
         }
     }
-
-    buscar(e) {
-        this.periodoActual = this.shadowRoot.querySelector("#search").value;
-        const estado = this.shadowRoot.querySelector("#estados")
-        const filterEstado = estado.value==-1?"":" and IdFacturasPrestadoresEstado eq " + estado.value
-        store.dispatch(getFacturas({
-            top: 100,
-            expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-            filter: "IdFacturasPrestadoresEstado eq 2" , 
-            orderby: " Id desc"}))
-    }
-
-
 
     static get properties() {
         return {

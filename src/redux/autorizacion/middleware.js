@@ -1,7 +1,25 @@
 /** @format */
-import { LOGIN, RECUPERO, RENOVACION, LOGON, UPDATE_PROFILE, LOGIN_SUCCESS, RECUPERO_SUCCESS, RENOVACION_SUCCESS, LOGON_SUCCESS, UPDATE_PROFILE_SUCCESS, LOGIN_ERROR, RECUPERO_ERROR, RENOVACION_ERROR, LOGON_ERROR, UPDATE_PROFILE_ERROR, LOGIN_SUCCESS_AUTO, LOGOUT } from "./actions";
+import {
+    LOGIN,
+    RECUPERO,
+    RENOVACION,
+    LOGON,
+    UPDATE_PROFILE,
+    LOGIN_SUCCESS,
+    RECUPERO_SUCCESS,
+    RENOVACION_SUCCESS,
+    LOGON_SUCCESS,
+    UPDATE_PROFILE_SUCCESS,
+    LOGIN_ERROR,
+    RECUPERO_ERROR,
+    RENOVACION_ERROR,
+    LOGON_ERROR,
+    UPDATE_PROFILE_ERROR,
+    LOGIN_SUCCESS_AUTO,
+    LOGOUT,
+} from "./actions";
 import { set as setPrestador } from "../prestador/actions";
-import { RESTAdd } from "../rest/actions";
+import { RESTAdd, RESTRequest } from "../rest/actions";
 import { goTo } from "../routing/actions";
 import { lista, set } from "../periodo/actions";
 import { listaMensuales, set as setMensual } from "../periodosMensuales/actions";
@@ -14,7 +32,7 @@ export const login = ({ dispatch }) => (next) => (action) => {
         const success = action.auto ? action.loginSuccessAuto : action.loginSuccess;
 
         //reemplazar esto por lo qur corresponda para loguearse
-        dispatch(apiRequest(loginFetch, { key: "mail='" + action.email.toLowerCase() + "',password='" + action.password + "'" }, success, action.loginError));
+        dispatch(RESTAdd(loginFetch, { Username: action.email.toLowerCase(), Password: action.password }, success, action.loginError));
         //dispatch({ type: success, payload: { receive: {} } });
     }
 };
@@ -67,7 +85,7 @@ export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
             let anterior = actual - 1;
             let siguiente = actual + 1;
             //const periodos = [anterior, actual, siguiente];
-            const periodos = [ actual, siguiente];
+            const periodos = [actual, siguiente];
             dispatch(lista(periodos));
             dispatch(set(actual));
             dispatch(goTo("aprobacionFacturas"));
