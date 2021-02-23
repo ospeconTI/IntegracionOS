@@ -18,6 +18,7 @@ import {
     LOGIN_SUCCESS_AUTO,
     LOGOUT,
 } from "./actions";
+
 import { set as setPrestador } from "../prestador/actions";
 import { RESTAdd, RESTRequest } from "../rest/actions";
 import { goTo } from "../routing/actions";
