@@ -5,8 +5,7 @@ import { connect } from "@brunomon/helpers";
 import { store } from "../redux/store";
 import { layoutsCSS } from "../views/ui/layouts";
 import { getLayout } from "../redux/screens/screenLayouts";
-import { expedientesBody } from "../views/bodies/expedientes";
-import { facturaBody } from "../views/bodies/factura";
+
 import { bonosBody } from "../views/bodies/bonos";
 
 import { pantallaWarning } from "../views/bodies/warning";
@@ -23,7 +22,7 @@ import { stepsComponent } from "../views/componentes/steps";
 import { pantallaCambioClave } from "../views/bodies/cambioClave";
 import { pantallaMiembro } from "./bodies/miembro";
 import { goTo } from "../redux/routing/actions";
-import {detalleFactura} from "./bodies/detalleFactura"
+import { detalleFactura } from "./bodies/detalleFactura";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -72,8 +71,6 @@ export class viewManager extends connect(store, MEDIA_CHANGE, SCREEN, SELECTION)
 
     render() {
         return html`
-            <expedientes-body class="body"></expedientes-body>
-            <factura-body class="body" id="factura"></factura-body>
             <steps-component class="header"></steps-component>
             <bonos-body class="body"></bonos-body>
             <alerta-errores></alerta-errores>
