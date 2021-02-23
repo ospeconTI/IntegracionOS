@@ -75,33 +75,11 @@ export const updateProfile = ({ dispatch }) => (next) => (action) => {
 export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
     next(action);
     if (action.type === LOGIN_SUCCESS || action.type === LOGIN_SUCCESS_AUTO) {
-        if (action.payload.receive.message || action.payload.receive.length == 0) {
+        if (!action.payload.receive.Profiles || action.payload.receive.Profiles.length == 0 || action.payload.receive.message || action.payload.receive.length == 0) {
             loginErroneo();
         } else {
             viewMode("main");
-            /*    dispatch(setPrestador(getState().autorizacion.usuario[0].Lifnr));
-            let actual = new Date();
-            let mesActual = actual.getMonth() + 1;
-            actual = actual.getFullYear();
-            let anterior = actual - 1;
-            let siguiente = actual + 1;
-            //const periodos = [anterior, actual, siguiente];
-            const periodos = [actual, siguiente];
-            dispatch(lista(periodos));
-            dispatch(set(actual)); */
             dispatch(goTo("aprobacionFacturas"));
-
-            let periodosMensuales = [];
-
-            periodos.forEach((element) => {
-                let i = 1;
-                for (i == 1; i <= 12; i++) {
-                    periodosMensuales.push(element * 100 + i);
-                }
-            });
-            dispatch(listaMensuales(periodosMensuales));
-            const periodoMensualActual = actual * 100 + mesActual;
-            dispatch(setMensual(periodoMensualActual));
         }
     }
 };

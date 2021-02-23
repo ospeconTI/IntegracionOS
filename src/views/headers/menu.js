@@ -23,7 +23,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
         this.area = "header";
         this.visible = false;
         this.arrastrando = false;
-        this.usuario = [];
+        this.usuario = null;
         this.addEventListener("gestures", this.gestos);
     }
 
@@ -113,6 +113,9 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 position: absolute;
                 transition: none;
             }
+            .activo {
+                color: var(--primary-color);
+            }
         `;
     }
     render() {
@@ -128,18 +131,11 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 <div class="menu-button">${RIGHT}</div>
                 <div class="menuItem" @click=${this.click} .option=${"aprobacionFacturas"}>Aprobación de Facturas</div>
                 <div class="menuItem" @click=${this.click} .option=${"consultaFacturas"}>Consultar Facturas</div>
-                <div class="menuItem" @click=${this.click} .option=${"bonos"}>Presentar Facturas</div>
-
-                <div class="menuItem" @click=${this.click} .option=${"ayuda"}>Ayuda</div>
+                <div class="activo">${this.usuario ? this.usuario.Profiles[0].Perfil.Apellido : ""}</div>
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
         `;
     }
-
-    /*     cambioPrestador(e) {
-        store.dispatch(setPrestador(e.currentTarget.value));
-        store.dispatch(getCurrentCabecera(e.currentTarget.value, store.getState().periodo.periodoActual));
-    } */
 
     gestos(e) {
         if (this.mediaSize != "large") {
@@ -198,9 +194,9 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             this.update();
         }
         if (name == USUARIO) {
-            this.usuario = state.autorizacion.usuario;
-            // agrego usuario para test
-            //this.usuario.push({ Lifnr: 1566, Name1: "Test" });
+            if (state.autorizacion.usuario.Profiles && state.autorizacion.usuario.Profiles.length != 0) {
+                this.usuario = state.autorizacion.usuario;
+            }
             this.update();
         }
     }
