@@ -105,9 +105,9 @@ export const middleware = ({ dispatch }) => (next) => (action) => {
     }
 
     if (action.type === API_ACTION) {
-        const { ODataFetch, body, key, accion, onSuccess, onError } = action.meta;
+        const { ODataFetch, body, key, accion, onSuccess, onError, token } = action.meta;
         dispatch(showSpinner(ODataFetch));
-        ODataFetch.action(accion, body, key)
+        ODataFetch.action(accion, body, key, token)
             .then((data) => {
                 dispatch(hideSpinner(ODataFetch));
                 if (data.redirect) {
