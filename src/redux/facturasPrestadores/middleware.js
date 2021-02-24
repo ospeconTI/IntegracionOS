@@ -82,9 +82,8 @@ export const aprobar = ({ dispatch }) => (next) => (action) => {
 export const rechazar = ({ dispatch, getState }) => (next) => (action) => {
     next(action);
     if (action.type === RECHAZAR) {
-        //dispatch(apiUpdate(facturasPrestadoresFetch, action.entity, RECHAZAR_SUCCESS, UPDATE_ERROR));
-        const token = getState().autorizacion.usuario.Profiles[0].Token;
-        dispatch(apiAction(RechazarFacturaFetch, null, "pId=" + action.id + ",pEstado=" + action.estado + ",pMotivo=" + action.motivo, "", RECHAZAR_SUCCESS, UPDATE_ERROR, token));
+
+        dispatch(apiAction(RechazarFacturaFetch, null, "pId=" + action.id + ",pEstado=" + action.estado + ",pMotivo=" + action.motivo, "", RECHAZAR_SUCCESS, UPDATE_ERROR));
     }
 };
 

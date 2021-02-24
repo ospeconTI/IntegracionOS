@@ -48,7 +48,7 @@ export const apiAdd = (ODataFetch, body, onSuccess, onError) => ({
         onError,
     },
 });
-export const apiAction = (ODataFetch, body, key, accion, onSuccess, onError, token) => ({
+export const apiAction = (ODataFetch, body, key, accion, onSuccess, onError) => ({
     type: API_ACTION,
     payload: {},
     meta: {
@@ -58,7 +58,6 @@ export const apiAction = (ODataFetch, body, key, accion, onSuccess, onError, tok
         accion,
         onSuccess,
         onError,
-        token,
     },
 });
 export const apiFunction = (ODataFetch, funct, onSuccess, onError) => ({
