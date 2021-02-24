@@ -163,6 +163,8 @@ export class consultaFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCR
     }
 
     buscar(e) {
+
+        
         this.periodoActual = this.shadowRoot.querySelector("#search").value;
         const estado = this.shadowRoot.querySelector("#estados");
         const filterEstado = estado.value == -1 ? "" : " and IdFacturasPrestadoresEstado eq " + estado.value;
