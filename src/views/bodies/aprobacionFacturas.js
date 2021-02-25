@@ -218,7 +218,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                     expand:
                         "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
-                    orderby: " Id desc",
+                    orderby: " Id ",
                     count: true
                 })
             );
