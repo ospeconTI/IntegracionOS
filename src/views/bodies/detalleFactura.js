@@ -125,7 +125,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div class="select no-padding" style="grid-template-rows:1fr">
                         <select id="selectImagenes" .value="${this.documentoActual}" @change="${this.cambiaImagen}">
                             ${this.factura.FacturasPrestadoresImagenes.map((c) => {
-                                return html`<option ?selected=${c.Documentacion.Id == 7} value="${c.Documentacion.Id}">${c.Documentacion.Descripcion}</option>`;
+                                return html`<option ?selected=${c.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA} value="${c.Documentacion.Id}">${c.Documentacion.Descripcion}</option>`;
                             })}
                         </select>
                     </div>
@@ -257,11 +257,13 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
         if (name == FACTURA) {
             this.factura = state.facturasPrestadores.selected;
-            this.imagenActual = this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == 7) ? this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == 7).Url : "";
+            this.imagenActual = this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA)
+                ? this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA).Url
+                : "";
             this.documentoActual = "0";
 
             this.update();
-            this.documentoActual = "7";
+            this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
             this.update();
         }
 
