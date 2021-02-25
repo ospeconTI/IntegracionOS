@@ -108,7 +108,7 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
                     <div class="grid column start no-padding">
                         <div class="input">
                             <label>Ingrese Número o Nombre del prestador</label>
-                            <input type="text" id="txtPrestador" autocomplete="off" value="${this._value}" />   
+                            <input type="text" id="txtPrestador" autocomplete="off" .value="${this._value.toString()}" @change="${this.change}" />   
                             <div class="sublabel" id="nombrePrestador" style="display:none"></div>
                         </div>  
                         <button btn3 @click="${this.buscar}">${SEARCH}</button>     
@@ -133,6 +133,11 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
 
 
             `;
+    }
+
+    change(e){
+        this._value=e.currentTarget.value
+        this.update()
     }
 
     seleccion(e){
@@ -194,10 +199,12 @@ export class prestadoresComponent extends connect(store,  MEDIA_CHANGE, SCREEN, 
         
     }
     get value() {
-        return parseInt(this.shadowRoot.querySelector("#txtPrestador").value, 10)
+        return parseInt(this.shadowRoot.querySelector("#txtPrestador").value, 10)||0
     }
 
     set value(value) {
+        const nombrePrestador = this.shadowRoot.querySelector("#nombrePrestador")
+        nombrePrestador.innerHTML=""
         this._value = value
         this.update()
     }

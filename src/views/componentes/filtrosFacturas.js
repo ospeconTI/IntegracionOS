@@ -228,7 +228,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         }
 
         filtro = filtro.slice(0, -5);
-        store.dispatch(setFiltro(filtro));
+        //store.dispatch(setFiltro(filtro));
 
         this.update();
     }
