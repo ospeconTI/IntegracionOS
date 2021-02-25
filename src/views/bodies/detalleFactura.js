@@ -32,7 +32,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         this.comprobantes = [];
         this.estados = [];
         this.imagenActual = "";
-        this.documentoActual = "7";
+        this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
         this.rechazos = null;
     }
     static get styles() {

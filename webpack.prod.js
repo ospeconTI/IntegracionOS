@@ -24,7 +24,8 @@ module.exports = merge(common, {
             maximumFileSizeToCacheInBytes: 4000000,
         }),
         new webpack.DefinePlugin({
-            'SERVICE_URL': JSON.stringify("https://www.uocra.net/intranet/promocionsocial/MotivosCategorias")
+            SERVICE_URL: JSON.stringify("https://www.uocra.net/intranet/promocionsocial/MotivosCategorias"),
+            ID_TIPO_DOCUMENTO_FACTURA: JSON.stringify("28"),
         }),
     ],
 });
