@@ -9,6 +9,7 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { select } from "../css/select";
+import {onOff} from "../css/onOff"
 import { prestadoresComponent } from "./prestadores";
 import { get as getFacturas } from "../../redux/facturasPrestadores/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
@@ -40,6 +41,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
             ${toggle}
             ${input}
             ${select}
+            ${onOff}
 
             :host {
                 overflow-y: auto;
@@ -144,6 +146,17 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
                         })}
                     </select>
                 </div>
+                <div class="select">
+                    <label>Integracion</label>
+                    <select id="esIntegracion">
+                        <option value="-1">Todos</option>
+                        <option selected value="4">Integración</option>
+                        <option value="22">No Integración</option>
+                    </select>
+                </div>
+
+                    
+
             </div>
         `;
     }
@@ -163,6 +176,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         const numero = this.shadowRoot.querySelector("#numero");
         const estados = this.shadowRoot.querySelector("#estados");
         const prestador = this.shadowRoot.querySelector("#prestador");
+        const integracion = this.shadowRoot.querySelector("#esIntegracion");
 
         orden.value = "";
         hiscli.value = "";
@@ -173,6 +187,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         numero.value = "";
         estados.value = this.estado;
         prestador.value = "";
+        integracion.value = -1
 
         let filtro = "";
 
@@ -208,6 +223,10 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
             filtro += " IdFacturasPrestadoresEstado eq " + estados.value + " and ";
         }
 
+        if (integracion!= -1){
+            filtro+= "Expediente_Bono/Cabecera/Evento eq " + integracion.value + " and ";
+        }
+
         filtro = filtro.slice(0, -5);
         store.dispatch(setFiltro(filtro));
 
@@ -222,6 +241,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         const sucursal = this.shadowRoot.querySelector("#sucursal").value;
         const numero = this.shadowRoot.querySelector("#numero").value;
         const estados = this.shadowRoot.querySelector("#estados").value;
+        const integracion = this.shadowRoot.querySelector("#esIntegracion").value;
         let filtro = "";
 
         if (periodo != -1) {
@@ -256,10 +276,14 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
             filtro += " IdFacturasPrestadoresEstado eq " + estados + " and ";
         }
 
+        if (integracion != -1){
+            filtro += " Expediente_Bono/Cabecera/Evento eq " + integracion + " and ";
+        }
+
         filtro = filtro.slice(0, -5);
 
         store.dispatch(setFiltro(filtro));
-
+        this.cerrar()
         /*  store.dispatch(getFacturas({
             expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
             filter: filtro , 

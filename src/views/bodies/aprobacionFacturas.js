@@ -97,7 +97,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             filtros-facturas {
                 position: fixed;
                 top: 0px;
-                width: 40%;
+                width: 30%;
                 height: 100vh;
                 z-index: 1000;
                 background-color: white;
@@ -114,9 +114,12 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
         if (this.facturas) {
             return html`
                 <div class="grid row">
-                    <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>
+                    <div class="grid column ">
+                        <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>
+                        <div class="sublabel justify-self-end">Cantidad:${this.facturas.__odataCount}</div>
+                    </div>
                     <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas>
-                    <div class="grid fit6 cabecera itemsCenter">
+                    <div class="grid fit6 cabecera itemsCenter">                      
                         <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Fecha de Ingreso</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Expediente"}">Expte</div>
@@ -170,8 +173,9 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                 top: 100,
                 expand:
                     "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-                filter: "IdFacturasPrestadoresEstado eq 2",
+                filter: store.getState().filtro.value, // "IdFacturasPrestadoresEstado eq 2",
                 orderby: e.currentTarget.orden,
+                count: true
             })
         );
         this.update();
@@ -215,6 +219,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id desc",
+                    count: true
                 })
             );
         }
