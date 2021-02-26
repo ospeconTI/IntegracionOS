@@ -164,7 +164,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
 
     seleccionar(e) {
         store.dispatch(setSelected(e.currentTarget.item));
-        store.dispatch(goTo("detalleFactura"));
+        store.dispatch(goTo("detalleFacturaC"));
     }
 
     ordenar(e) {

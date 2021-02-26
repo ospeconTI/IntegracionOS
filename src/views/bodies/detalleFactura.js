@@ -34,6 +34,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         this.imagenActual = "";
         this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
         this.rechazos = null;
+        this.modo = ""
     }
     static get styles() {
         return css`
@@ -53,6 +54,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             :host([hidden]) {
                 display: none;
             }
+
+
 
             h1,
             h2,
@@ -90,6 +93,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             .columnas {
                 grid-template-columns: 1fr 2fr;
             }
+            .btn1[modo="C"]{
+                display: none
+            }
         `;
     }
     render() {
@@ -109,11 +115,11 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div>Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}</div> -->
                 </div>
                 <div class="grid column">
-                    <button btn3 id="volver" @click="${this.volver}">Volver</button>
-                    <button btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
-                    <button btn1 id="rechazar" @click="${this.rechazar}">Rechazar</button>
+                    <button  btn3 id="volver" @click="${this.volver}">Volver</button>
+                    <button style="display:${this.modo=="C"?"none":""}"   btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
+                    <button  style="display:${this.modo=="C"?"none":""}" btn1 id="rechazar" @click="${this.rechazar}">Rechazar</button>
 
-                    <div class="select no-padding" style="grid-template-rows:1fr">
+                    <div class="select no-padding" style="grid-template-rows:1fr;display:${this.modo=="C"?"none":""}">
                         <select id="motivosRechazo">
                             <option disabled selected value="-1">Motivo de Rechazo</option>
                             ${this.rechazos.map((c) => {
@@ -134,7 +140,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div class="grid fit ">
                         <div class="select">
                             <label>Tipo</label>
-                            <select id="tipo" .value=${this.factura.IdTipoComprobante}>
+                            <select id="tipo" .value=${this.factura.IdTipoComprobante} ?disabled="${this.modo=="C"?true:false}">
                                 ${this.comprobantes.map((c) => {
                                     return html`<option ?selected=${this.factura.IdTipoComprobante === c.Id} value="${c.Id}">${c.Nombre}</option>`;
                                 })}
@@ -142,20 +148,20 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                         </div>
                         <div class="input">
                             <label>Punto de venta</label>
-                            <input type="number" id="sucursal" autocomplete="off" maxlength="5" @input=${this.maxLength} .value="${this.factura.PuntoVenta}" />
+                            <input ?disabled="${this.modo=="C"?true:false}" type="number" id="sucursal" autocomplete="off" maxlength="5" @input=${this.maxLength} .value="${this.factura.PuntoVenta}" />
                         </div>
                         <div class="input">
                             <label>Número</label>
-                            <input type="number" id="numero" autocomplete="off" maxlength="8" @input=${this.maxLength} .value="${this.factura.NroComprobante}" />
+                            <input ?disabled="${this.modo=="C"?true:false}" type="number" id="numero" autocomplete="off" maxlength="8" @input=${this.maxLength} .value="${this.factura.NroComprobante}" />
                         </div>
 
                         <div class="input">
                             <label>Fecha</label>
-                            <input type="date" id="fecha" .value="${this.factura.Fecha.substr(0, 10)}" />
+                            <input ?disabled="${this.modo=="C"?true:false}" type="date" id="fecha" .value="${this.factura.Fecha.substr(0, 10)}" />
                         </div>
                         <div class="input">
                             <label>Cantidad</label>
-                            <input type="number" id="cantidad" step="1" placeholder="0" autocomplete="off" .value="${this.factura.Cantidad}" />
+                            <input  ?disabled="${this.modo=="C"?true:false}" type="number" id="cantidad" step="1" placeholder="0" autocomplete="off" .value="${this.factura.Cantidad}" />
                         </div>
 
                         <div class="input">
@@ -165,7 +171,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
                         <div class="input">
                             <label>Importe</label>
-                            <input type="number" id="importe" step=".01" placeholder="0,00" autocomplete="off" .value="${this.factura.Importe}" />
+                            <input ?disabled="${this.modo=="C"?true:false}" type="number" id="importe" step=".01" placeholder="0,00" autocomplete="off" .value="${this.factura.Importe}" />
                         </div>
 
                         <div class="input">
@@ -175,11 +181,11 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
                         <div class="input">
                             <label>C.A.E.</label>
-                            <input type="text" id="cae" autocomplete="off" maxlength="14" @input=${this.maxLength} .value="${this.factura.CAE}" />
+                            <input ?disabled="${this.modo=="C"?true:false}" type="text" id="cae" autocomplete="off" maxlength="14" @input=${this.maxLength} .value="${this.factura.CAE}" />
                         </div>
                         <div class="input">
                             <label>Vencimiento C.A.E.</label>
-                            <input type="date" id="vtoCae" autocomplete="off" .value="${this.factura.VtoCAE.substr(0, 10)}" />
+                            <input ?disabled="${this.modo=="C"?true:false}" type="date" id="vtoCae" autocomplete="off" .value="${this.factura.VtoCAE.substr(0, 10)}" />
                         </div>
                     </div>
 
@@ -248,9 +254,15 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
         if (name == SCREEN) {
             this.hidden = true;
-            const isCurrentScreen = ["detalleFactura"].includes(state.screen.name);
+            const isCurrentScreen = ["detalleFactura","detalleFacturaC"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
+                if (state.screen.name=="detalleFactura"){
+                    this.modo = ""
+                }
+                else{
+                    this.modo="C"
+                }
             }
             this.update();
         }
@@ -305,6 +317,11 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             area: {
                 type: String,
             },
+            modo: {
+                type: String,
+                reflect: true,
+
+            }
         };
     }
 }
