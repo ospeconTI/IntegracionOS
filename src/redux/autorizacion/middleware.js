@@ -41,7 +41,7 @@ export const login = ({ dispatch }) => (next) => (action) => {
 export const logout = ({ dispatch }) => (next) => (action) => {
     next(action);
     if (action.type === LOGOUT) {
-        dispatch(setPrestador(0));
+        //dispatch(setPrestador(0));
         dispatch(goTo("login"));
     }
 };
