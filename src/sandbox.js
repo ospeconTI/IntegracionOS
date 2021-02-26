@@ -17,6 +17,8 @@ import { get as getTipoComprobantes } from "./redux/tipoComprobantes/actions";
 import { get as getDocumentacion } from "./redux/documentacion/actions";
 import { get as getFacturasEstados } from "./redux/facturasPrestadoresEstados/actions";
 import { get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/actions";
+import { lista, set } from "./redux/periodo/actions";
+import { listaMensuales, set as setMensual } from "./redux/periodosMensuales/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -28,6 +30,30 @@ store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
 
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
+
+
+let actual = new Date();
+let mesActual = actual.getMonth() + 1;
+actual = actual.getFullYear();
+let anterior = actual - 1;
+let siguiente = actual + 1;
+//const periodos = [anterior, actual, siguiente];
+const periodos = [actual, siguiente];
+store.dispatch(lista(periodos));
+store.dispatch(set(actual));
+store.dispatch(goTo("main"));
+
+let periodosMensuales = [];
+
+periodos.forEach((element) => {
+    let i = 1;
+    for (i == 1; i <= 12; i++) {
+        periodosMensuales.push(element * 100 + i);
+    }
+});
+store.dispatch(listaMensuales(periodosMensuales));
+const periodoMensualActual = actual * 100 + mesActual;
+store.dispatch(setMensual(periodoMensualActual));
 
 if ("credentials" in navigator) {
     navigator.credentials

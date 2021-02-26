@@ -16,11 +16,10 @@ import { alertaErrores } from "./bodies/alert";
 
 import { SpinnerLoading } from "./componentes/spinner";
 
-import { consultaFacturas } from "./bodies/consultaFacturas";
+import { consultarFacturas } from "./bodies/consultarFacturas";
 import { aprobacionFacturas } from "./bodies/aprobacionFacturas";
 import { stepsComponent } from "../views/componentes/steps";
-import { pantallaCambioClave } from "../views/bodies/cambioClave";
-import { pantallaMiembro } from "./bodies/miembro";
+
 import { goTo } from "../redux/routing/actions";
 import { detalleFactura } from "./bodies/detalleFactura";
 
@@ -71,16 +70,14 @@ export class viewManager extends connect(store, MEDIA_CHANGE, SCREEN, SELECTION)
 
     render() {
         return html`
-            <steps-component class="header"></steps-component>
+
             <bonos-body class="body"></bonos-body>
             <alerta-errores></alerta-errores>
             <pantalla-warning id="warning"></pantalla-warning>
             <menu-principal id="menu" class="header"></menu-principal>
             <spinner-loading type="spinner3"></spinner-loading>
-            <consulta-facturas class="body" id="consultaFacturas"></consulta-facturas>
+            <consultar-facturas class="body" id="consultaFacturas"></consultar-facturas>
             <aprobacion-facturas class="body" id="aprobacionFacturas"></aprobacion-facturas>
-            <pantalla-cambioclave id="cambioclave"></pantalla-cambioclave>
-            <pantalla-miembro id="miembro"></pantalla-miembro>
             <detalle-factura class="body"></detalle-factura>
         `;
     }

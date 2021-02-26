@@ -8,22 +8,12 @@ export const screenLayuts = {
         medium: HEADER_BODY,
         large: HEADER_BODY,
     },
-    expedientes: {
-        small: HEADER_BODY,
-        medium: HEADER_BODY,
-        large: HEADER_BODY,
-    },
     bonos: {
         small: HEADER_BODY,
         medium: HEADER_BODY,
         large: HEADER_BODY,
     },
-    factura: {
-        small: HEADER_BODY,
-        medium: HEADER_BODY,
-        large: HEADER_BODY,
-    },
-    consultaFacturas: {
+    consultarFacturas: {
         small: HEADER_BODY,
         medium: HEADER_BODY,
         large: HEADER_BODY,
@@ -32,16 +22,6 @@ export const screenLayuts = {
         small: HEADER_BODY,
         medium: HEADER_BODY,
         large: HEADER_BODY,
-    },
-    serMiembro: {
-        small: ALL_BODY,
-        medium: ALL_BODY,
-        large: ALL_BODY,
-    },
-    cambioClave: {
-        small: ALL_BODY,
-        medium: ALL_BODY,
-        large: ALL_BODY,
     },
     detalleFactura: {
         small: HEADER_BODY,

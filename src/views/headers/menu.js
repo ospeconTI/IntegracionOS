@@ -130,7 +130,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             <div id="opciones" class="grid column" @click=${this.toggleMenu}>
                 <div class="menu-button">${RIGHT}</div>
                 <div class="menuItem" @click=${this.click} .option=${"aprobacionFacturas"}>Aprobación de Facturas</div>
-                <div class="menuItem" @click=${this.click} .option=${"consultaFacturas"}>Consultar Facturas</div>
+                <div class="menuItem" @click=${this.click} .option=${"consultarFacturas"}>Consultar Facturas</div>
                 <div class="activo">${this.usuario ? this.usuario.Profiles[0].Perfil.Apellido : ""}</div>
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
