@@ -77,6 +77,7 @@ export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
     if (action.type === LOGIN_SUCCESS || action.type === LOGIN_SUCCESS_AUTO) {
         if (!action.payload.receive.Profiles || action.payload.receive.Profiles.length == 0 || action.payload.receive.message || action.payload.receive.length == 0) {
             loginErroneo();
+            viewMode("login");
         } else {
             viewMode("main");
             dispatch(goTo("aprobacionFacturas"));

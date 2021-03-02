@@ -41,7 +41,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                 display: grid;
                 grid-auto-flow: row;
                 align-content: start;
-                overflow-y: auto;
+
                 width: 98vw;
                 padding: 1vw;
             }
@@ -77,10 +77,11 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             }
             .cabecera {
                 background-color: white;
-                color: var(--primary-color);
+                color: var(--color-azul-oscuro);
                 font-size: 0.7rem;
                 font-weight: bold;
             }
+
             .datos {
                 background-color: white;
                 color: var(--color-azul-oscuro);
@@ -88,7 +89,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                 cursor: pointer;
             }
             .datos:hover {
-                background-color: var(--primary-color);
+                background-color: var(--color-gris-claro);
             }
             .ordena {
                 cursor: pointer;
@@ -108,23 +109,34 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             filtros-facturas[isOpen] {
                 left: 0;
             }
+
+            .rows {
+                overflow-y: auto;
+            }
+            .contenedor {
+                background-color: var(--color-crudo);
+            }
+            .bordeRow {
+                border-bottom: 1px solid var(--color-gris-claro);
+            }
         `;
     }
     render() {
         if (this.facturas) {
             return html`
-                <div class="grid row">
+                <div class="grid row contenedor">
                     <div class="grid column ">
                         <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>
                         <div class="sublabel justify-self-end">Cantidad:${this.facturas.__odataCount}</div>
                     </div>
                     <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas>
-                    <div class="grid fit6 cabecera itemsCenter">                      
+                    <div class="grid fit6 cabecera itemsCenter">
                         <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
-                        <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Fecha de Ingreso</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Ingreso</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Expediente"}">Expte</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Hiscli"}">Documento</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Nombre"}">Nombre</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"cuit"}">CUIT</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"IdPrestador"}">Prestador</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.prestado.nombre"}">Nombre Prestador</div>
                         <div>Integracion</div>
@@ -132,15 +144,16 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div>Importe</div>
                     </div>
-                    <div class="inner-grid">
+                    <div class="inner-grid rows">
                         ${this.facturas.map((item) => {
                             return html`
-                                <div class="inner-grid fit6 datos itemsCenter" .item="${item}" @click="${this.seleccionar}">
+                                <div class="inner-grid fit6 datos itemsCenter bordeRow" .item="${item}" @click="${this.seleccionar}">
                                     <div>${item.Id}</div>
                                     <div>${item.FechaIngreso ? new Date(item.FechaIngreso).toLocaleDateString() : ""}</div>
                                     <div>${item.Expediente_Bono.Expediente}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Hiscli}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Nombre}</div>
+                                    <div>${item.prestado.Cuit}</div>
                                     <div>${item.IdPrestador}</div>
                                     <div>${item.prestado.nombre}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Evento == 4 ? "SI" : "NO"}</div>
@@ -175,7 +188,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                     "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value, // "IdFacturasPrestadoresEstado eq 2",
                 orderby: e.currentTarget.orden,
-                count: true
+                count: true,
             })
         );
         this.update();
@@ -197,8 +210,8 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
 
-                let filtro = "IdFacturasPrestadoresEstado eq 2";
-                store.dispatch(setFiltro(filtro));
+                /*  let filtro = "IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA;
+                store.dispatch(setFiltro(filtro)); */
             }
             this.update();
         }
@@ -219,7 +232,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id ",
-                    count: true
+                    count: true,
                 })
             );
         }

@@ -19,6 +19,7 @@ import { get as getFacturasEstados } from "./redux/facturasPrestadoresEstados/ac
 import { get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/actions";
 import { lista, set } from "./redux/periodo/actions";
 import { listaMensuales, set as setMensual } from "./redux/periodosMensuales/actions";
+import { set as setFiltro } from "./redux/filtro/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -31,7 +32,6 @@ store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
 
-
 let actual = new Date();
 let mesActual = actual.getMonth() + 1;
 actual = actual.getFullYear();
@@ -41,6 +41,7 @@ let siguiente = actual + 1;
 const periodos = [actual, siguiente];
 store.dispatch(lista(periodos));
 store.dispatch(set(actual));
+store.dispatch(setFiltro("IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA));
 store.dispatch(goTo("main"));
 
 let periodosMensuales = [];

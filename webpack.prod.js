@@ -26,6 +26,8 @@ module.exports = merge(common, {
         new webpack.DefinePlugin({
             SERVICE_URL: JSON.stringify("https://www.uocra.net/intranet/promocionsocial/MotivosCategorias"),
             ID_TIPO_DOCUMENTO_FACTURA: JSON.stringify("28"),
+            ESTADO_FACTURA_PRESENTADA: JSON.stringify("2"),
+            ESTADO_FACTURA_RECHAZADA: JSON.stringify("7"),
         }),
     ],
 });
