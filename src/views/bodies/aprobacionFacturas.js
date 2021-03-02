@@ -112,6 +112,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
 
             .rows {
                 overflow-y: auto;
+                height: 75vh;
             }
             .contenedor {
                 background-color: var(--color-crudo);

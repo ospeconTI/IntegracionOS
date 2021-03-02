@@ -110,6 +110,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
             }
 
             .rows {
+                height: 75vh;
                 overflow-y: auto;
             }
             .contenedor {
