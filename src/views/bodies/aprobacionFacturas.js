@@ -119,6 +119,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             }
             .bordeRow {
                 border-bottom: 1px solid var(--color-gris-claro);
+                gap: 0.3rem;
             }
         `;
     }
@@ -145,7 +146,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div>Importe</div>
                     </div>
-                    <div class="inner-grid rows">
+                    <div class=" rows">
                         ${this.facturas.map((item) => {
                             return html`
                                 <div class="inner-grid fit6 datos itemsCenter bordeRow" .item="${item}" @click="${this.seleccionar}">

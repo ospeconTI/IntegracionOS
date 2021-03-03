@@ -144,7 +144,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div>Importe</div>
                     </div>
-                    <div class="inner-grid">
+                    <div class=" rows">
                         ${this.facturas.map((item) => {
                             return html`
                                 <div class="inner-grid fit6 datos itemsCenter bordeRow" .item="${item}" @click="${this.seleccionar}">
