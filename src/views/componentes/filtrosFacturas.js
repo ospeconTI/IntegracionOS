@@ -247,6 +247,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         const estados = this.shadowRoot.querySelector("#estados").value;
         const integracion = this.shadowRoot.querySelector("#esIntegracion").value;
         const cuit = this.shadowRoot.querySelector("#cuit").value;
+        const hiscli = this.shadowRoot.querySelector("#hiscli").value;
         let filtro = "";
 
         if (periodo != -1) {
@@ -259,6 +260,10 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
 
         if (expediente != 0 && expediente != "") {
             filtro += "Expediente_Bono/Expediente eq " + expediente + " and ";
+        }
+
+        if (hiscli != 0 && hiscli != "") {
+            filtro += "Expediente_Bono/Cabecera/Hiscli eq " + hiscli + " and ";
         }
 
         if (prestador.value && prestador.value != "") {

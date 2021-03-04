@@ -143,6 +143,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                         <div>Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div>Importe</div>
+                        <div>Rechazo</div>
                     </div>
                     <div class=" rows">
                         ${this.facturas.map((item) => {
@@ -160,6 +161,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                                     <div>${item.SSS_TipoComprobantes.Nombre + " " + item.PuntoVenta.toString().padStart(4, "0") + "-" + item.NroComprobante.toString().padStart(8, "0")}</div>
                                     <div>${item.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
                                     <div>${item.Importe}</div>
+                                    <div>${item.IdMotivoRechazo ? item.FacturasPrestadoresRechazos.Descripcion : ""}</div>
                                 </div>
                             `;
                         })}
@@ -185,7 +187,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
             getFacturas({
                 top: 100,
                 expand:
-                    "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                    "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value,
                 orderby: e.currentTarget.orden,
             })
@@ -226,7 +228,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                 getFacturas({
                     top: 100,
                     expand:
-                        "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                        "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id ",
                     count: true,

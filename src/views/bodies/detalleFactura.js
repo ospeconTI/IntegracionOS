@@ -9,7 +9,7 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getFacturas, rechazar, aprobar } from "../../redux/facturasPrestadores/actions";
+import { get as getFacturas, rechazar, aprobar, setSelected } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
@@ -374,12 +374,14 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             getFacturas({
                 top: 100,
                 expand:
-                    "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                    "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value,
                 orderby: " Id ",
                 count: true,
             })
         );
+        const motivosRechazo = this.shadowRoot.querySelector("#motivosRechazo");
+        motivosRechazo.value = "-1";
         this.update();
         store.dispatch(goHistoryPrev());
     }
@@ -411,14 +413,22 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
 
         if (name == FACTURA) {
+            // if (state.facturasPrestadores.selected) {
+            /*         this.factura = state.facturasPrestadores.selected;
+            this.imagenActual = this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA)
+                ? this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA).Url
+                : ""; */
+            this.documentoActual = "0";
+            this;
+            this.factura = { Fecha: "", VtoCAE: "", Expediente_Bono: { Periodo: 0, Cabecera: { Detalle: { SSS_Prestaciones: {} } } }, prestado: {}, FacturasPrestadoresImagenes: [] };
+            // }
+            this.update();
+            this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
             this.factura = state.facturasPrestadores.selected;
             this.imagenActual = this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA)
                 ? this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA).Url
                 : "";
-            this.documentoActual = "0";
 
-            this.update();
-            this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
             this.update();
         }
 
