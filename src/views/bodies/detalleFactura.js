@@ -413,15 +413,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
 
         if (name == FACTURA) {
-            // if (state.facturasPrestadores.selected) {
-            /*         this.factura = state.facturasPrestadores.selected;
-            this.imagenActual = this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA)
-                ? this.factura.FacturasPrestadoresImagenes.find((a) => a.Documentacion.Id == ID_TIPO_DOCUMENTO_FACTURA).Url
-                : ""; */
             this.documentoActual = "0";
-            this;
             this.factura = { Fecha: "", VtoCAE: "", Expediente_Bono: { Periodo: 0, Cabecera: { Detalle: { SSS_Prestaciones: {} } } }, prestado: {}, FacturasPrestadoresImagenes: [] };
-            // }
             this.update();
             this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
             this.factura = state.facturasPrestadores.selected;
