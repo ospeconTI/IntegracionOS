@@ -10,8 +10,7 @@ import { select } from "../css/select";
 import { MENU, RIGHT } from "../../../assets/icons/svgs";
 import { gestures } from "../../libs/gestures";
 import { logout } from "../../redux/autorizacion/actions";
-import { set as setPrestador } from "../../redux/prestador/actions";
-import { getCurrent as getCurrentCabecera } from "../../redux/cabecera/actions";
+import { set as setFiltro } from "../../redux/filtro/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -165,17 +164,24 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
     click(e) {
         if (e.currentTarget.option == "ayuda") {
             window.open("./ayuda.html", "_blank");
-
             return;
         }
+
         if (e.currentTarget.option == "logout") {
             try {
                 navigator.credentials.preventSilentAccess();
             } catch {}
             store.dispatch(logout());
-        } else {
-            store.dispatch(goTo(e.currentTarget.option));
+            return;
         }
+
+        if (e.currentTarget.option == "aprobacionFacturas") {
+            store.dispatch(setFiltro("IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA));
+            return;
+        }
+
+        store.dispatch(goTo(e.currentTarget.option));
+
         this.update();
     }
 
