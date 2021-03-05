@@ -177,6 +177,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
 
         if (e.currentTarget.option == "aprobacionFacturas") {
             store.dispatch(setFiltro("IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA));
+            store.dispatch(goTo(e.currentTarget.option));
             return;
         }
 
