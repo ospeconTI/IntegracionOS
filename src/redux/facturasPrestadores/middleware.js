@@ -16,6 +16,7 @@ import {
     RECHAZAR,
     APROBAR_SUCCESS,
     RECHAZAR_SUCCESS,
+    CAMBIO,
 } from "./actions";
 
 import { facturasPrestadoresFetch, RechazarFacturaFetch } from "../fetchs";
@@ -74,7 +75,7 @@ export const processUpdate = ({ dispatch }) => (next) => (action) => {
 
 export const aprobar = ({ dispatch }) => (next) => (action) => {
     next(action);
-    if (action.type === APROBAR) {
+    if (action.type === APROBAR || action.type === CAMBIO) {
         dispatch(apiUpdate(facturasPrestadoresFetch, action.entity, APROBAR_SUCCESS, UPDATE_ERROR));
     }
 };
@@ -82,7 +83,6 @@ export const aprobar = ({ dispatch }) => (next) => (action) => {
 export const rechazar = ({ dispatch, getState }) => (next) => (action) => {
     next(action);
     if (action.type === RECHAZAR) {
-
         dispatch(apiAction(RechazarFacturaFetch, null, "pId=" + action.id + ",pEstado=" + action.estado + ",pMotivo=" + action.motivo, "", RECHAZAR_SUCCESS, UPDATE_ERROR));
     }
 };

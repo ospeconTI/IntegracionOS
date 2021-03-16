@@ -9,7 +9,7 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getFacturas, rechazar, aprobar, setSelected } from "../../redux/facturasPrestadores/actions";
+import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
@@ -127,7 +127,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                             })}
                         </select>
                     </div>
-
+                    <button style="display:${this.modo == "C" ? "none" : ""}" btn1 id="rechazar" @click="${this.devolver}">Devolver al Prestador</button>
                     <div class="select no-padding" style="grid-template-rows:1fr">
                         <select id="selectImagenes" .value="${this.documentoActual}" @change="${this.cambiaImagen}">
                             ${this.factura.FacturasPrestadoresImagenes.map((c) => {
@@ -136,6 +136,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                         </select>
                     </div>
                 </div>
+
                 <div class="grid column columnas align-start">
                     <div class="grid fit ">
                         <div class="select">
@@ -370,6 +371,11 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
         store.dispatch(rechazar(this.factura.Id, motivo));
     }
+
+    devolver(e) {
+        store.dispatch(cambioEstado(this.factura.Id, 1));
+    }
+
     volver(e) {
         store.dispatch(
             getFacturas({
