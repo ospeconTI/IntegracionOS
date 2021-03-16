@@ -100,7 +100,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
     render() {
         if (this.factura) {
             return html`
-                <div class="grid fit18 tarjeta">
+                <div class="grid fit18 tarjeta ">
                     <div>Nº: ${this.factura.Id}</div>
                     <div>Int: <span>${this.factura.Expediente_Bono.Cabecera.Evento == 4 ? "SI" : "NO"}</span></div>
                     <div>Prestador: ${this.factura.prestado.nombre + " - " + this.factura.IdPrestador}</div>
@@ -109,7 +109,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div>Dependencia: ${this.factura.Expediente_Bono.Cabecera.Detalle.Dependencia == "N" ? "NO" : "SI"}</div>
                     <div>Periodo: ${this.factura.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
                     <div>Prestación: ${this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.Descripcion}</div>
-
+                    <div>Estado: ${this.factura.FacturasPrestadoresEstados ? this.factura.FacturasPrestadoresEstados.Descripcion : ""}</div>
+                    <div>${this.factura.IdMotivoRechazo ? "Motivo: " + this.factura.FacturasPrestadoresRechazos.Descripcion : ""}</div>
                     <!-- <div>Cantidad Autorizada: ${this.factura.Expediente_Bono.Cabecera.Detalle.Cantidad}</div>
                     <div>Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}</div> -->
                 </div>

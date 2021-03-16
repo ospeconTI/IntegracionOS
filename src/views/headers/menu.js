@@ -113,6 +113,11 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 transition: none;
             }
             .activo {
+                color: var(--color-celeste-claro);
+                font-size: var(--font-label-size);
+            }
+
+            .seleccionado {
                 color: var(--primary-color);
             }
         `;
@@ -121,16 +126,20 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
         return html`
             <div id="velo" @click=${this.toggleMenu}></div>
             <div class="grid column">
-                <div id="version">V${__VERSION__}</div>
+                <div class="grid row no-padding">
+                    <div id="version" class="grid no-padding">V${__VERSION__}</div>
+                    <div class="grid activo no-padding">${this.usuario ? this.usuario.Profiles[0].Perfil.Apellido : ""}</div>
+                </div>
+
                 <h1 id="titulo" @click="${this.click}" .option=${""}>${__DESCRIPTION__}</h1>
                 <div class="menu-button" @click=${this.toggleMenu}>${MENU}</div>
             </div>
 
             <div id="opciones" class="grid column" @click=${this.toggleMenu}>
                 <div class="menu-button">${RIGHT}</div>
-                <div class="menuItem" @click=${this.click} .option=${"aprobacionFacturas"}>Aprobación de Facturas</div>
+                <div class="menuItem seleccionado" @click=${this.click} .option=${"aprobacionFacturas"}>Aprobación de Facturas</div>
                 <div class="menuItem" @click=${this.click} .option=${"consultarFacturas"}>Consultar Facturas</div>
-                <div class="activo">${this.usuario ? this.usuario.Profiles[0].Perfil.Apellido : ""}</div>
+
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
         `;
@@ -174,6 +183,12 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             store.dispatch(logout());
             return;
         }
+
+        const botones = this.shadowRoot.querySelectorAll(".menuItem");
+        botones.forEach((button) => {
+            button.classList.remove("seleccionado");
+        });
+        e.currentTarget.classList.add("seleccionado");
 
         if (e.currentTarget.option == "aprobacionFacturas") {
             store.dispatch(setFiltro("IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA));

@@ -13,7 +13,6 @@ export const gridLayout = css`
         align-items: center;
     }
 
-
     .inner-grid {
         display: grid;
         grid-gap: 0.5rem;
@@ -25,11 +24,21 @@ export const gridLayout = css`
         grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     }
 
+    .fit2 {
+        grid-template-columns: repeat(auto-fit, minmax(2rem, 1fr));
+    }
     .fit3 {
         grid-template-columns: repeat(auto-fit, minmax(3rem, 1fr));
     }
+    .fit4 {
+        grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+    }
     .fit6 {
         grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    }
+
+    .fit10 {
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     }
 
     .fit18 {
@@ -40,6 +49,9 @@ export const gridLayout = css`
     }
     .column {
         grid-auto-flow: column;
+    }
+    .row {
+        grid-auto-flow: row;
     }
     .start {
         place-content: start;
@@ -54,10 +66,10 @@ export const gridLayout = css`
         justify-items: center;
     }
 
-    .itemsRight{
+    .itemsRight {
         justify-items: right;
     }
-    .itemsLeft{
+    .itemsLeft {
         justify-items: left;
     }
     .stretch {
@@ -85,12 +97,12 @@ export const gridLayout = css`
     .align-end {
         align-items: end;
     }
-    
-    .align-self-stretch{
+
+    .align-self-stretch {
         align-self: stretch;
     }
 
-    .justify-self-stretch{
+    .justify-self-stretch {
         justify-self: stretch;
     }
 `;

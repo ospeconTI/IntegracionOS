@@ -112,14 +112,23 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
 
             .rows {
                 overflow-y: auto;
-                height: 75vh;
+                height: 68vh;
+                gap: 0.3rem;
+                align-content: flex-start;
+                box-sizing: content-box;
             }
+
             .contenedor {
                 background-color: var(--color-crudo);
             }
             .bordeRow {
                 border-bottom: 1px solid var(--color-gris-claro);
                 gap: 0.3rem;
+            }
+
+            .columnas {
+                grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr;
+                padding: 0.3rem !important;
             }
         `;
     }
@@ -132,36 +141,44 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         <div class="sublabel justify-self-end">Cantidad:${this.facturas.__odataCount}</div>
                     </div>
                     <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas>
-                    <div class="grid fit6 cabecera itemsCenter">
+                    <div class="grid columnas cabecera">
                         <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Ingreso</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Expediente"}">Expte</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Hiscli"}">Documento</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Cabecera.Nombre"}">Nombre</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"cuit"}">CUIT</div>
-                        <div class="ordena" @click=${this.ordenar} .orden="${"IdPrestador"}">Prestador</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.prestado.nombre"}">Nombre Prestador</div>
-                        <div>Integracion</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"IdPrestador"}">Prestador</div>
+
+                        <div class="justify-self-center">Int</div>
                         <div>Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
-                        <div>Importe</div>
+                        <div class="justify-self-end">Importe</div>
                     </div>
-                    <div class=" rows">
+                    <div class="inner-grid  rows">
                         ${this.facturas.map((item) => {
                             return html`
-                                <div class="inner-grid fit6 datos itemsCenter bordeRow" .item="${item}" @click="${this.seleccionar}">
+                                <div class="inner-grid columnas datos  bordeRow" .item="${item}" @click="${this.seleccionar}">
                                     <div>${item.Id}</div>
                                     <div>${item.FechaIngreso ? new Date(item.FechaIngreso).toLocaleDateString() : ""}</div>
                                     <div>${item.Expediente_Bono.Expediente}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Hiscli}</div>
                                     <div>${item.Expediente_Bono.Cabecera.Nombre}</div>
                                     <div>${item.prestado.Cuit}</div>
-                                    <div>${item.IdPrestador}</div>
                                     <div>${item.prestado.nombre}</div>
-                                    <div>${item.Expediente_Bono.Cabecera.Evento == 4 ? "SI" : "NO"}</div>
-                                    <div>${item.SSS_TipoComprobantes.Nombre + " " + item.PuntoVenta.toString().padStart(4, "0") + "-" + item.NroComprobante.toString().padStart(8, "0")}</div>
+                                    <div>${item.IdPrestador}</div>
+
+                                    <div class="justify-self-center">${item.Expediente_Bono.Cabecera.Evento == 4 ? "SI" : "NO"}</div>
+                                    <div>
+                                        ${item.SSS_TipoComprobantes.Nombre.replace("FACTURA", "FC ").replace("RECIBO", "RC ") +
+                                        " " +
+                                        item.PuntoVenta.toString().padStart(4, "0") +
+                                        "-" +
+                                        item.NroComprobante.toString().padStart(8, "0")}
+                                    </div>
                                     <div>${item.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
-                                    <div>${item.Importe}</div>
+                                    <div class="justify-self-end">${item.Importe}</div>
                                 </div>
                             `;
                         })}
