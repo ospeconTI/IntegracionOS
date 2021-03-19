@@ -1,6 +1,6 @@
 /** @format */
 
-import { GET_SUCCESS, GET_ERROR, ADD_ERROR, ADD_SUCCESS, SET_SELECTED, UPDATE_ERROR, UPDATE_SUCCESS, UPDATE_ESTADO_SUCCESS, RECHAZAR_SUCCESS, APROBAR_SUCCESS} from "./actions";
+import { GET_SUCCESS, GET_ERROR, ADD_ERROR, ADD_SUCCESS, SET_SELECTED, UPDATE_ERROR, UPDATE_SUCCESS, UPDATE_ESTADO_SUCCESS, RECHAZAR_SUCCESS, APROBAR_SUCCESS } from "./actions";
 
 const initialState = {
     entities: null,
@@ -9,10 +9,12 @@ const initialState = {
     addTimeStamp: null,
     updateTimeStamp: null,
     updateEstadoTimeStamp: null,
+    errorTimeStamp: null,
+    errorMessage: null,
     selected: null,
     selectedTimeStamp: null,
     aprobarTimeStamp: null,
-    rechazarTimeStamp: null
+    rechazarTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -38,16 +40,48 @@ export const reducer = (state = initialState, action) => {
             newState.updateTimeStamp = new Date().getTime();
             newState.selected = action.payload.receive;
             break;
+
         case UPDATE_ESTADO_SUCCESS:
-            newState.updateEstadoTimeStamp = new Date().getTime();
+            switch (action.payload.receive.Id) {
+                case -1:
+                    newState.errorTimeStamp = new Date().getTime();
+                    newState.errorMessage = "La Factura que esta intentando cargar ya fue ingresada con anterioridad. Verifique los datos";
+                    break;
+                case -2:
+                    newState.errorTimeStamp = new Date().getTime();
+                    newState.errorMessage = "La factura que intenta modificar fue eliminada";
+                    break;
+                case -3:
+                    newState.errorTimeStamp = new Date().getTime();
+                    newState.errorMessage = "No se registran imagenes para esta factura. Refresque su navegador";
+                    break;
+                default:
+                    newState.updateEstadoTimeStamp = new Date().getTime();
+            }
             break;
         case SET_SELECTED:
             newState.selected = action.selected;
-            newState.selectedTimeStamp = new Date().getTime()
+            newState.selectedTimeStamp = new Date().getTime();
             break;
         case APROBAR_SUCCESS:
-                newState.aprobarTimeStamp = new Date().getTime();
-                break;
+            switch (action.payload.receive.Id) {
+                case -1:
+                    newState.errorTimeStamp = new Date().getTime();
+                    newState.errorMessage = "La Factura que esta intentando cargar ya fue ingresada con anterioridad. Verifique los datos";
+                    break;
+                case -2:
+                    newState.errorTimeStamp = new Date().getTime();
+                    newState.errorMessage = "La factura que intenta modificar fue eliminada";
+                    break;
+                case -3:
+                    newState.errorTimeStamp = new Date().getTime();
+                    newState.errorMessage = "No se registran imagenes para esta factura. Refresque su navegador";
+                    break;
+                default:
+                    newState.aprobarTimeStamp = new Date().getTime();
+                    newState.selected = action.payload.receive;
+            }
+            break;
         case RECHAZAR_SUCCESS:
             newState.rechazarTimeStamp = new Date().getTime();
 
