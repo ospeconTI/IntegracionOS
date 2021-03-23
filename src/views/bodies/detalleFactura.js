@@ -115,7 +115,15 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div>Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}</div> -->
                 </div>
                 <div class="grid column">
-                    <button btn3 id="volver" @click="${this.volver}">Volver</button>
+                    <button btn3 id="volver" @click="${this.volver}">Atras</button>
+                    <button
+                        style="display:${this.modo == "C" && (this.factura.IdFacturasPrestadoresEstado == 3 || this.factura.IdFacturasPrestadoresEstado == 7) ? "" : "none"}"
+                        btn3
+                        id="estadoAnterior"
+                        @click="${this.estadoAnterior}"
+                    >
+                        Pasar a estado Pendiente Aprobacion OS
+                    </button>
                     <button style="display:${this.modo == "C" ? "none" : ""}" btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
                     <button style="display:${this.modo == "C" ? "none" : ""}" btn1 id="rechazar" @click="${this.rechazar}">Rechazar</button>
 
@@ -374,6 +382,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
     devolver(e) {
         store.dispatch(cambioEstado(this.factura.Id, 1));
+    }
+    estadoAnterior(e) {
+        store.dispatch(cambioEstado(this.factura.Id, 2));
     }
 
     volver(e) {
