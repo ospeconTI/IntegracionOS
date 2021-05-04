@@ -22,6 +22,7 @@ import {
 import { facturasPrestadoresFetch, RechazarFacturaFetch } from "../fetchs";
 
 import { apiAdd, apiRequest, apiUpdate, apiAction, apiFunction } from "../api/actions";
+import { changed } from "../notifications/actions";
 
 export const get = ({ dispatch }) => (next) => (action) => {
     next(action);
@@ -87,4 +88,17 @@ export const rechazar = ({ dispatch, getState }) => (next) => (action) => {
     }
 };
 
-export const middleware = [get, add, update, processGet, processError, processAdd, processUpdate, updateEstado, aprobar, rechazar];
+export const rechazarSucces = ({ dispatch, getState }) => (next) => (action) => {
+    next(action);
+    if (action.type === RECHAZAR_SUCCESS) {
+        dispatch(changed(getState().facturasPrestadores.selected.Id));
+    }
+};
+export const aprobarSucces = ({ dispatch, getState }) => (next) => (action) => {
+    next(action);
+    if (action.type === APROBAR_SUCCESS) {
+        dispatch(changed(getState().facturasPrestadores.selected.Id));
+    }
+};
+
+export const middleware = [get, add, update, processGet, processError, processAdd, processUpdate, updateEstado, aprobar, rechazar, rechazarSucces, aprobarSucces];

@@ -26,6 +26,7 @@ import { lista, set } from "../periodo/actions";
 import { listaMensuales, set as setMensual } from "../periodosMensuales/actions";
 import { apiRequest, apiAction, apiFunction } from "../../redux/api/actions";
 import { loginFetch, logonFetch, recuperoFetch, cambiarPasswordFetch } from "../fetchs";
+import { connect } from "../notifications/actions";
 
 export const login = ({ dispatch }) => (next) => (action) => {
     next(action);
@@ -81,6 +82,13 @@ export const processLogin = ({ dispatch, getState }) => (next) => (action) => {
         } else {
             viewMode("main");
             dispatch(goTo("aprobacionFacturas"));
+
+            // genereo un id unico nombre de siststema+id de usuario+milisegundo actual
+            let id = "IntOS" + getState().autorizacion.usuario.Profiles[0].Perfil.Usuario + Date.now();
+
+            let usuario = getState().autorizacion.usuario.Profiles[0].Perfil.Usuario.substr(0, 2);
+
+            dispatch(connect(id, usuario));
         }
     }
 };

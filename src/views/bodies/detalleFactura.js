@@ -13,6 +13,7 @@ import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado } from
 import { SEARCH } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
+import { editing, closed } from "../../redux/notifications/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -401,6 +402,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         const motivosRechazo = this.shadowRoot.querySelector("#motivosRechazo");
         motivosRechazo.value = "-1";
         this.update();
+
+        store.dispatch(closed(this.factura.Id));
         store.dispatch(goHistoryPrev());
     }
     maxLength(e) {
@@ -420,6 +423,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             this.hidden = true;
             const isCurrentScreen = ["detalleFactura", "detalleFacturaC"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
+                store.dispatch(editing(this.factura.Id));
+
                 this.hidden = false;
                 if (state.screen.name == "detalleFactura") {
                     this.modo = "";

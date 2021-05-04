@@ -10,7 +10,7 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, setSelected } from "../../redux/facturasPrestadores/actions";
-import { SEARCH } from "../../../assets/icons/svgs";
+import { PERSON, SEARCH } from "../../../assets/icons/svgs";
 import { filtrosFacturas } from "../componentes/filtrosFacturas";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
@@ -20,12 +20,16 @@ const SCREEN = "screen.timeStamp";
 const FACTURAS = "facturasPrestadores.timeStamp";
 const ESTADOS = "facturasPrestadoresEstados.timeStamp";
 const FILTROTS = "filtro.timeStamp";
+const MY_NET = "notifications.myNetTimeStamp";
+const MESSAGE = "notifications.singleMessageTimeStamp";
 
-export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS)(LitElement) {
+export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS, MY_NET, MESSAGE)(LitElement) {
     constructor() {
         super();
         this.area = "body";
         this.estados = [];
+        this.myNet = [];
+        this.messages = [];
 
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
     }
@@ -78,15 +82,19 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             .cabecera {
                 background-color: white;
                 color: var(--color-azul-oscuro);
+                fill: var(--color-azul-oscuro);
+                stroke: var(--color-azul-oscuro);
                 font-size: 0.7rem;
                 font-weight: bold;
             }
 
             .datos {
+                position: relative;
                 background-color: white;
                 color: var(--color-azul-oscuro);
                 font-size: 0.7rem;
                 cursor: pointer;
+                min-height: 1.6rem;
             }
             .datos:hover {
                 background-color: var(--color-gris-claro);
@@ -127,8 +135,33 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             }
 
             .columnas {
-                grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr;
+                grid-template-columns: 0.5fr 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr;
                 padding: 0.3rem !important;
+            }
+            .myNet {
+                display: grid;
+                gap: -0.2rem;
+                grid-auto-flow: column;
+                align-items: center;
+                justify-items: start;
+                overflow-x: hidden;
+            }
+            .myNetNode {
+                place-content: center;
+                border-radius: 50%;
+                width: 1rem;
+                height: 1rem;
+                border: 2px solid var(--primary-color);
+                font-size: 0.5rem;
+            }
+
+            svg {
+                height: 1.3rem;
+                width: 1.3rem;
+            }
+
+            div[dirty] {
+                color: var(--color-gris);
             }
         `;
     }
@@ -142,6 +175,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                     </div>
                     <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas>
                     <div class="grid columnas cabecera">
+                        <div class="ordena">${PERSON}</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"Id"}">Orden</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaIngreso"}">Ingreso</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacturasPrestadores.Expediente_Bono.Expediente"}">Expte</div>
@@ -159,7 +193,16 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                     <div class="inner-grid  rows">
                         ${this.facturas.map((item) => {
                             return html`
-                                <div class="inner-grid columnas datos  bordeRow" .item="${item}" @click="${this.seleccionar}">
+                                <div class="inner-grid columnas datos bordeRow" .item="${item}" @click="${this.seleccionar}" ?dirty="${this.messages.find((e) => e.Document == item.Id)}">
+                                    <div class="myNet">
+                                        ${this.myNet
+                                            .filter((el) => {
+                                                return el.State.find((e) => e.Document == item.Id);
+                                            })
+                                            .map((el) => {
+                                                return html`<div class="myNetNode inner-grid">${el.Name}</div>`;
+                                            })}
+                                    </div>
                                     <div>${item.Id}</div>
                                     <div>${item.FechaIngreso ? new Date(item.FechaIngreso).toLocaleDateString() : ""}</div>
                                     <div>${item.Expediente_Bono.Expediente}</div>
@@ -254,6 +297,16 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                     count: true,
                 })
             );
+        }
+        if (name == MY_NET) {
+            this.myNet = state.notifications.myNet.filter((item) => {
+                return item.Id != state.notifications.myNetId;
+            });
+            this.update();
+        }
+        if (name == MESSAGE) {
+            this.messages.push(state.notifications.singleMessage);
+            this.update();
         }
     }
 
