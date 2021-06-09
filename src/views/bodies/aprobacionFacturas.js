@@ -9,11 +9,12 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getFacturas, setSelected } from "../../redux/facturasPrestadores/actions";
+import { get as getFacturas, getComplementaria, setSelected } from "../../redux/facturasPrestadores/actions";
 import { PERSON, SEARCH } from "../../../assets/icons/svgs";
 import { filtrosFacturas } from "../componentes/filtrosFacturas";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
+import { COPY } from "../../../assets/icons/svgs";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -135,7 +136,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             }
 
             .columnas {
-                grid-template-columns: 0.5fr 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr;
+                grid-template-columns: 0.5fr 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 1fr;
                 padding: 0.3rem !important;
             }
             .myNet {
@@ -153,6 +154,10 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                 height: 1rem;
                 border: 2px solid var(--primary-color);
                 font-size: 0.5rem;
+            }
+
+            .complementaria {
+                font-size: 0.7rem !important;
             }
 
             svg {
@@ -189,6 +194,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         <div>Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div class="justify-self-end">Importe</div>
+                        <div class="justify-self-center">${COPY}</div>
                     </div>
                     <div class="inner-grid  rows">
                         ${this.facturas.map((item) => {
@@ -222,6 +228,11 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                                     </div>
                                     <div>${item.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
                                     <div class="justify-self-end">${item.Importe}</div>
+                                    <div style="overflow: none" class="justify-self-end" .item=${item}>
+                                        ${item.IdFacturaPrestador
+                                            ? html`<button class="complementaria" btn3 id="btnComplementaria">${item.TipoComplementaria == "C" ? "Ver Orig" : "Ver Comp"}</button>`
+                                            : ""}
+                                    </div>
                                 </div>
                             `;
                         })}
@@ -233,21 +244,30 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
         }
     }
 
+    complementaria(e) {
+        if (e.currentTarget.item.IdFacturaComplementaria) {
+            return "<div class='myNetNode inner-grid'>" + e.currentTarget.item.IdFacturaComplementaria + "</div>";
+        }
+        return "";
+    }
     mostrarFiltros() {
         this.shadowRoot.querySelector("#filtros").isOpen = true;
     }
 
     seleccionar(e) {
-        store.dispatch(setSelected(e.currentTarget.item));
-        store.dispatch(goTo("detalleFactura"));
+        if (e.path[0].id != "btnComplementaria") {
+            store.dispatch(setSelected(e.currentTarget.item));
+            store.dispatch(goTo("detalleFactura"));
+        } else {
+            store.dispatch(getComplementaria(e.currentTarget.item.IdFacturaPrestador));
+        }
     }
 
     ordenar(e) {
         store.dispatch(
             getFacturas({
                 top: 100,
-                expand:
-                    "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value, // "IdFacturasPrestadoresEstado eq 2",
                 orderby: e.currentTarget.orden,
                 count: true,
@@ -290,8 +310,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             store.dispatch(
                 getFacturas({
                     top: 100,
-                    expand:
-                        "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                    expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id ",
                     count: true,

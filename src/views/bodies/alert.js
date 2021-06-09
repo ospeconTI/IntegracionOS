@@ -6,7 +6,8 @@ const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const ERROR_MESSAGES = "ui.error.messages";
 const FACTURA_ERROR = "facturasPrestadores.errorTimeStamp";
-export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR)(LitElement) {
+const PASAR_A_PENDIENTE_OS_ERROR = "facturasPrestadores.pasarAPendienteOSErrorTimeStamp";
+export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR, PASAR_A_PENDIENTE_OS_ERROR)(LitElement) {
     constructor() {
         super();
     }
@@ -30,6 +31,10 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR)
         }
         if (name == FACTURA_ERROR) {
             alert("ERROR :\n\n" + state.facturasPrestadores.errorMessage);
+        }
+
+        if (name == PASAR_A_PENDIENTE_OS_ERROR) {
+            alert("ERROR :\n\n" + state.facturasPrestadores.pasarAPendienteOSError);
         }
     }
 }

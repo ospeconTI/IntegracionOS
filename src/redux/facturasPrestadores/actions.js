@@ -28,16 +28,28 @@ export const SET_SELECTED = "[facturasPrestadores] SET_SELECTED";
 
 export const APROBAR = "[facturasPrestadores] APROBAR";
 export const RECHAZAR = "[facturasPrestadores] RECHAZAR";
+export const PASAR_A_PENDIENTE_OS = "[facturasPrestadores] PASARAPENDIENTEOS";
+export const PASAR_A_PENDIENTE_OS_SUCCESS = "[facturasPrestadores] PASARAPENDIENTEOS_SUCCESS";
+export const PASAR_A_PENDIENTE_OS_ERROR = "[facturasPrestadores] PASARAPENDIENTEOS_ERROR";
 
 export const APROBAR_SUCCESS = "[facturasPrestadores] APROBAR_SUCCESS";
 export const RECHAZAR_SUCCESS = "[facturasPrestadores] RECHAZAR_SUCCESS";
 export const CAMBIO = "[facturasPrestadores] CAMBIO";
+export const GET_COMPLEMENTARIA = "[facturasPrestadores] GET_COMPLEMENTARIA";
+export const GET_COMPLEMENTARIA_SUCCESS = "[facturasPrestadores] GET_COMPLEMENTARIA_SUCCESS";
+export const GET_COMPLEMENTARIA_ERROR = "[facturasPrestadores] GET_COMPLEMENTARIA_ERROR";
 
 export const get = (options) => ({
     type: GET,
     options: options,
 });
-
+export const getComplementaria = (id) => ({
+    type: GET_COMPLEMENTARIA,
+    options: {
+        filter: "Id eq " + id,
+        expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+    },
+});
 export const add = (entity) => ({
     type: ADD,
     entity: entity,
@@ -71,6 +83,11 @@ export const cambioEstado = (id, idFacturasPrestadoresEstado) => ({
 export const rechazar = (id, Motivo) => ({
     type: RECHAZAR,
     id: id,
-    estado: 7,
+    estado: ESTADO_FACTURA_RECHAZADA,
     motivo: Motivo,
+});
+
+export const pasarAPendienteOS = (id) => ({
+    type: PASAR_A_PENDIENTE_OS,
+    id: id,
 });

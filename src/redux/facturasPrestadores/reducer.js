@@ -1,6 +1,20 @@
 /** @format */
 
-import { GET_SUCCESS, GET_ERROR, ADD_ERROR, ADD_SUCCESS, SET_SELECTED, UPDATE_ERROR, UPDATE_SUCCESS, UPDATE_ESTADO_SUCCESS, RECHAZAR_SUCCESS, APROBAR_SUCCESS } from "./actions";
+import {
+    GET_SUCCESS,
+    GET_ERROR,
+    ADD_ERROR,
+    ADD_SUCCESS,
+    SET_SELECTED,
+    UPDATE_ERROR,
+    UPDATE_SUCCESS,
+    UPDATE_ESTADO_SUCCESS,
+    RECHAZAR_SUCCESS,
+    APROBAR_SUCCESS,
+    GET_COMPLEMENTARIA_SUCCESS,
+    PASAR_A_PENDIENTE_OS_SUCCESS,
+    PASAR_A_PENDIENTE_OS_ERROR,
+} from "./actions";
 
 const initialState = {
     entities: null,
@@ -15,6 +29,11 @@ const initialState = {
     selectedTimeStamp: null,
     aprobarTimeStamp: null,
     rechazarTimeStamp: null,
+    complementaria: null,
+    complementariaTimeStamp: null,
+    pasarAPendienteOSTimeStamp: null,
+    pasarAPendienteOSError: null,
+    pasarAPendienteOSErrorTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -85,6 +104,17 @@ export const reducer = (state = initialState, action) => {
         case RECHAZAR_SUCCESS:
             newState.rechazarTimeStamp = new Date().getTime();
 
+            break;
+        case GET_COMPLEMENTARIA_SUCCESS:
+            newState.complementaria = action.payload.receive[0];
+            newState.complementariaTimeStamp = new Date().getTime();
+            break;
+        case PASAR_A_PENDIENTE_OS_SUCCESS:
+            newState.pasarAPendienteOSTimeStamp = new Date().getTime();
+            break;
+        case PASAR_A_PENDIENTE_OS_ERROR:
+            newState.pasarAPendienteOSError = action.payload.receive.message;
+            newState.pasarAPendienteOSErrorTimeStamp = new Date().getTime();
             break;
     }
     return newState;

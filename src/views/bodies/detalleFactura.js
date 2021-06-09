@@ -9,11 +9,12 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado } from "../../redux/facturasPrestadores/actions";
+import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
 import { editing, closed } from "../../redux/notifications/actions";
+import _tipoComplementarias from "../../data/tipoComplementarias.json";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -24,7 +25,8 @@ const COMPROBANTES = "tipoComprobantes.timeStamp";
 const APROBADO = "facturasPrestadores.aprobarTimeStamp";
 const RECHAZADO = "facturasPrestadores.rechazarTimeStamp";
 const MOTIVOSRECHAZO = "facturasPrestadoresRechazos.timeStamp";
-export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO)(LitElement) {
+const PASAR_A_PENDIENTE_OS = "facturasPrestadores.pasarAPendienteOSTimeStamp";
+export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO, PASAR_A_PENDIENTE_OS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
@@ -112,6 +114,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div>Prestación: ${this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.Descripcion}</div>
                     <div>Estado: ${this.factura.FacturasPrestadoresEstados ? this.factura.FacturasPrestadoresEstados.Descripcion : ""}</div>
                     <div>${this.factura.IdMotivoRechazo ? "Motivo: " + this.factura.FacturasPrestadoresRechazos.Descripcion : ""}</div>
+                    <div .complementaria="${this.factura.IdFacturaPrestador}" @click="${this.complementaria}">
+                        ${this.factura.IdFacturaPrestador ? "Tipo: " + _tipoComplementarias[this.factura.TipoComplementaria] + " (" + this.factura.IdFacturaPrestador.toString() + ")" : ""}
+                    </div>
                     <!-- <div>Cantidad Autorizada: ${this.factura.Expediente_Bono.Cabecera.Detalle.Cantidad}</div>
                     <div>Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}</div> -->
                 </div>
@@ -247,6 +252,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
         return true;
     }
+
+    complementaria(e) {}
+
     esFechaEnPeriodo(fecha) {
         let periodo = this.factura.Expediente_Bono.Periodo.toString();
         let ultimosDias = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -354,16 +362,18 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
                 store.dispatch(
                     aprobar({
-                        Id: this.factura.Id,
-                        IdFacturasPrestadoresEstado: 3,
-                        IdTipoComprobante: parseInt(this.shadowRoot.querySelector("#tipo").value, 10),
-                        Fecha: this.shadowRoot.querySelector("#fecha").value,
-                        PuntoVenta: parseInt(this.shadowRoot.querySelector("#sucursal").value, 10),
-                        NroComprobante: parseInt(this.shadowRoot.querySelector("#numero").value, 10),
-                        CAE: this.shadowRoot.querySelector("#cae").value,
-                        VtoCAE: this.shadowRoot.querySelector("#vtoCae").value,
-                        Cantidad: parseInt(this.shadowRoot.querySelector("#cantidad").value, 10),
-                        Importe: new Number(this.shadowRoot.querySelector("#importe").value),
+                        FacturasPrestadores: {
+                            Id: this.factura.Id,
+                            IdFacturasPrestadoresEstado: 3,
+                            IdTipoComprobante: parseInt(this.shadowRoot.querySelector("#tipo").value, 10),
+                            Fecha: this.shadowRoot.querySelector("#fecha").value,
+                            PuntoVenta: parseInt(this.shadowRoot.querySelector("#sucursal").value, 10),
+                            NroComprobante: parseInt(this.shadowRoot.querySelector("#numero").value, 10),
+                            CAE: this.shadowRoot.querySelector("#cae").value,
+                            VtoCAE: this.shadowRoot.querySelector("#vtoCae").value,
+                            Cantidad: parseInt(this.shadowRoot.querySelector("#cantidad").value, 10),
+                            Importe: new Number(this.shadowRoot.querySelector("#importe").value),
+                        },
                     })
                 );
             } else {
@@ -385,15 +395,15 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         store.dispatch(cambioEstado(this.factura.Id, 1));
     }
     estadoAnterior(e) {
-        store.dispatch(cambioEstado(this.factura.Id, 2));
+        // store.dispatch(cambioEstado(this.factura.Id, 2));'
+        store.dispatch(pasarAPendienteOS(this.factura.Id));
     }
 
     volver(e) {
         store.dispatch(
             getFacturas({
                 top: 100,
-                expand:
-                    "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value,
                 orderby: " Id ",
                 count: true,
@@ -458,7 +468,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             this.update();
         }
 
-        if (name == APROBADO || name == RECHAZADO) {
+        if (name == APROBADO || name == RECHAZADO || name == PASAR_A_PENDIENTE_OS) {
             this.volver();
         }
 

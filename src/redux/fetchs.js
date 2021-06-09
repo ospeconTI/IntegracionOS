@@ -27,3 +27,5 @@ export const recuperoFetch = ODataEntity(expedienteOdataFactory, "PedirRecupero"
 export const cambiarPasswordFetch = ODataEntity(expedienteOdataFactory, "CambiarPassword");
 export const facturasPrestadoresRechazosFetch = ODataEntity(expedienteOdataFactory, "FacturasPrestadoresRechazos");
 export const RechazarFacturaFetch = ODataEntity(expedienteOdataFactory, "RechazarFactura");
+export const AprobarFacturaFetch = ODataEntity(expedienteOdataFactory, "AprobarFactura");
+export const PasarAPendienteOSFacturaFetch = ODataEntity(expedienteOdataFactory, "PasarAPendienteOS");
