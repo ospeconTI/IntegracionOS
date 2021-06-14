@@ -17,6 +17,9 @@ export const UPDATE = "[bonos] UPDATE";
 export const UPDATE_SUCCESS = "[bonos] UPDATE success";
 
 export const UPDATE_ERROR = "[bonos] UPDATE error";
+export const GENERAR_BONOS_PERIODO = "[bonos] GENERAR_BONOS_PERIODO";
+export const GENERAR_BONOS_PERIODO_SUCCESS = "[bonos] GENERAR_BONOS_PERIODO_SUCCESS";
+export const GENERAR_BONOS_PERIODO_ERROR = "[bonos] GENERAR_BONOS_PERIODO_SUCCESS";
 
 export const get = (options) => ({
     type: GET,
@@ -34,4 +37,11 @@ export const generar = (periodo, expedientes) => ({
 export const update = (entity) => ({
     type: UPDATE,
     entity: entity,
+});
+
+export const generarBonosPeriodo = (expediente, periodo, token) => ({
+    type: GENERAR_BONOS_PERIODO,
+    expediente: expediente,
+    periodo: periodo,
+    token: token,
 });

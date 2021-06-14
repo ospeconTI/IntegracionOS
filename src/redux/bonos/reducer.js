@@ -1,6 +1,6 @@
 /** @format */
 
-import { GET_SUCCESS, GET_ERROR, GENERAR_SUCCESS, GENERAR_ERROR, UPDATE_ERROR, UPDATE_SUCCESS } from "./actions";
+import { GET_SUCCESS, GET_ERROR, GENERAR_SUCCESS, GENERAR_ERROR, UPDATE_ERROR, UPDATE_SUCCESS, GENERAR_BONOS_PERIODO_SUCCESS } from "./actions";
 
 const initialState = {
     entities: null,
@@ -11,6 +11,8 @@ const initialState = {
     generarErrorTimeStamp: null,
     updateTimeStamp: null,
     updateErrorTimeStamp: null,
+    generarBonosPeriodo: null,
+    generarBonosPeriodoTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -38,6 +40,10 @@ export const reducer = (state = initialState, action) => {
             break;
         case UPDATE_ERROR:
             newState.updateErrorTimeStamp = new Date().getTime();
+            break;
+        case GENERAR_BONOS_PERIODO_SUCCESS:
+            newState.generarBonosPeriodo = action.payload.receive;
+            newState.generarBonosPeriodoTimeStamp = new Date().getTime();
             break;
     }
     return newState;

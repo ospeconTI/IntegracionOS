@@ -20,6 +20,7 @@ import { get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/
 import { lista, set } from "./redux/periodo/actions";
 import { listaMensuales, set as setMensual } from "./redux/periodosMensuales/actions";
 import { set as setFiltro } from "./redux/filtro/actions";
+import { listaPeriodosBono } from "./redux/periodosBono/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -52,6 +53,7 @@ periodos.forEach((element) => {
         periodosMensuales.push(element * 100 + i);
     }
 });
+
 store.dispatch(listaMensuales(periodosMensuales));
 const periodoMensualActual = actual * 100 + mesActual;
 store.dispatch(setMensual(periodoMensualActual));
@@ -71,6 +73,7 @@ if ("credentials" in navigator) {
     store.dispatch(goTo("login"));
 }
 
+store.dispatch(listaPeriodosBono(4));
 store.dispatch(getDocumentacion({ filter: "Prestador" }));
 export default {
     login: (email, password) => {
