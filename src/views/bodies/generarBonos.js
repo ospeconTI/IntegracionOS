@@ -10,7 +10,7 @@ import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, limpiar } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
 import { traeParaBonos } from "../../redux/cabecera/actions";
-import { generar } from "../../redux/bonos/actions";
+import { generarBonosPeriodo } from "../../redux/bonos/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -190,7 +190,7 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
             Expedientes.push(expediente.item.Numero);
         });
 
-        store.dispatch(generar(periodo, Expedientes));
+        store.dispatch(generarBonosPeriodo(periodo, Expedientes));
     }
 
     stateChanged(state, name) {

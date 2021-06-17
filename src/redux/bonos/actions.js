@@ -39,9 +39,12 @@ export const update = (entity) => ({
     entity: entity,
 });
 
-export const generarBonosPeriodo = (expediente, periodo, token) => ({
+export const generarBonosPeriodo = (periodo, expedientes) => ({
     type: GENERAR_BONOS_PERIODO,
-    expediente: expediente,
-    periodo: periodo,
-    token: token,
+    body: {
+        GenerarBonoDTO: {
+            Expedientes: expedientes,
+            Periodo: periodo,
+        },
+    },
 });

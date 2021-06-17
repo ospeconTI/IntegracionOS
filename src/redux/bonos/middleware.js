@@ -106,7 +106,7 @@ export const generarBonosPeriodo =
     (action) => {
         next(action);
         if (action.type === GENERAR_BONOS_PERIODO) {
-            dispatch(apiAdd(generaBonosPeriodoFetch, action.entity, GENERAR_BONOS_PERIODO_SUCCESS, GENERAR_BONOS_PERIODO_ERROR));
+            dispatch(apiAction(generaBonosPeriodoFetch, action.body, null, null, GENERAR_BONOS_PERIODO_SUCCESS, GENERAR_BONOS_PERIODO_ERROR));
         }
     };
 
