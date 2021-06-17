@@ -1,6 +1,6 @@
 /** @format */
 
-import { GET_SUCCESS, GET_ERROR, SET_SELECTED } from "./actions";
+import { GET_SUCCESS, GET_ERROR, SET_SELECTED, TRAE_PARA_BONOS_SUCCESS } from "./actions";
 
 const initialState = {
     entities: null,
@@ -8,6 +8,8 @@ const initialState = {
     errorTimeStamp: null,
     selectedTimeStamp: null,
     selected: null,
+    paraBonos: null,
+    paraBonosTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -30,6 +32,9 @@ export const reducer = (state = initialState, action) => {
             newState.selectedTimeStamp = new Date().getTime();
             newState.selected = action.selected;
             break;
+        case TRAE_PARA_BONOS_SUCCESS:
+            newState.paraBonos = action.payload.receive;
+            newState.paraBonosTimeStamp = new Date().getTime();
     }
     return newState;
 };

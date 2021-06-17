@@ -9,17 +9,22 @@ import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, limpiar } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
+import { traeParaBonos } from "../../redux/cabecera/actions";
+import { generar } from "../../redux/bonos/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const LISTARPERIODOSBONOS = "periodosBono.listaTimeStamp";
+const EXPEDIENTES = "cabecera.paraBonosTimeStamp";
 
-export class generarBonos extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, LISTARPERIODOSBONOS)(LitElement) {
+export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPERIODOSBONOS, EXPEDIENTES)(LitElement) {
     constructor() {
         super();
         this.area = "body";
         this.estados = [];
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString().padStart(2, "0");
+        this.periodos = [];
+        this.expedientes = [];
     }
     static get styles() {
         return css`
@@ -67,67 +72,125 @@ export class generarBonos extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN,
                 padding: 0.3rem;
                 border-radius: 4px;
             }
+
+            .option-input {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                -o-appearance: none;
+                appearance: none;
+                position: relative;
+                top: 13.33333px;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                height: 2rem;
+                width: 2rem;
+                transition: all 0.15s ease-out 0s;
+                background: #cbd1d8;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                display: inline-block;
+                margin-right: 0.5rem;
+                outline: none;
+                position: relative;
+                z-index: 1000;
+            }
+            .option-input:hover {
+                background: #9faab7;
+            }
+            .option-input:checked {
+                background: var(--primary-color);
+            }
+            .option-input:checked::before {
+                height: 2rem;
+                width: 2rem;
+                position: absolute;
+                content: "✔";
+                display: inline-block;
+                font-size: 26.66667px;
+                text-align: center;
+                line-height: 2rem;
+            }
+            .option-input:checked::after {
+                -webkit-animation: click-wave 0.65s;
+                -moz-animation: click-wave 0.65s;
+                animation: click-wave 0.65s;
+                background: var(--primary-color);
+                content: "";
+                display: block;
+                position: relative;
+                z-index: 100;
+            }
+            .option-input.radio {
+                border-radius: 50%;
+            }
+            .option-input.radio::after {
+                border-radius: 50%;
+            }
         `;
     }
     render() {
-        if (this.facturas) {
-            return html`
-                <div class="grid row">
-                    <div class="grid column start">
-                        <div class="select">
-                            <label>Período</label>
-                            <select id="periodo">
-                                ${this.periodos.map((periodo) => {
-                                    return html` <option value=${periodo}>${periodo}</option> `;
-                                })}
-                            </select>
-                        </div>
-                        <button btn1 @click="${this.buscar}">Ver</button>
-                    </div>
-                    <div class="grid column start">
-                        <!-- <div class="grid column start">
-                        <div class="input">
-                            <label>Busqueda por Expediente</label>
-                            <input type="text" id="search" autocomplete="off" />
-                        </div>
-                        <button btn3 @click="${this.filtrar}">${SEARCH}</button>
-                    </div> -->
-
-                        <d class="grid">
-                            ${this.facturas.map((item) => {
-                                return html`
-                                    <div class="grid row tarjeta">
-                                        <div class="grid column start">
-                                            <div>Expediente:</div>
-                                            <div class="primaryColorInvert">${item.Expediente_Bono.Expediente}</div>
-                                            <div>Factura:</div>
-                                            <div class="primaryColorInvert">
-                                                ${item.SSS_TipoComprobantes.Nombre + " " + item.PuntoVenta.toString().padStart(4, "0") + "-" + item.NroComprobante.toString().padStart(8, "0")}
-                                            </div>
-                                            <div class="primaryColor">${item.TipoComplementaria == "C" ? "COMPLEMENTARIA" : ""}</div>
-                                        </div>
-                                        <div class="sublabel">Beneficiario: ${item.Expediente_Bono.Cabecera.Nombre + " DNI " + item.Expediente_Bono.Cabecera.Hiscli}</div>
-                                        <div class="sublabel">Prestación:${item.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.Descripcion + "  Cantidad: " + item.Cantidad}</div>
-                                        <div class="sublabel">Fecha:${new Date(item.Fecha).toLocaleDateString()}</div>
-                                        <div class="sublabel">Perído:${item.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
-                                        <div class="sublabel">Importe:${item.Importe}</div>
-                                        <div class="sublabel">
-                                            Estado:${item.FacturasPrestadoresEstados.Descripcion + (item.FacturasPrestadoresRechazos ? "-" + item.FacturasPrestadoresRechazos.Descripcion : "")}
-                                        </div>
-
-                                        ${item.FacturasPrestadoresImagenes.map((imagen) => {
-                                            return html` <div><a href="${imagen.Url}" target="_blank">${imagen.Documentacion.Descripcion}</a></div> `;
-                                        })}
-                                    </div>
-                                `;
+        return html`
+            <div class="grid row start">
+                <div class="grid column start">
+                    <div class="select">
+                        <label>Período</label>
+                        <select id="periodo">
+                            ${this.periodos.map((periodo) => {
+                                return html` <option value=${periodo}>${periodo}</option> `;
                             })}
-                        </d>
+                        </select>
                     </div>
+                    <div class="select">
+                        <label>Búsqueda por</label>
+                        <select id="criterio">
+                            <option value="E">Expediente</option>
+                            <option value="D">DNI</option>
+                            <option value="P">Prestador</option>
+                        </select>
+                    </div>
+                    <div class="input">
+                        <label>Número</label>
+                        <input type="number" id="valor" />
+                    </div>
+                    <button btn1 @click="${this.buscar}">Consultar</button>
                 </div>
-            `;
-        } else {
-            return html`<h3>Sin Datos</h3>`;
-        }
+            </div>
+
+            <div class="grid">
+                ${this.expedientes.map((item) => {
+                    return html`
+                        <div class="grid row tarjeta">
+                            <div class="grid fit">
+                                <div class="grid column start">
+                                    <div>Expediente:</div>
+                                    <div class="primaryColorInvert">${item.Numero}</div>
+                                    <div>Fecha:${new Date(item.Fecha).toLocaleDateString()}</div>
+                                </div>
+                                <div class="justify-self-center"><input type="checkbox" marca class="option-input checkbox" .item="${item}" /></div>
+                            </div>
+                            <div class="sublabel">Beneficiario:${item.Nombre + " (" + item.Obrasoc + ") DNI " + item.Hiscli}</div>
+                            <div class="sublabel">Prestacion:${item.Detalle.SSS_Prestaciones.Descripcion}</div>
+                            <div class="sublabel">Desde ${item.Detalle.Periodo_Desde + " hasta " + item.Detalle.Periodo_Hasta}</div>
+                        </div>
+                    `;
+                })}
+                <button btn1 class="justify-self-center" @click="${this.generar}">Generar Bonos</button>
+            </div>
+        `;
+    }
+
+    generar() {
+        let marcados = [...this.shadowRoot.querySelectorAll("input[marca]:checked")];
+        const periodo = this.shadowRoot.querySelector("#periodo").value;
+        let Expedientes = [];
+        marcados.forEach((expediente) => {
+            Expedientes.push(expediente.item.Numero);
+        });
+
+        store.dispatch(generar(periodo, Expedientes));
     }
 
     stateChanged(state, name) {
@@ -140,27 +203,38 @@ export class generarBonos extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN,
             const isCurrentScreen = ["generarBonos"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
-                store.dispatch(limpiar());
             }
             this.update();
         }
         if (name == LISTARPERIODOSBONOS) {
-            this.periodos = state.periodosBonos.entities;
+            this.periodos = state.periodosBono.entities;
+            this.update();
+        }
+
+        if (name == EXPEDIENTES) {
+            this.expedientes = state.cabecera.paraBonos;
             this.update();
         }
     }
 
     buscar(e) {
-        this.periodoActual = this.shadowRoot.querySelector("#search").value;
-        const estado = this.shadowRoot.querySelector("#estados");
-        const filterEstado = estado.value == -1 ? "" : " and IdFacturasPrestadoresEstado eq " + estado.value;
-        store.dispatch(
-            getFacturas({
-                expand: "FacturasPrestadoresRechazos,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-                filter: "IdPrestador eq " + store.getState().prestador.numero + " and Expediente_Bono/Periodo eq " + this.periodoActual + filterEstado,
-                orderby: "NroComprobante desc",
-            })
-        );
+        const periodo = this.shadowRoot.querySelector("#periodo").value;
+        const criterio = this.shadowRoot.querySelector("#criterio").value;
+        const valor = this.shadowRoot.querySelector("#valor").value;
+        let filtro = "";
+        switch (criterio) {
+            case "D":
+                filtro = "Hiscli eq ";
+                break;
+            case "E":
+                filtro = "Numero eq ";
+                break;
+            case "P":
+                filtro = "Prestador eq ";
+        }
+        filtro += valor;
+
+        store.dispatch(traeParaBonos(periodo, filtro));
     }
 
     static get properties() {
