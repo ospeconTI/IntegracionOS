@@ -46,6 +46,6 @@ export const traeParaBonos = (periodo, filtro) => ({
             periodo +
             ") and ( Evento eq 4 or Evento eq 22) and " +
             filtro,
-        expand: "Detalle($expand=SSS_Prestaciones)",
+        expand: "prestado,Detalle($expand=SSS_Prestaciones)",
     },
 });

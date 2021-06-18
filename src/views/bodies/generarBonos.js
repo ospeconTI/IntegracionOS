@@ -16,8 +16,9 @@ const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const LISTARPERIODOSBONOS = "periodosBono.listaTimeStamp";
 const EXPEDIENTES = "cabecera.paraBonosTimeStamp";
+const BONOS_GENERADOS = "bonos.generarBonosPeriodoTimeStamp";
 
-export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPERIODOSBONOS, EXPEDIENTES)(LitElement) {
+export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPERIODOSBONOS, EXPEDIENTES, BONOS_GENERADOS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
@@ -25,6 +26,9 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString().padStart(2, "0");
         this.periodos = [];
         this.expedientes = [];
+        this.mostrarGeneracion = false;
+        this.bonos = [];
+        this.generarHidden = true;
     }
     static get styles() {
         return css`
@@ -43,6 +47,9 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                 padding: 1vw;
             }
 
+            *[hidden] {
+                display: none !important;
+            }
             :host([hidden]) {
                 display: none;
             }
@@ -121,13 +128,27 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                 content: "";
                 display: block;
                 position: relative;
-                z-index: 100;
+                z-index: 10;
             }
             .option-input.radio {
                 border-radius: 50%;
             }
             .option-input.radio::after {
                 border-radius: 50%;
+            }
+            #resultado {
+                position: absolute;
+                height: 80vh;
+                width: 80vw;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1000;
+                overflow-y: auto;
+                border-radius: 1rem;
+                box-shadow: var(--shadow-elevation-3-box);
+                align-items: flex-start;
+                padding: 1rem;
             }
         `;
     }
@@ -173,13 +194,47 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                             </div>
                             <div class="sublabel">Beneficiario:${item.Nombre + " (" + item.Obrasoc + ") DNI " + item.Hiscli}</div>
                             <div class="sublabel">Prestacion:${item.Detalle.SSS_Prestaciones.Descripcion}</div>
+                            <div class="sublabel">Prestador:${item.prestado.nombre}</div>
                             <div class="sublabel">Desde ${item.Detalle.Periodo_Desde + " hasta " + item.Detalle.Periodo_Hasta}</div>
                         </div>
                     `;
                 })}
-                <button btn1 class="justify-self-center" @click="${this.generar}">Generar Bonos</button>
+                <button ?hidden="${this.generarHidden}" btn1 class="justify-self-center" @click="${this.generar}">Generar Bonos</button>
             </div>
+            ${this.modal()}
         `;
+    }
+
+    modal() {
+        if (this.bonos.length > 0) {
+            return html` <div id="resultado" ?hidden="${!this.mostrarGeneracion}" class="grid row tarjeta">
+                <div class="grid fit">
+                    <h3>Resultado de la Generación del período:${this.bonos[0].Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</h3>
+                    <button btn2 @click="${this.cerrarResultado}" class="end">Cerrar</button>
+                </div>
+                ${this.bonos.map((item) => {
+                    return html` <div class="grid fit">
+                        <div>Expediente: ${item.Expediente}</div>
+                        <div>Estado: ${item.Estado}</div>
+                        <div>Resultado: ${item.Resultado}</div>
+                    </div>`;
+                })}
+            </div>`;
+        } else {
+            return html` <div id="resultado" ?hidden="${!this.mostrarGeneracion}" class="grid row tarjeta">
+                <div class="grid fit">
+                    <h3>No se obtuvieron resultados</h3>
+                    <button btn2 @click="${this.cerrarResultado}" class="end">Cerrar</button>
+                </div>
+            </div>`;
+        }
+    }
+
+    cerrarResultado() {
+        this.mostrarGeneracion = false;
+        this.expedientes = [];
+        this.generarHidden = true;
+        this.update();
     }
 
     generar() {
@@ -213,6 +268,16 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
 
         if (name == EXPEDIENTES) {
             this.expedientes = state.cabecera.paraBonos;
+            if (this.expedientes.length > 0) {
+                this.generarHidden = false;
+            }
+
+            this.update();
+        }
+
+        if (name == BONOS_GENERADOS) {
+            this.bonos = state.bonos.generarBonosPeriodo;
+            this.mostrarGeneracion = true;
             this.update();
         }
     }
