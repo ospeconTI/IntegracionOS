@@ -222,7 +222,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
                         <div class="input">
                             <label>C.A.E.</label>
-                            <input ?disabled="${this.modo == "C" ? true : false}" type="text" id="cae" autocomplete="off" maxlength="14" @input=${this.maxLength} .value="${this.factura.CAE}" />
+                            <input ?disabled="${this.modo == "C" ? true : false}" type="number" id="cae" autocomplete="off" maxlength="14" @input=${this.maxLength} .value="${this.factura.CAE}" />
                         </div>
                         <div class="input">
                             <label>Vencimiento C.A.E.</label>
@@ -469,7 +469,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
 
         if (name == APROBADO || name == RECHAZADO || name == PASAR_A_PENDIENTE_OS) {
-            this.volver();
+            if (state.facturasPrestadores.selected != -1) this.volver();
         }
 
         if (name == MOTIVOSRECHAZO) {

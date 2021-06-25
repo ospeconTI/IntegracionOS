@@ -183,7 +183,11 @@ export const aprobarSuccess =
     (action) => {
         next(action);
         if (action.type === APROBAR_SUCCESS) {
-            dispatch(changed(getState().facturasPrestadores.selected.Id));
+            if (action.payload.receive != -1) {
+                dispatch(changed(getState().facturasPrestadores.selected.Id));
+            } else {
+                alert("Factura ya Existente");
+            }
         }
     };
 

@@ -94,8 +94,8 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                 height: 2rem;
                 width: 2rem;
                 transition: all 0.15s ease-out 0s;
-                background: #cbd1d8;
-                border: none;
+                background: white;
+                border: 2px solid var(--primary-color);
                 color: #fff;
                 cursor: pointer;
                 display: inline-block;
@@ -103,6 +103,7 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                 outline: none;
                 position: relative;
                 z-index: 1000;
+                border-radius: 0.6rem;
             }
             .option-input:hover {
                 background: #9faab7;
@@ -116,7 +117,7 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                 position: absolute;
                 content: "✔";
                 display: inline-block;
-                font-size: 26.66667px;
+                font-size: 1.7rem;
                 text-align: center;
                 line-height: 2rem;
             }
