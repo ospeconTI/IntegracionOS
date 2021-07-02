@@ -321,6 +321,10 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             errores.push({ campo: "CAE", mensaje: "Debe tener 14 digitos" });
         }
 
+        if (cae.value <= 71000000000000) {
+            errores.push({ campo: "CAE", mensaje: "Debe ingresar un CAE válido" });
+        }
+
         if (vtoCae.value == "") {
             errores.push({ campo: "Vencimiento CAE", mensaje: "No puede ser vacío" });
         } else {
@@ -337,6 +341,19 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                 campo: "Cantidad",
                 mensaje: "No puede ser vacío",
             });
+        }
+        if (!this.factura.Expediente_Bono.Cabecera.Detalle.sesiones) {
+            if (this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones) {
+                const medida = store.getState().medidas.entities.find((m) => m.Id == this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.IdMedida);
+                if (medida) {
+                    if (medida.Desde > cantidad.value || medida.Hasta < cantidad.value) {
+                        errores.push({
+                            campo: "Cantidad",
+                            mensaje: "Fuera del rango permitido (" + medida.Desde + " a " + medida.Hasta + ")",
+                        });
+                    }
+                }
+            }
         }
 
         return errores.length == 0 ? null : errores;

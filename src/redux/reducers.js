@@ -19,6 +19,7 @@ import { reducer as filtroReducer } from "./filtro/reducer";
 import { reducer as facturasPrestadoresRechazosReducer } from "./facturasPrestadoresRechazos/reducer";
 import { reducer as notifications } from "./notifications/reducer";
 import { reducer as periodosBono } from "./periodosBono/reducer";
+import { reducer as medidasReducer } from "./medidas/reducer";
 
 export const rootReducer = (state = {}, action) => {
     return {
@@ -41,5 +42,6 @@ export const rootReducer = (state = {}, action) => {
         facturasPrestadoresRechazos: facturasPrestadoresRechazosReducer(state.facturasPrestadoresRechazos, action),
         notifications: notifications(state.notifications, action),
         periodosBono: periodosBono(state.periodosBono, action),
+        medidas: medidasReducer(state.medidas, action),
     };
 };

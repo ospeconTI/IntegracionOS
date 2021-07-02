@@ -21,6 +21,7 @@ import { lista, set } from "./redux/periodo/actions";
 import { listaMensuales, set as setMensual } from "./redux/periodosMensuales/actions";
 import { set as setFiltro } from "./redux/filtro/actions";
 import { listaPeriodosBono } from "./redux/periodosBono/actions";
+import { get as getMedidas } from "./redux/medidas/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -32,6 +33,7 @@ store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
 
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
+store.dispatch(getMedidas({}));
 
 let actual = new Date();
 let mesActual = actual.getMonth() + 1;
