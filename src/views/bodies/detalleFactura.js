@@ -343,7 +343,6 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             });
         }
 
-        //presentacion
         if (this.factura.Expediente_Bono.Cabecera.Detalle.IdSSSPrestacion == 95) {
             if (this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones) {
                 const medida = store.getState().medidas.entities.find((m) => m.Id == this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.IdMedida);

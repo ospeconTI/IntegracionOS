@@ -23,6 +23,7 @@ import { stepsComponent } from "../views/componentes/steps";
 import { goTo } from "../redux/routing/actions";
 import { detalleFactura } from "./bodies/detalleFactura";
 import { generarBonos } from "./bodies/generarBonos";
+import { presentacionSSSBody } from "./bodies/PresentacionSSS";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -80,6 +81,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, SCREEN, SELECTION)
             <aprobacion-facturas class="body" id="aprobacionFacturas"></aprobacion-facturas>
             <detalle-factura class="body"></detalle-factura>
             <generar-bonos class="body"></generar-bonos>
+            <presentacionsss-body></presentacionsss-body>
         `;
     }
 
