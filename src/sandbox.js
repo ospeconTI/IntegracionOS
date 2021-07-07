@@ -17,11 +17,13 @@ import { get as getTipoComprobantes } from "./redux/tipoComprobantes/actions";
 import { get as getDocumentacion } from "./redux/documentacion/actions";
 import { get as getFacturasEstados } from "./redux/facturasPrestadoresEstados/actions";
 import { get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/actions";
+import { get as getPesentacionesCabecera } from "./redux/presentacionesCabecera/actions";
 import { lista, set } from "./redux/periodo/actions";
 import { listaMensuales, set as setMensual } from "./redux/periodosMensuales/actions";
 import { set as setFiltro } from "./redux/filtro/actions";
 import { listaPeriodosBono } from "./redux/periodosBono/actions";
 import { get as getMedidas } from "./redux/medidas/actions";
+import { lista as listaPeriodosPresentacion } from "./redux/periodosPresentaciones/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -33,6 +35,7 @@ store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
 
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
+store.dispatch(getPesentacionesCabecera({ top: 20, orderby: "Id" }));
 store.dispatch(getMedidas({}));
 
 let actual = new Date();
@@ -59,6 +62,15 @@ periodos.forEach((element) => {
 store.dispatch(listaMensuales(periodosMensuales));
 const periodoMensualActual = actual * 100 + mesActual;
 store.dispatch(setMensual(periodoMensualActual));
+
+let fechaDesde = new Date();
+fechaDesde.setMonth(fechaDesde.getMonth() - 1);
+let mesesPresentacion = [];
+for (let i = 1; i <= 6; i++) {
+    mesesPresentacion[i] = fechaDesde.getFullYear() * 100 + (fechaDesde.getMonth() + 1);
+    fechaDesde.setMonth(fechaDesde.getMonth() + 1);
+}
+store.dispatch(listaPeriodosPresentacion(mesesPresentacion));
 
 if ("credentials" in navigator) {
     navigator.credentials

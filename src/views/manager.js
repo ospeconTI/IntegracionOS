@@ -19,6 +19,7 @@ import { SpinnerLoading } from "./componentes/spinner";
 import { consultarFacturas } from "./bodies/consultarFacturas";
 import { aprobacionFacturas } from "./bodies/aprobacionFacturas";
 import { stepsComponent } from "../views/componentes/steps";
+import { presentacionesCabecera } from "./bodies/presentacionesCabecera";
 
 import { goTo } from "../redux/routing/actions";
 import { detalleFactura } from "./bodies/detalleFactura";
@@ -80,6 +81,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, SCREEN, SELECTION)
             <aprobacion-facturas class="body" id="aprobacionFacturas"></aprobacion-facturas>
             <detalle-factura class="body"></detalle-factura>
             <generar-bonos class="body"></generar-bonos>
+            <presentaciones-cabecera class="body" id="presentacionesCabecera"></presentaciones-cabecera>
         `;
     }
 

@@ -31,3 +31,4 @@ export const AprobarFacturaFetch = ODataEntity(expedienteOdataFactory, "AprobarF
 export const PasarAPendienteOSFacturaFetch = ODataEntity(expedienteOdataFactory, "PasarAPendienteOS");
 export const generaBonosPeriodoFetch = ODataEntity(expedienteOdataFactory, "GenerarBonosPeriodo");
 export const medidasFetch = ODataEntity(expedienteOdataFactory, "SSS_Medidas");
+export const presentacionesCabeceraFetch = ODataEntity(expedienteOdataFactory, "PresentacionSSS");

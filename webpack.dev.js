@@ -20,8 +20,8 @@ module.exports = merge(common, {
     },
     plugins: [
         new webpack.DefinePlugin({
-            SERVICE_URL: JSON.stringify("http://200.80.227.180/PromocionSocial"),
-            SERVICE_URL: JSON.stringify("http://localhost/PromocionSocial"),
+            SERVICE_URL: JSON.stringify("http://200.80.227.180/promocionsocial"),
+            SERVICE_URL: JSON.stringify("http://localhost/promocionsocial"),
             ID_TIPO_DOCUMENTO_FACTURA: JSON.stringify("7"),
             ESTADO_FACTURA_PRESENTADA: JSON.stringify("2"),
             ESTADO_FACTURA_RECHAZADA: JSON.stringify("7"),

@@ -140,6 +140,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 <div class="menuItem seleccionado" @click=${this.click} .option=${"aprobacionFacturas"}>Aprobación de Facturas</div>
                 <div class="menuItem" @click=${this.click} .option=${"consultarFacturas"}>Consultar Facturas</div>
                 <div class="menuItem" @click=${this.click} .option=${"generarBonos"}>Generar Bonos</div>
+                <div class="menuItem" @click=${this.click} .option=${"presentacionesCabecera"}>Presentaciones</div>
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
         `;

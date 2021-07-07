@@ -105,4 +105,25 @@ export const button = css`
         cursor: not-allowed;
         pointer-events: none;
     }
+    button[btn4] {
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+        grid-gap: 0.1rem;
+        cursor: pointer;
+        color: var(--primary-color);
+        fill: var(--primary-color);
+        stroke: var(--primary-color);
+        background-color: transparent;
+        font-size: var(--font-bajada-size);
+        font-weight: var(--font-bajada-weight);
+        border-radius: 50%;
+        padding: 0.1rem;
+        box-shadow: 0 3px 6px 0 var(--orange-5);
+        transition-duration: 0.4s;
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        border: none;
+        outline: none;
+    }
 `;
