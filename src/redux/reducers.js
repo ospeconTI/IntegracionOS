@@ -20,6 +20,8 @@ import { reducer as facturasPrestadoresRechazosReducer } from "./facturasPrestad
 import { reducer as notifications } from "./notifications/reducer";
 import { reducer as periodosBono } from "./periodosBono/reducer";
 import { reducer as medidasReducer } from "./medidas/reducer";
+import { reducer as presentacionReducer } from "./presentacionSSS/reducer";
+import { reducer as facturasPrestadoresLogReducer } from "./facturasPrestadoresLog/reducer";
 
 export const rootReducer = (state = {}, action) => {
     return {
@@ -43,5 +45,7 @@ export const rootReducer = (state = {}, action) => {
         notifications: notifications(state.notifications, action),
         periodosBono: periodosBono(state.periodosBono, action),
         medidas: medidasReducer(state.medidas, action),
+        presentacionSSS: presentacionReducer(state.presentacionSSS, action),
+        facturasPrestadoresLog: facturasPrestadoresLogReducer(state.facturasPrestadoresLog, action),
     };
 };

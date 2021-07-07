@@ -10,10 +10,11 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, setSelected } from "../../redux/facturasPrestadores/actions";
-import { SEARCH } from "../../../assets/icons/svgs";
+import { SEARCH, TIMELINE } from "../../../assets/icons/svgs";
 import { filtrosFacturas } from "../componentes/filtrosFacturas";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
+import { get as getLog } from "../../redux/facturasPrestadoresLog/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -124,8 +125,10 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
             }
 
             .columnas {
-                grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 2fr;
+                grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 2fr 0.5fr;
                 padding: 0.3rem !important;
+            }
+            .log {
             }
         `;
     }
@@ -154,7 +157,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div class="justify-self-end">Importe</div>
                         <div>Estado</div>
-                        <!-- <div>Rechazo</div> -->
+                        <div>Log</div>
                     </div>
                     <div class="inner-grid rows">
                         ${this.facturas.map((item) => {
@@ -185,7 +188,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                                     <div>${item.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
                                     <div class="justify-self-end">${item.Importe}</div>
                                     <div>${item.FacturasPrestadoresEstados.Descripcion}</div>
-                                    <!-- <div>${item.IdMotivoRechazo ? item.FacturasPrestadoresRechazos.Descripcion : ""}</div> -->
+                                    <div id="timeline" .item="${item}">${TIMELINE}</div>
                                 </div>
                             `;
                         })}
@@ -202,16 +205,20 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
     }
 
     seleccionar(e) {
-        store.dispatch(setSelected(e.currentTarget.item));
-        store.dispatch(goTo("detalleFacturaC"));
+        const clickOnTimeline = e.path.find((control) => control.id == "timeline");
+        if (clickOnTimeline) {
+            store.dispatch(getLog({ filter: "IdFacturasPrestadores eq " + e.currentTarget.item.Id, orderby: "Fecha desc" }));
+        } else {
+            store.dispatch(setSelected(e.currentTarget.item));
+            store.dispatch(goTo("detalleFacturaC"));
+        }
     }
 
     ordenar(e) {
         store.dispatch(
             getFacturas({
                 top: 100,
-                expand:
-                    "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value,
                 orderby: e.currentTarget.orden,
             })
@@ -251,8 +258,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
             store.dispatch(
                 getFacturas({
                     top: 100,
-                    expand:
-                        "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+                    expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id ",
                     count: true,

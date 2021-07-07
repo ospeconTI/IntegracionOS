@@ -10,11 +10,12 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS } from "../../redux/facturasPrestadores/actions";
-import { SEARCH } from "../../../assets/icons/svgs";
+import { SEARCH, TIMELINE } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
 import { editing, closed } from "../../redux/notifications/actions";
 import _tipoComplementarias from "../../data/tipoComplementarias.json";
+import { get as getLog } from "../../redux/facturasPrestadoresLog/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -117,8 +118,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div .complementaria="${this.factura.IdFacturaPrestador}" @click="${this.complementaria}">
                         ${this.factura.IdFacturaPrestador ? "Tipo: " + _tipoComplementarias[this.factura.TipoComplementaria] + " (" + this.factura.IdFacturaPrestador.toString() + ")" : ""}
                     </div>
-                    <!-- <div>Cantidad Autorizada: ${this.factura.Expediente_Bono.Cabecera.Detalle.Cantidad}</div>
-                    <div>Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}</div> -->
+                    <button btn3 @click="${this.verLogs}" class="justify-self-end">${TIMELINE} Ver log</button>
                 </div>
                 <div class="grid column">
                     <button btn3 id="volver" @click="${this.volver}">Atras</button>
@@ -237,6 +237,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             `;
         }
     }
+    verLogs(e) {
+        store.dispatch(getLog({ filter: "IdFacturasPrestadores eq " + this.factura.Id, orderby: "Fecha desc" }));
+    }
     esFechaValida(fecha) {
         if (fecha.value != "") {
             let fechaHoy = new Date();
@@ -342,6 +345,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                 mensaje: "No puede ser vacío",
             });
         }
+
         if (this.factura.Expediente_Bono.Cabecera.Detalle.IdSSSPrestacion == 95) {
             if (this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones) {
                 const medida = store.getState().medidas.entities.find((m) => m.Id == this.factura.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.IdMedida);
