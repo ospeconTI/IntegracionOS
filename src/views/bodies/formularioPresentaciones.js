@@ -5,13 +5,15 @@ import { button } from "../css/button";
 import { input } from "../css/input";
 import { select } from "../css/select";
 import { BUSCAR, AGREGAR, SAVE, CANCEL, DELETE, MODIF } from "../../../assets/icons/svgs";
-import { update, remove } from "../../redux/presentacionesCabecera/actions";
+import { add, update, remove, validar, setSelected } from "../../redux/presentacionesCabecera/actions";
 import { getPeriodosPresentacion } from "../../redux/periodosPresentaciones/actions";
 
-const MOSTRAR_FORM = "presentacionesCabecera.selectedTimeStamp";
+const SELECTED = "presentacionesCabecera.selectedTimeStamp";
 const TIPO_ACCION = "presentacionesCabecera.tipoAccionTimeStamp";
 const GET_PERIODOS = "periodosPresentaciones.timeStampPeriodosPresentacion";
-export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_ACCION, GET_PERIODOS)(LitElement) {
+const VALID = "presentacionesCabecera.esValidoTimeStamp";
+const PRESENTACION_ESTADO = "presentacionesEstados.getTimeStamp";
+export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCION, GET_PERIODOS, VALID, PRESENTACION_ESTADO)(LitElement) {
     constructor() {
         super();
         this.hidden = true;
@@ -22,6 +24,8 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
         this.periodosPresentacion = [];
         this.listaPeriodos = [];
         this.estados = [];
+        this.valido = false;
+        this.aGrabar = false;
     }
 
     static get styles() {
@@ -40,6 +44,15 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
                 width: 100%;
                 z-index: 1000;
                 background-color: rgba(0, 0, 0, 0.6);
+            }
+            :host([valido]) #mensaje {
+                display: none;
+            }
+            :host(:not([valido])) #mensaje {
+                display: grid;
+            }
+            :host([modo="A"]) #divEstados {
+                display: none;
             }
             .form {
                 display: grid;
@@ -124,7 +137,7 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
                     <div class="divABM">
                         <div class="select">
                             <label>Periodo Presentación</label>
-                            <select id="periodoPresentacion" ?disabled="${this.modo == "D" ? true : false}">
+                            <select id="periodoPresentacion" ?disabled="${this.modo != "A" ? true : false}" @change="${this.cambioPeriodo}">
                                 ${this.listaPeriodos.map((periodo) => {
                                     if (this.item.PeriodoPresentacion == periodo) {
                                         return html` <option value=${periodo} selected>${periodo}</option> `;
@@ -165,7 +178,7 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
                             </select>
                         </div>
                     </div>
-                    <div class="select">
+                    <div class="select" id="divEstados">
                         <label>Estado Presentacion</label>
                         <select id="estado" ?disabled="${this.modo == "D" ? true : false}">
                             ${this.estados.map((estado) => {
@@ -177,8 +190,9 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
                             })}
                         </select>
                     </div>
+                    <label id="mensaje">${this.mensaje}</label>
                     <div class="botonera">
-                        <button btn2 class="button" @click=${this.grabar}>${SAVE}</button>
+                        <button btn2 class="button" @click=${this.validar} .item=${this.item}>${SAVE}</button>
                         <button btn2 class="button" @click=${this.cerrar}>${CANCEL}</button>
                     </div>
                 </div>
@@ -186,74 +200,109 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
         }
     }
 
+    cambioPeriodo(e) {
+        const periodo = e.currentTarget.value;
+        this.aGrabar = false;
+        store.dispatch(getPeriodosPresentacion(periodo));
+        store.dispatch(validar(periodo));
+    }
+
     cerrar(e) {
-        /*         const itemVacio = {
-            Activo: true,
-            Clasif_Materiales: {},
+        const itemVacio = {
+            Activo: false,
+            FechaPresentacion: "",
             FechaUpdate: "",
             Id: 0,
-            IdClasif: 0,
-            IdTipoMaterial: 0,
-            UsuarioUpdate: "Desarrollo",
-            codigo: 0,
-            costo: 0,
-            nombre: "",
+            IdEstadoPresentacionSSS: 0,
+            PeriodoDesde: 0,
+            PeriodoHasta: 0,
+            PeriodoPresentacion: 0,
+            UsuarioUpdate: "",
         };
-        this.item = itemVacio;
-        this.update();
-        this.item = this.itemOld; 
-        this.update();*/
 
+        store.dispatch(setSelected(itemVacio));
+        store.dispatch(setSelected(this.itemOld));
         this.hidden = true;
     }
 
+    validar(e) {
+        if (this.modo == "A") {
+            const periodo = this.shadowRoot.querySelector("#periodoPresentacion").value;
+            store.dispatch(validar(periodo));
+            this.aGrabar = true;
+        } else {
+            this.grabar(e);
+        }
+    }
     grabar(e) {
-        const item = {};
-        item.Activo = true;
-        item.FechaUpdate = new Date();
-        item.Id = this.item.Id;
-        item.IdEstadoPresentacionSSS = this.shadowRoot.querySelector("#estado").value;
-        item.PeriodoDesde = this.shadowRoot.querySelector("#periodoDesde").value;
-        item.PeriodoHasta = this.shadowRoot.querySelector("#periodoHasta").value;
-        item.PeriodoPresentacion = this.shadowRoot.querySelector("#periodoPresentacion").value;
-        item.FechaPresentacion = this.shadowRoot.querySelector("#fechaPresentacion").value;
-        item.UsuarioUpdate = "";
+        if (this.valido) {
+            const item = {};
+            item.Activo = true;
+            item.FechaUpdate = new Date();
+            item.Id = this.item.Id;
+            item.IdEstadoPresentacionSSS = this.shadowRoot.querySelector("#estado").value;
+            item.PeriodoDesde = this.shadowRoot.querySelector("#periodoDesde").value;
+            item.PeriodoHasta = this.shadowRoot.querySelector("#periodoHasta").value;
+            item.PeriodoPresentacion = this.shadowRoot.querySelector("#periodoPresentacion").value;
+            item.FechaPresentacion = this.shadowRoot.querySelector("#fechaPresentacion").value;
+            item.UsuarioUpdate = "";
 
-        if (this.modo == "M") {
-            store.dispatch(update(item));
+            if (this.modo == "M") {
+                store.dispatch(update(item));
+            }
+            if (this.modo == "D") {
+                store.dispatch(remove(item));
+            }
+            if (this.modo == "A") {
+                store.dispatch(add(item));
+            }
+            this.hidden = true;
         }
-        if (this.modo == "D") {
-            store.dispatch(remove(item.Id));
-        }
-        this.hidden = true;
     }
 
     stateChanged(state, name) {
-        if (name === MOSTRAR_FORM) {
+        if (name === SELECTED) {
             this.item = state.presentacionesCabecera.selected;
             this.itemOld = state.presentacionesCabecera.selected;
-            //if (this.item != {}) {
-            store.dispatch(getPeriodosPresentacion(this.item.PeriodoPresentacion));
+            this.valido = true;
+            let periodoInical = this.item.PeriodoPresentacion;
+            if (periodoInical == 0) {
+                periodoInical = state.periodosPresentaciones.listaPeriodos[0];
+            }
+            store.dispatch(getPeriodosPresentacion(periodoInical));
+            if (this.item.FechaPresentacion == "") {
+                const hoy = new Date();
+                const mes = hoy.getMonth() + 1 < 10 ? (hoy.getMonth() + 1).toString().padStart(2, "0") : hoy.getMonth() + 1;
+                const dia = hoy.getDay() < 10 ? hoy.getDay().toString().padStart(2, "0") : hoy.getDay();
+                this.item.FechaPresentacion = hoy.getFullYear().toString() + "-" + mes + "-" + dia;
+            }
+            this.update();
         }
         if (name === TIPO_ACCION) {
             this.modo = state.presentacionesCabecera.tipoAction;
             this.disabled = this.modo == "M" || this.modo == "A" ? false : true;
             this.update();
         }
+        if (name === PRESENTACION_ESTADO) {
+            this.estados = state.presentacionesEstados.entities;
+            this.update();
+        }
         if (name === GET_PERIODOS) {
             this.periodosPresentacion = state.periodosPresentaciones.periodosPresentacion;
             this.listaPeriodos = state.periodosPresentaciones.listaPeriodos;
-
-            const estados = [
-                { Id: 1, Descripcion: "En Proceso" },
-                { Id: 2, Descripcion: "Cerrada" },
-            ];
-            this.estados = estados;
 
             if (this.item != null) {
                 this.hidden = false;
             } else {
                 this.hidden = true;
+            }
+            this.update();
+        }
+        if (name === VALID) {
+            this.valido = state.presentacionesCabecera.esValido;
+            this.mensaje = state.presentacionesCabecera.mensaje;
+            if (this.valido && this.aGrabar) {
+                this.grabar();
             }
             this.update();
         }
@@ -268,6 +317,15 @@ export class formularioPresentaciones extends connect(store, MOSTRAR_FORM, TIPO_
             },
             disabled: {
                 type: Boolean,
+                reflect: true,
+            },
+            valido: {
+                type: Boolean,
+                reflect: true,
+                value: true,
+            },
+            modo: {
+                type: String,
                 reflect: true,
             },
         };

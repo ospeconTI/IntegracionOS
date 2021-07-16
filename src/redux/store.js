@@ -21,6 +21,7 @@ import { middleware as notifications } from "./notifications/middleware";
 import { middleware as periodosBono } from "./periodosBono/middleware";
 import { middleware as medidas } from "./medidas/middleware";
 import { middleware as presentacionesCabecera } from "./presentacionesCabecera/middleware";
+import { middleware as presentacionesEstados } from "./PresentacionesEstados/middleware";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -43,6 +44,7 @@ let mdw = [
     ...periodosBono,
     ...medidas,
     ...presentacionesCabecera,
+    ...presentacionesEstados,
 ];
 
 if (process.env.NODE_ENV !== "production") {

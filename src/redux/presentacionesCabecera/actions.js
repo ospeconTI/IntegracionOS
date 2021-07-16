@@ -29,9 +29,18 @@ export const REMOVE_ERROR = "[presentacionesCabecera] REMOVE_ERROR";
 export const SET_SELECTED = "[presentacionesCabecera] SET_SELECTED";
 export const TIPO_ACCION = "[presentacionesCabecera] Seteo el tipo de Accion";
 
+export const VALIDAR = "[presentacionesCabecera] Validar";
+export const VALIDAR_SUCCESS = "[presentacionesCabecera] Validar success";
+export const VALIDAR_ERROR = "[presentacionesCabecera] Validar error";
+
 export const get = (options) => ({
     type: GET,
     options: options,
+});
+
+export const validar = (periodo) => ({
+    type: VALIDAR,
+    periodo: periodo,
 });
 
 export const add = (entity) => ({

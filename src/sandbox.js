@@ -24,6 +24,7 @@ import { set as setFiltro } from "./redux/filtro/actions";
 import { listaPeriodosBono } from "./redux/periodosBono/actions";
 import { get as getMedidas } from "./redux/medidas/actions";
 import { lista as listaPeriodosPresentacion } from "./redux/periodosPresentaciones/actions";
+import { get as getPresentacionsEstados } from "./redux/PresentacionesEstados/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();
@@ -37,6 +38,7 @@ store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
 store.dispatch(getPesentacionesCabecera({ top: 20, orderby: "Id" }));
 store.dispatch(getMedidas({}));
+store.dispatch(getPresentacionsEstados({}));
 
 let actual = new Date();
 let mesActual = actual.getMonth() + 1;
@@ -66,7 +68,7 @@ store.dispatch(setMensual(periodoMensualActual));
 let fechaDesde = new Date();
 fechaDesde.setMonth(fechaDesde.getMonth() - 1);
 let mesesPresentacion = [];
-for (let i = 1; i <= 6; i++) {
+for (let i = 0; i <= 5; i++) {
     mesesPresentacion[i] = fechaDesde.getFullYear() * 100 + (fechaDesde.getMonth() + 1);
     fechaDesde.setMonth(fechaDesde.getMonth() + 1);
 }

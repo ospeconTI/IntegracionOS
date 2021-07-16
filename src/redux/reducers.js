@@ -22,8 +22,10 @@ import { reducer as periodosBono } from "./periodosBono/reducer";
 import { reducer as medidasReducer } from "./medidas/reducer";
 import { reducer as presentacionesCabeceraReducer } from "./presentacionesCabecera/reducer";
 import { reducer as periodosPresentacionesReducer } from "./periodosPresentaciones/reducer";
+import { reducer as presentacionesEstadosReducer } from "./presentacionesEstados/reducer";
 
 export const rootReducer = (state = {}, action) => {
+    const presentacionesEstadosRed = state.presentacionesEstados;
     return {
         api: apiReducer(state.api, action),
         ui: uiReducer(state.ui, action),
@@ -45,7 +47,8 @@ export const rootReducer = (state = {}, action) => {
         notifications: notifications(state.notifications, action),
         periodosBono: periodosBono(state.periodosBono, action),
         medidas: medidasReducer(state.medidas, action),
-        presentacionesCabecera: presentacionesCabeceraReducer(state.presentacionesCabecera, action),
+        presentacionesCabecera: presentacionesCabeceraReducer(state.presentacionesCabecera, action, presentacionesEstadosRed),
         periodosPresentaciones: periodosPresentacionesReducer(state.periodosPresentaciones, action),
+        presentacionesEstados: presentacionesEstadosReducer(state.presentacionesEstados, action),
     };
 };

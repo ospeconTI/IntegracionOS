@@ -11,10 +11,10 @@ import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getPresentacionesCabecera, setSelected, setTipoAccion } from "../../redux/presentacionesCabecera/actions";
 import { PERSON, SEARCH } from "../../../assets/icons/svgs";
-import { filtrosFacturas } from "../componentes/filtrosFacturas";
+import { filtrosPresentaciones } from "../componentes/filtrosPresentaciones";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
-import { COPY, ADD, MODIF, DELETE } from "../../../assets/icons/svgs";
+import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
 import { formularioPresentaciones } from "./formularioPresentaciones";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
@@ -33,6 +33,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         this.myNet = [];
         this.messages = [];
         this.items = [];
+        this.order = "";
 
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
     }
@@ -106,7 +107,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                 cursor: pointer;
             }
 
-            filtros-facturas {
+            filtros-presentaciones {
                 position: fixed;
                 top: 0px;
                 width: 30%;
@@ -117,7 +118,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                 transition: all 0.5s ease 0s;
             }
 
-            filtros-facturas[isOpen] {
+            filtros-presentaciones[isOpen] {
                 left: 0;
             }
 
@@ -183,7 +184,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             .botonera {
                 grid-auto-flow: column;
                 display: grid;
-                justify-content: left;
+                justify-content: right;
             }
         `;
     }
@@ -195,7 +196,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                         <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>
                         <div class="sublabel justify-self-end">Cantidad:${this.items.length}</div>
                     </div>
-                    <filtros-facturas class="grid row start " id="filtros" hidden estado="2"></filtros-facturas>
+                    <filtros-presentaciones class="grid row start " id="filtros" hidden estado="2"></filtros-presentaciones>
                     <div class="grid columnas cabecera">
                         <div class="ordena">${PERSON}</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"PeriodoPresentacion"}">Presentacion</div>
@@ -222,11 +223,8 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                                     <div>${item.PeriodoDesde}</div>
                                     <div>${item.PeriodoHasta}</div>
                                     <div>${new Date(item.FechaPresentacion).toLocaleDateString()}</div>
-                                    <div>${item.IdEstadoPresentacionSSS}</div>
-                                    <div class="botonera">
-                                        <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
-                                        <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
-                                    </div>
+                                    <div>${item.PresentacionSSS_Estados.Descripcion}</div>
+                                    <div class="botonera">${this.poneBotonera(item)}</div>
                                 </div>
                             `;
                         })}
@@ -240,6 +238,29 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         }
     }
 
+    // <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
+    // <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
+    // <button btn2 class="button" @click=${this.consultarDetalle} .item="${item}">${DETALLE}</button>
+
+    poneBotonera(item) {
+        if (item.IdEstadoPresentacionSSS == 1) {
+            return html`
+                <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
+                <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
+                <button btn2 class="button" @click=${this.consultarDetalle} .item="${item}">${DETALLE}</button>
+            `;
+        }
+        if (item.IdEstadoPresentacionSSS == 2) {
+            return html` <button btn2 class="button" @click=${this.consultarDetalle} .item="${item}">${DETALLE}</button> `;
+        }
+        if (item.IdEstadoPresentacionSSS == 3) {
+            return html`
+                <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
+                <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
+            `;
+        }
+    }
+
     delete(e) {
         store.dispatch(setSelected(e.currentTarget.item));
         store.dispatch(setTipoAccion("D"));
@@ -250,21 +271,38 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         store.dispatch(setTipoAccion("M"));
     }
 
+    agregar(e) {
+        const itemVacio = {
+            Activo: false,
+            FechaPresentacion: "",
+            FechaUpdate: "",
+            Id: 0,
+            IdEstadoPresentacionSSS: 0,
+            PeriodoDesde: 0,
+            PeriodoHasta: 0,
+            PeriodoPresentacion: 0,
+            UsuarioUpdate: "",
+        };
+        store.dispatch(setSelected(itemVacio));
+        store.dispatch(setTipoAccion("A"));
+    }
+
+    consultarDetalle(e) {}
+
     mostrarFiltros() {
         this.shadowRoot.querySelector("#filtros").isOpen = true;
     }
 
     ordenar(e) {
-        /*         store.dispatch(
-            getFacturas({
+        this.order = this.order == "" ? "desc" : "";
+        store.dispatch(
+            getPresentacionesCabecera({
                 top: 100,
-                expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-                filter: store.getState().filtro.value, // "IdFacturasPrestadoresEstado eq 2",
-                orderby: e.currentTarget.orden,
+                orderby: e.currentTarget.orden + " " + this.order,
                 count: true,
             })
         );
-        this.update(); */
+        this.update();
     }
 
     filtrar(e) {

@@ -1,6 +1,22 @@
 /** @format */
 
-import { GET, GET_SUCCESS, GET_ERROR, ADD, ADD_SUCCESS, ADD_ERROR, UPDATE, UPDATE_SUCCESS, UPDATE_ERROR, REMOVE_ERROR, REMOVE_SUCCESS, REMOVE } from "./actions";
+import {
+    GET,
+    GET_SUCCESS,
+    GET_ERROR,
+    VALIDAR,
+    VALIDAR_SUCCESS,
+    VALIDAR_ERROR,
+    ADD,
+    ADD_SUCCESS,
+    ADD_ERROR,
+    UPDATE,
+    UPDATE_SUCCESS,
+    UPDATE_ERROR,
+    REMOVE_ERROR,
+    REMOVE_SUCCESS,
+    REMOVE,
+} from "./actions";
 
 import { presentacionesCabeceraFetch } from "../fetchs";
 
@@ -12,7 +28,20 @@ export const get =
     (action) => {
         next(action);
         if (action.type === GET) {
+            const options = action.options;
+            options.expand = "PresentacionSSS_Estados";
             dispatch(apiRequest(presentacionesCabeceraFetch, action.options, GET_SUCCESS, GET_ERROR));
+        }
+    };
+
+export const validar =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === VALIDAR) {
+            const options = { filter: "PeriodoPresentacion eq " + action.periodo };
+            dispatch(apiRequest(presentacionesCabeceraFetch, options, VALIDAR_SUCCESS, VALIDAR_ERROR));
         }
     };
 
@@ -22,7 +51,7 @@ export const add =
     (action) => {
         next(action);
         if (action.type === ADD) {
-            const body = action.entity;
+            const body = action.item;
             dispatch(apiAdd(presentacionesCabeceraFetch, body, ADD_SUCCESS, ADD_ERROR));
         }
     };
@@ -56,12 +85,21 @@ export const processGet =
         }
     };
 
+export const processValidar =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === VALIDAR_SUCCESS) {
+        }
+    };
+
 export const processError =
     ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
-        if (action.type === GET_ERROR || action.type === ADD_ERROR || action.type == UPDATE_ERROR || action.type == REMOVE_ERROR) {
+        if (action.type === GET_ERROR || action.type === VALIDAR_ERROR || action.type === ADD_ERROR || action.type == UPDATE_ERROR || action.type == REMOVE_ERROR) {
         }
     };
 
@@ -89,4 +127,4 @@ export const processRemove =
         if (action.type === REMOVE_SUCCESS) {
         }
     };
-export const middleware = [get, add, update, remove, processGet, processError, processAdd, processUpdate, processRemove];
+export const middleware = [get, validar, add, update, remove, processValidar, processGet, processError, processAdd, processUpdate, processRemove];
