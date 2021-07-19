@@ -11,6 +11,7 @@ import { MENU, RIGHT } from "../../../assets/icons/svgs";
 import { gestures } from "../../libs/gestures";
 import { logout } from "../../redux/autorizacion/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
+import { get as getPresentacionesSSS } from "../../redux/presentacionSSS/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -195,6 +196,15 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             store.dispatch(setFiltro("IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA));
             store.dispatch(goTo(e.currentTarget.option));
             return;
+        }
+
+        if (e.currentTarget.option == "presentacionSSS") {
+            store.dispatch(
+                getPresentacionesSSS({
+                    filter: "Activo eq true",
+                    orderby: "FechaPresentacion desc",
+                })
+            );
         }
 
         store.dispatch(goTo(e.currentTarget.option));

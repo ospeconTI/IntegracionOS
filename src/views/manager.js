@@ -24,6 +24,7 @@ import { presentacionesCabecera } from "./bodies/presentacionesCabecera";
 import { goTo } from "../redux/routing/actions";
 import { detalleFactura } from "./bodies/detalleFactura";
 import { generarBonos } from "./bodies/generarBonos";
+import { presentacionSSSBody } from "./bodies/PresentacionSSS";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
