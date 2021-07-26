@@ -11,7 +11,8 @@ import { MENU, RIGHT } from "../../../assets/icons/svgs";
 import { gestures } from "../../libs/gestures";
 import { logout } from "../../redux/autorizacion/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
-import { get as getPresentacionesSSS } from "../../redux/presentacionSSS/actions";
+
+import { get as getPesentacionesCabecera } from "../../redux/presentacionesCabecera/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -142,6 +143,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 <div class="menuItem" @click=${this.click} .option=${"consultarFacturas"}>Consultar Facturas</div>
                 <div class="menuItem" @click=${this.click} .option=${"generarBonos"}>Generar Bonos</div>
                 <div class="menuItem" @click=${this.click} .option=${"presentacionesCabecera"}>Presentaciones</div>
+                <div class="menuItem" @click=${this.click} .option=${"enProceso"}>En Proceso</div>
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
         `;
@@ -198,10 +200,10 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             return;
         }
 
-        if (e.currentTarget.option == "presentacionSSS") {
+        if (e.currentTarget.option == "presentacionesCabecera") {
             store.dispatch(
-                getPresentacionesSSS({
-                    filter: "Activo eq true",
+                getPesentacionesCabecera({
+                    filter: "Activo",
                     orderby: "FechaPresentacion desc",
                 })
             );

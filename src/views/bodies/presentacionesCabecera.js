@@ -16,6 +16,7 @@ import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
 import { formularioPresentaciones } from "./formularioPresentaciones";
+import { getResumen } from "../../redux/presentacionesErrores/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -247,11 +248,11 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             return html`
                 <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
                 <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
-                <button btn2 class="button" @click=${this.consultarDetalle} .item="${item}">${DETALLE}</button>
+                <button btn2 class="button" @click=${this.resumen} .item="${item}">${DETALLE}</button>
             `;
         }
         if (item.IdEstadoPresentacionSSS == 2) {
-            return html` <button btn2 class="button" @click=${this.consultarDetalle} .item="${item}">${DETALLE}</button> `;
+            // return html` <button btn2 class="button" @click=${this.v} .item="${item}">${DETALLE}</button> `;
         }
         if (item.IdEstadoPresentacionSSS == 3) {
             return html`
@@ -287,7 +288,9 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         store.dispatch(setTipoAccion("A"));
     }
 
-    consultarDetalle(e) {}
+    resumen(e) {
+        store.dispatch(getResumen());
+    }
 
     mostrarFiltros() {
         this.shadowRoot.querySelector("#filtros").isOpen = true;
@@ -299,6 +302,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             getPresentacionesCabecera({
                 top: 100,
                 orderby: e.currentTarget.orden + " " + this.order,
+                filter: "Activo",
                 count: true,
             })
         );

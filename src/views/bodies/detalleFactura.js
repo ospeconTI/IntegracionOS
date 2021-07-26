@@ -380,6 +380,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
 
                 store.dispatch(
                     aprobar({
+                        forzado: false,
                         FacturasPrestadores: {
                             Id: this.factura.Id,
                             IdFacturasPrestadoresEstado: 3,

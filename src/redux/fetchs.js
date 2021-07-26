@@ -4,7 +4,7 @@ import { ODataEntity, ODataFetchFactory } from "@brunomon/odata-fetch-factory";
 import { fetchFactory } from "../libs/fetchFactory";
 
 let webApiExpedientes = SERVICE_URL;
-let webApiLogin = SERVICE_URL + "/api";
+let webApi = SERVICE_URL + "/api";
 
 const expedienteOdataFactory = ODataFetchFactory({
     fetch: fetch,
@@ -21,7 +21,8 @@ export const facturasPrestadoresImagenesFetch = ODataEntity(expedienteOdataFacto
 export const grabarImagenesFetch = ODataEntity(expedienteOdataFactory, "Grabar");
 export const facturasPrestadoresEstadosFetch = ODataEntity(expedienteOdataFactory, "FacturasPrestadoresEstados");
 export const prestadoresFetch = ODataEntity(expedienteOdataFactory, "Prestado");
-export const loginFetch = fetchFactory(webApiLogin, "LoginOS");
+export const loginFetch = fetchFactory(webApi, "LoginOS");
+export const resumenFetch = fetchFactory(webApi, "Errores/GetResumen");
 export const logonFetch = ODataEntity(expedienteOdataFactory, "Logon");
 export const recuperoFetch = ODataEntity(expedienteOdataFactory, "PedirRecupero");
 export const cambiarPasswordFetch = ODataEntity(expedienteOdataFactory, "CambiarPassword");

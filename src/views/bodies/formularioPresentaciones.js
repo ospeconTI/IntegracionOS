@@ -1,3 +1,5 @@
+/** @format */
+
 import { html, LitElement, css, svg } from "lit-element";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers/connect";
@@ -178,18 +180,18 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
                             </select>
                         </div>
                     </div>
-                    <div class="select" id="divEstados">
+                    <!-- <div class="select" id="divEstados">
                         <label>Estado Presentacion</label>
                         <select id="estado" ?disabled="${this.modo == "D" ? true : false}">
                             ${this.estados.map((estado) => {
-                                if (this.item.IdEstadoPresentacionSSS == estado.Id) {
-                                    return html` <option value=${estado.Id} selected>${estado.Descripcion}</option> `;
-                                } else {
-                                    return html` <option value=${estado.Id}>${estado.Descripcion}</option> `;
-                                }
-                            })}
+                        if (this.item.IdEstadoPresentacionSSS == estado.Id) {
+                            return html` <option value=${estado.Id} selected>${estado.Descripcion}</option> `;
+                        } else {
+                            return html` <option value=${estado.Id}>${estado.Descripcion}</option> `;
+                        }
+                    })}
                         </select>
-                    </div>
+                    </div> -->
                     <label id="mensaje">${this.mensaje}</label>
                     <div class="botonera">
                         <button btn2 class="button" @click=${this.validar} .item=${this.item}>${SAVE}</button>
@@ -240,7 +242,7 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
             item.Activo = true;
             item.FechaUpdate = new Date();
             item.Id = this.item.Id;
-            item.IdEstadoPresentacionSSS = this.shadowRoot.querySelector("#estado").value;
+            //item.IdEstadoPresentacionSSS = this.shadowRoot.querySelector("#estado").value;
             item.PeriodoDesde = this.shadowRoot.querySelector("#periodoDesde").value;
             item.PeriodoHasta = this.shadowRoot.querySelector("#periodoHasta").value;
             item.PeriodoPresentacion = this.shadowRoot.querySelector("#periodoPresentacion").value;

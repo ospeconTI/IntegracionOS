@@ -36,7 +36,7 @@ store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
 
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
-store.dispatch(getPesentacionesCabecera({ top: 20, orderby: "Id" }));
+store.dispatch(getPesentacionesCabecera({ top: 20, orderby: "Id", filter: "Activo" }));
 store.dispatch(getMedidas({}));
 store.dispatch(getPresentacionsEstados({}));
 

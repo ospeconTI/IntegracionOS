@@ -14,6 +14,7 @@ import {
     GET_COMPLEMENTARIA_SUCCESS,
     PASAR_A_PENDIENTE_OS_SUCCESS,
     PASAR_A_PENDIENTE_OS_ERROR,
+    APROBAR,
 } from "./actions";
 
 const initialState = {
@@ -34,6 +35,7 @@ const initialState = {
     pasarAPendienteOSTimeStamp: null,
     pasarAPendienteOSError: null,
     pasarAPendienteOSErrorTimeStamp: null,
+    preAprobacion: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -42,6 +44,9 @@ export const reducer = (state = initialState, action) => {
     };
 
     switch (action.type) {
+        case APROBAR:
+            newState.preAprobacion = action;
+            break;
         case GET_SUCCESS:
             newState.entities = action.payload.receive;
             newState.timeStamp = new Date().getTime();

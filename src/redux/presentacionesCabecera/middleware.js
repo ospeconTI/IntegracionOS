@@ -16,6 +16,7 @@ import {
     REMOVE_ERROR,
     REMOVE_SUCCESS,
     REMOVE,
+    get as getPresentaciones,
 } from "./actions";
 
 import { presentacionesCabeceraFetch } from "../fetchs";
@@ -40,7 +41,7 @@ export const validar =
     (action) => {
         next(action);
         if (action.type === VALIDAR) {
-            const options = { filter: "PeriodoPresentacion eq " + action.periodo };
+            const options = { filter: "PeriodoPresentacion eq " + action.periodo + " and Activo" };
             dispatch(apiRequest(presentacionesCabeceraFetch, options, VALIDAR_SUCCESS, VALIDAR_ERROR));
         }
     };
@@ -100,6 +101,7 @@ export const processError =
     (action) => {
         next(action);
         if (action.type === GET_ERROR || action.type === VALIDAR_ERROR || action.type === ADD_ERROR || action.type == UPDATE_ERROR || action.type == REMOVE_ERROR) {
+            alert(JSON.parse(action.payload.receive.message).innererror.message);
         }
     };
 
@@ -125,6 +127,7 @@ export const processRemove =
     (action) => {
         next(action);
         if (action.type === REMOVE_SUCCESS) {
+            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "FechaPresentacion desc", count: true }));
         }
     };
 export const middleware = [get, validar, add, update, remove, processValidar, processGet, processError, processAdd, processUpdate, processRemove];

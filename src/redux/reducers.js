@@ -23,6 +23,7 @@ import { reducer as medidasReducer } from "./medidas/reducer";
 import { reducer as presentacionesCabeceraReducer } from "./presentacionesCabecera/reducer";
 import { reducer as periodosPresentacionesReducer } from "./periodosPresentaciones/reducer";
 import { reducer as presentacionesEstadosReducer } from "./presentacionesEstados/reducer";
+import { reducer as presentacionesErroresReducer } from "./presentacionesErrores/reducer";
 
 export const rootReducer = (state = {}, action) => {
     const presentacionesEstadosRed = state.presentacionesEstados;
@@ -50,5 +51,6 @@ export const rootReducer = (state = {}, action) => {
         presentacionesCabecera: presentacionesCabeceraReducer(state.presentacionesCabecera, action, presentacionesEstadosRed),
         periodosPresentaciones: periodosPresentacionesReducer(state.periodosPresentaciones, action),
         presentacionesEstados: presentacionesEstadosReducer(state.presentacionesEstados, action),
+        presentacionesErrores: presentacionesErroresReducer(state.presentacionesErrores, action),
     };
 };

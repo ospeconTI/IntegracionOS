@@ -1,3 +1,5 @@
+/** @format */
+
 import { html, LitElement, css } from "lit-element";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
@@ -30,7 +32,7 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
             );
         }
         if (name == FACTURA_ERROR) {
-            alert("ERROR :\n\n" + state.facturasPrestadores.errorMessage);
+            if (state.facturasPrestadores.errorMessage) alert("ERROR :\n\n" + state.facturasPrestadores.errorMessage);
         }
 
         if (name == PASAR_A_PENDIENTE_OS_ERROR) {

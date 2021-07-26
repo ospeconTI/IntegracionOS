@@ -103,11 +103,24 @@ export const processGetComplementaria =
     };
 
 export const processError =
-    ({ dispatch }) =>
+    ({ dispatch, getState }) =>
     (next) =>
     (action) => {
         next(action);
         if (action.type === GET_ERROR || action.type === ADD_ERROR || action.type == UPDATE_ERROR) {
+            const errorMsg = JSON.parse(action.payload.receive.message);
+            if (errorMsg.innererror) {
+                alert(errorMsg.innererror.message);
+            }
+            if (errorMsg.message) {
+                const erroresMsg = JSON.parse(errorMsg.message);
+                const textoErrores = erroresMsg.map((e) => e.Descripcion + "\n");
+                if (confirm(textoErrores + "\n ¿Lo APRUEBA de todas maneras?")) {
+                    const aprobacion = getState().facturasPrestadores.preAprobacion;
+                    aprobacion.entity.forzado = true;
+                    dispatch(aprobacion);
+                }
+            }
         }
     };
 
