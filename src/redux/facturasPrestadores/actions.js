@@ -39,6 +39,10 @@ export const GET_COMPLEMENTARIA = "[facturasPrestadores] GET_COMPLEMENTARIA";
 export const GET_COMPLEMENTARIA_SUCCESS = "[facturasPrestadores] GET_COMPLEMENTARIA_SUCCESS";
 export const GET_COMPLEMENTARIA_ERROR = "[facturasPrestadores] GET_COMPLEMENTARIA_ERROR";
 
+export const GET_BY_ERROR = "[facturasPrestadores] GET_BY_ERROR";
+export const GET_BY_ERROR_SUCCESS = "[facturasPrestadores] GET_BY_ERROR_SUCCESS";
+export const GET_BY_ERROR_ERROR = "[facturasPrestadores] GET_BY_ERROR_ERROR";
+
 export const get = (options) => ({
     type: GET,
     options: options,
@@ -50,6 +54,13 @@ export const getComplementaria = (id) => ({
         expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
     },
 });
+
+export const getByError = (error) => ({
+    type: GET_BY_ERROR,
+    error: error,
+    options: { top: 100 },
+});
+
 export const add = (entity) => ({
     type: ADD,
     entity: entity,

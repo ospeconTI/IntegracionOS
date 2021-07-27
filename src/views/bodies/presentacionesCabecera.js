@@ -248,11 +248,11 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             return html`
                 <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
                 <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
-                <button btn2 class="button" @click=${this.resumen} .item="${item}">${DETALLE}</button>
+                <button btn2 class="button" @click=${this.Detalle} .item="${item}">${DETALLE}</button>
             `;
         }
         if (item.IdEstadoPresentacionSSS == 2) {
-            // return html` <button btn2 class="button" @click=${this.v} .item="${item}">${DETALLE}</button> `;
+            return html` <button btn2 class="button" @click=${this.Detalle} .item="${item}">${DETALLE}</button> `;
         }
         if (item.IdEstadoPresentacionSSS == 3) {
             return html`
@@ -286,10 +286,6 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         };
         store.dispatch(setSelected(itemVacio));
         store.dispatch(setTipoAccion("A"));
-    }
-
-    resumen(e) {
-        store.dispatch(getResumen());
     }
 
     mostrarFiltros() {

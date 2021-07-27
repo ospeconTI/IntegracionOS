@@ -43,6 +43,11 @@ export const screenLayuts = {
         medium: HEADER_BODY,
         large: HEADER_BODY,
     },
+    enProceso: {
+        small: HEADER_BODY,
+        medium: HEADER_BODY,
+        large: HEADER_BODY,
+    },
 };
 
 export const getLayout = (state) => {

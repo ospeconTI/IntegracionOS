@@ -15,6 +15,8 @@ import {
     PASAR_A_PENDIENTE_OS_SUCCESS,
     PASAR_A_PENDIENTE_OS_ERROR,
     APROBAR,
+    GET_BY_ERROR,
+    GET_BY_ERROR_SUCCESS,
 } from "./actions";
 
 const initialState = {
@@ -36,6 +38,9 @@ const initialState = {
     pasarAPendienteOSError: null,
     pasarAPendienteOSErrorTimeStamp: null,
     preAprobacion: null,
+    selectedError: null,
+    entitiesWithError: null,
+    entitiesWithErrorTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -44,6 +49,13 @@ export const reducer = (state = initialState, action) => {
     };
 
     switch (action.type) {
+        case GET_BY_ERROR:
+            newState.selectedError = action.error;
+            break;
+        case GET_BY_ERROR_SUCCESS:
+            newState.entitiesWithError = action.payload.receive;
+            newState.entitiesWithErrorTimeStamp = new Date().getTime();
+            break;
         case APROBAR:
             newState.preAprobacion = action;
             break;

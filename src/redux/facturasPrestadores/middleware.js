@@ -24,6 +24,9 @@ import {
     PASAR_A_PENDIENTE_OS,
     PASAR_A_PENDIENTE_OS_SUCCESS,
     PASAR_A_PENDIENTE_OS_ERROR,
+    GET_BY_ERROR,
+    GET_BY_ERROR_SUCCESS,
+    GET_BY_ERROR_ERROR,
 } from "./actions";
 
 import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch } from "../fetchs";
@@ -40,6 +43,16 @@ export const get =
         next(action);
         if (action.type === GET) {
             dispatch(apiRequest(facturasPrestadoresFetch, action.options, GET_SUCCESS, GET_ERROR));
+        }
+    };
+
+export const getByError =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_BY_ERROR) {
+            dispatch(apiRequest(facturasPrestadoresFetch, action.options, GET_BY_ERROR_SUCCESS, GET_BY_ERROR_ERROR));
         }
     };
 
@@ -206,6 +219,7 @@ export const aprobarSuccess =
 
 export const middleware = [
     get,
+    getByError,
     add,
     update,
     processGet,
