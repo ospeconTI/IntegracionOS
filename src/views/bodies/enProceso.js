@@ -17,7 +17,7 @@ import { set as setFiltro } from "../../redux/filtro/actions";
 import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
 import { formularioPresentaciones } from "./formularioPresentaciones";
 import { getFacturasByError, getResumen } from "../../redux/presentacionesErrores/actions";
-import { getByError } from "../../redux/facturasPrestadores/actions";
+import { getByError, getFacturaAndSelect } from "../../redux/facturasPrestadores/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -29,7 +29,7 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
     constructor() {
         super();
         this.area = "body";
-        this.item = [];
+        this.item = null;
         this.alertas = [];
         this.facturas = [];
         this.selectedError = "";
@@ -109,6 +109,7 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                 background-color: var(--color-crudo);
                 display: grid;
                 grid-area: presentacion;
+                padding: 1rem !important;
             }
             .alertas {
                 grid-area: alertas;
@@ -126,8 +127,12 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
             .etiqueta div {
                 font-weight: bold;
             }
-            .etiqueta div:first-child {
+            .etiqueta div:first-child,
+            .headers {
                 color: var(--color-gris-medio);
+            }
+            .headers {
+                font-size: 0.7rem;
             }
             .underlined {
                 border-bottom: 1px solid var(--color-gris-claro);
@@ -138,6 +143,9 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                 display: grid;
                 overflow-y: auto;
                 align-content: start;
+            }
+            .columnas {
+                grid-template-columns: 0.5fr 0.5fr 0.5fr 4fr 4fr 1fr 1fr 1fr 1fr 1fr;
             }
         `;
     }
@@ -150,11 +158,11 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                     <div class="grid column presentacion">
                         <div class="inner-grid column start etiqueta">
                             <div>Periodo Presentación:</div>
-                            <div>${this.item.PeriodoPresentacion}</div>
+                            <div>${this.item.PeriodoPresentacion.toString().replace(/(\d{4})(\d{2})/, "$1-$2")}</div>
                         </div>
                         <div class="inner-grid column start etiqueta">
                             <div>Para Facturas entre:</div>
-                            <div>${this.item.PeriodoDesde} y ${this.item.PeriodoHasta}</div>
+                            <div>${this.item.PeriodoDesde.toString().replace(/(\d{4})(\d{2})/, "$1-$2")} y ${this.item.PeriodoHasta.toString().replace(/(\d{4})(\d{2})/, "$1-$2")}</div>
                         </div>
                         <div class="inner-grid column start etiqueta">
                             <div>Cantidad de Facturas:</div>
@@ -188,29 +196,29 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                             <div>${this.selectedError}</div>
                         </div>
 
-                        <div class="inner-grid column underlined">
-                            <div>Orden</div>
-                            <div>Expediente</div>
-                            <div>Prestador</div>
+                        <div class="inner-grid column underlined columnas headers">
+                            <div>Or.</div>
+                            <div>Ex.</div>
+                            <div>Pres</div>
                             <div>Nombre Prestador</div>
                             <div>Beneficiario</div>
                             <div>Periodo</div>
                             <div>Fecha</div>
-                            <div>PuntoVenta</div>
-                            <div>NroComprobante</div>
+                            <div>P.V.</div>
+                            <div>Nro.Fact.</div>
                             <div>Importe</div>
                         </div>
 
                         <div class="rows">
                             ${this.facturas.map((item) => {
                                 return html`
-                                    <div class="inner-grid column underlined">
+                                    <div class="inner-grid column underlined columnas" @click="${this.showFactura}" .item=${item}>
                                         <div>${item.Id}</div>
                                         <div>${item.Expediente}</div>
                                         <div>${item.Prestador}</div>
                                         <div>${item.PrestadorNombre}</div>
                                         <div>${item.Nombre}</div>
-                                        <div>${item.Periodo}</div>
+                                        <div>${item.Periodo.toString().replace(/(\d{4})(\d{2})/, "$1-$2")}</div>
                                         <div>${new Date(item.Fecha).toLocaleDateString()}</div>
                                         <div>${item.PuntoVenta}</div>
                                         <div>${item.NroComprobante}</div>
@@ -221,11 +229,14 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                         </div>
                     </div>
                 </div>
-                <formulario-presentaciones class="body" id="formularioPresentacion" hidden></formulario-presentaciones>
             `;
         } else {
             return html`<h3>No hay Presentaciones en proceso</h3>`;
         }
+    }
+
+    showFactura(e) {
+        store.dispatch(getFacturaAndSelect(e.currentTarget.item.Id));
     }
 
     getFacturas(e) {

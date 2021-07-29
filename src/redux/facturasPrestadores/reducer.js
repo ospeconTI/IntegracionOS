@@ -126,6 +126,10 @@ export const reducer = (state = initialState, action) => {
             newState.complementaria = action.payload.receive[0];
             newState.complementariaTimeStamp = new Date().getTime();
             break;
+        case GET_COMPLEMENTARIA_SUCCESS:
+            newState.complementaria = action.payload.receive[0];
+            newState.complementariaTimeStamp = new Date().getTime();
+            break;
         case PASAR_A_PENDIENTE_OS_SUCCESS:
             newState.pasarAPendienteOSTimeStamp = new Date().getTime();
             break;

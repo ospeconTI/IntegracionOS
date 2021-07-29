@@ -27,6 +27,9 @@ import {
     GET_BY_ERROR,
     GET_BY_ERROR_SUCCESS,
     GET_BY_ERROR_ERROR,
+    GET_FACTURA_AND_SELECT,
+    GET_FACTURA_AND_SELECT_ERROR,
+    GET_FACTURA_AND_SELECT_SUCCESS,
 } from "./actions";
 
 import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch } from "../fetchs";
@@ -63,6 +66,16 @@ export const getComplementaria =
         next(action);
         if (action.type === GET_COMPLEMENTARIA) {
             dispatch(apiRequest(facturasPrestadoresFetch, action.options, GET_COMPLEMENTARIA_SUCCESS, GET_COMPLEMENTARIA_ERROR));
+        }
+    };
+
+export const getFacturaAndSelect =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_FACTURA_AND_SELECT) {
+            dispatch(apiRequest(facturasPrestadoresFetch, action.options, GET_FACTURA_AND_SELECT_SUCCESS, GET_FACTURA_AND_SELECT_ERROR));
         }
     };
 
@@ -110,6 +123,16 @@ export const processGetComplementaria =
     (action) => {
         next(action);
         if (action.type === GET_COMPLEMENTARIA_SUCCESS) {
+            dispatch(setSelected(action.payload.receive[0]));
+            dispatch(goTo("detalleFacturaC"));
+        }
+    };
+export const processGetFacturaAndSelect =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type == GET_FACTURA_AND_SELECT_SUCCESS) {
             dispatch(setSelected(action.payload.receive[0]));
             dispatch(goTo("detalleFacturaC"));
         }
@@ -235,4 +258,6 @@ export const middleware = [
     getComplementaria,
     processGetComplementaria,
     pasarAPendienteOS,
+    getFacturaAndSelect,
+    processGetFacturaAndSelect,
 ];

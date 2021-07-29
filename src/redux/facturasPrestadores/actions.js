@@ -35,6 +35,7 @@ export const PASAR_A_PENDIENTE_OS_ERROR = "[facturasPrestadores] PASARAPENDIENTE
 export const APROBAR_SUCCESS = "[facturasPrestadores] APROBAR_SUCCESS";
 export const RECHAZAR_SUCCESS = "[facturasPrestadores] RECHAZAR_SUCCESS";
 export const CAMBIO = "[facturasPrestadores] CAMBIO";
+
 export const GET_COMPLEMENTARIA = "[facturasPrestadores] GET_COMPLEMENTARIA";
 export const GET_COMPLEMENTARIA_SUCCESS = "[facturasPrestadores] GET_COMPLEMENTARIA_SUCCESS";
 export const GET_COMPLEMENTARIA_ERROR = "[facturasPrestadores] GET_COMPLEMENTARIA_ERROR";
@@ -43,12 +44,24 @@ export const GET_BY_ERROR = "[facturasPrestadores] GET_BY_ERROR";
 export const GET_BY_ERROR_SUCCESS = "[facturasPrestadores] GET_BY_ERROR_SUCCESS";
 export const GET_BY_ERROR_ERROR = "[facturasPrestadores] GET_BY_ERROR_ERROR";
 
+export const GET_FACTURA_AND_SELECT = "[facturasPrestadores] GET_FACTURA_AND_SELECT";
+export const GET_FACTURA_AND_SELECT_SUCCESS = "[facturasPrestadores] GET_FACTURA_AND_SELECT_SUCCESS";
+export const GET_FACTURA_AND_SELECT_ERROR = "[facturasPrestadores] GET_FACTURA_AND_SELECT_ERROR";
+
 export const get = (options) => ({
     type: GET,
     options: options,
 });
 export const getComplementaria = (id) => ({
     type: GET_COMPLEMENTARIA,
+    options: {
+        filter: "Id eq " + id,
+        expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+    },
+});
+
+export const getFacturaAndSelect = (id) => ({
+    type: GET_FACTURA_AND_SELECT,
     options: {
         filter: "Id eq " + id,
         expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
