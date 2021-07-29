@@ -23,6 +23,7 @@ export const facturasPrestadoresEstadosFetch = ODataEntity(expedienteOdataFactor
 export const prestadoresFetch = ODataEntity(expedienteOdataFactory, "Prestado");
 export const loginFetch = fetchFactory(webApi, "LoginOS");
 export const resumenFetch = fetchFactory(webApi, "Errores/GetResumen");
+export const facturasByErrorFetch = fetchFactory(webApi, "Errores/GetFacturasByError");
 export const logonFetch = ODataEntity(expedienteOdataFactory, "Logon");
 export const recuperoFetch = ODataEntity(expedienteOdataFactory, "PedirRecupero");
 export const cambiarPasswordFetch = ODataEntity(expedienteOdataFactory, "CambiarPassword");

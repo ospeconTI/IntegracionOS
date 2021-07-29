@@ -16,14 +16,14 @@ import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
 import { formularioPresentaciones } from "./formularioPresentaciones";
-import { getResumen } from "../../redux/presentacionesErrores/actions";
+import { getFacturasByError, getResumen } from "../../redux/presentacionesErrores/actions";
 import { getByError } from "../../redux/facturasPrestadores/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const PRESENTACIONES_CAB = "presentacionesCabecera.timeStamp";
 const RESUMEN = "presentacionesErrores.timeStamp";
-const FACTURAS = "facturasPrestadores.entitiesWithErrorTimeStamp";
+const FACTURAS = "presentacionesErrores.facturasByErrorTimeStamp";
 
 export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, SCREEN, RESUMEN, FACTURAS)(LitElement) {
     constructor() {
@@ -34,6 +34,9 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
         this.facturas = [];
         this.selectedError = "";
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
+        this.TotalFacturas = 0;
+        this.totalAlertas = 0;
+        this.FacturasconErrores = 0;
     }
     static get styles() {
         return css`
@@ -129,6 +132,7 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
             .underlined {
                 border-bottom: 1px solid var(--color-gris-claro);
                 padding: 0.5rem 0 !important;
+                cursor: pointer;
             }
             .rows {
                 display: grid;
@@ -152,11 +156,19 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                             <div>Para Facturas entre:</div>
                             <div>${this.item.PeriodoDesde} y ${this.item.PeriodoHasta}</div>
                         </div>
+                        <div class="inner-grid column start etiqueta">
+                            <div>Cantidad de Facturas:</div>
+                            <div>${this.cantidadFacturas}</div>
+                        </div>
+                        <div class="inner-grid column start etiqueta">
+                            <div>Cantidad de Facturas con Alerta:</div>
+                            <div>${this.FacturasconErrores}</div>
+                        </div>
                     </div>
                     <div class="alertas area">
                         <div class="grid column start etiqueta">
                             <div>Resumen de Alertas</div>
-                            <div></div>
+                            <div>${this.alertas.reduce((total, item) => total + item.Cantidad, 0)}</div>
                         </div>
 
                         <div class="rows">
@@ -178,8 +190,15 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
 
                         <div class="inner-grid column underlined">
                             <div>Orden</div>
+                            <div>Expediente</div>
+                            <div>Prestador</div>
+                            <div>Nombre Prestador</div>
+                            <div>Beneficiario</div>
+                            <div>Periodo</div>
+                            <div>Fecha</div>
                             <div>PuntoVenta</div>
                             <div>NroComprobante</div>
+                            <div>Importe</div>
                         </div>
 
                         <div class="rows">
@@ -187,8 +206,15 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
                                 return html`
                                     <div class="inner-grid column underlined">
                                         <div>${item.Id}</div>
+                                        <div>${item.Expediente}</div>
+                                        <div>${item.Prestador}</div>
+                                        <div>${item.PrestadorNombre}</div>
+                                        <div>${item.Nombre}</div>
+                                        <div>${item.Periodo}</div>
+                                        <div>${new Date(item.Fecha).toLocaleDateString()}</div>
                                         <div>${item.PuntoVenta}</div>
                                         <div>${item.NroComprobante}</div>
+                                        <div>${item.Importe}</div>
                                     </div>
                                 `;
                             })}
@@ -203,7 +229,7 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
     }
 
     getFacturas(e) {
-        store.dispatch(getByError(e.currentTarget.item));
+        store.dispatch(getFacturasByError(e.currentTarget.item));
     }
 
     mostrarFiltros() {
@@ -233,12 +259,14 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
             this.update();
         }
         if (name == RESUMEN) {
-            this.alertas = state.presentacionesErrores.entities;
+            this.alertas = state.presentacionesErrores.entities.Errores;
+            this.cantidadFacturas = state.presentacionesErrores.entities.TotalFacturas;
+            this.FacturasconErrores = state.presentacionesErrores.entities.FacturasConError;
             this.update();
         }
         if (name == FACTURAS) {
-            this.facturas = state.facturasPrestadores.entitiesWithError;
-            this.selectedError = state.facturasPrestadores.selectedError.Descripcion;
+            this.facturas = state.presentacionesErrores.facturasByError;
+            this.selectedError = state.presentacionesErrores.selectedError.Descripcion;
             this.update();
         }
     }
