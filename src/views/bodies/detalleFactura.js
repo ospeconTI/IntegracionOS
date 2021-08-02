@@ -9,7 +9,7 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS } from "../../redux/facturasPrestadores/actions";
+import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS, controlar } from "../../redux/facturasPrestadores/actions";
 import { SEARCH } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
@@ -26,6 +26,7 @@ const APROBADO = "facturasPrestadores.aprobarTimeStamp";
 const RECHAZADO = "facturasPrestadores.rechazarTimeStamp";
 const MOTIVOSRECHAZO = "facturasPrestadoresRechazos.timeStamp";
 const PASAR_A_PENDIENTE_OS = "facturasPrestadores.pasarAPendienteOSTimeStamp";
+
 export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO, PASAR_A_PENDIENTE_OS)(LitElement) {
     constructor() {
         super();
@@ -95,7 +96,15 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             .columnas {
                 grid-template-columns: 1fr 2fr;
             }
-            .btn1[modo="C"] {
+
+            :host(:not([modo="P"])) div[modoP] {
+                display: none;
+            }
+            :host(:not([modo="C"])) div[modoC] {
+                display: none;
+            }
+
+            :host(:not([modo=""])) div[modo] {
                 display: none;
             }
         `;
@@ -120,28 +129,34 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <!-- <div>Cantidad Autorizada: ${this.factura.Expediente_Bono.Cabecera.Detalle.Cantidad}</div>
                     <div>Importe Autorizado $: ${this.factura.Expediente_Bono.Cabecera.Detalle.Importe}</div> -->
                 </div>
+
                 <div class="grid column">
                     <button btn3 id="volver" @click="${this.volver}">Atras</button>
-                    <button
-                        style="display:${this.modo == "C" && (this.factura.IdFacturasPrestadoresEstado == 3 || this.factura.IdFacturasPrestadoresEstado == 7) ? "" : "none"}"
-                        btn3
-                        id="estadoAnterior"
-                        @click="${this.estadoAnterior}"
-                    >
-                        Pasar a estado Pendiente Aprobacion OS
-                    </button>
-                    <button style="display:${this.modo == "C" ? "none" : ""}" btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
-                    <button style="display:${this.modo == "C" ? "none" : ""}" btn1 id="rechazar" @click="${this.rechazar}">Rechazar</button>
-
-                    <div class="select no-padding" style="grid-template-rows:1fr;display:${this.modo == "C" ? "none" : ""}">
-                        <select id="motivosRechazo">
-                            <option disabled selected value="-1">Motivo de Rechazo</option>
-                            ${this.rechazos.map((c) => {
-                                return html`<option value="${c.Id}">${c.Descripcion}</option>`;
-                            })}
-                        </select>
+                    <div modo class="grid column">
+                        <button btn1 id="aprobar" @click="${this.aprobar}">Aprobar</button>
+                        <button btn1 id="rechazar" @click="${this.rechazar}">Rechazar</button>
+                        <div class="select no-padding" style="grid-template-rows:1fr;">
+                            <select id="motivosRechazo">
+                                <option disabled selected value="-1">Motivo de Rechazo</option>
+                                ${this.rechazos.map((c) => {
+                                    return html`<option value="${c.Id}">${c.Descripcion}</option>`;
+                                })}
+                            </select>
+                        </div>
+                        <button btn1 id="rechazar" @click="${this.devolver}">Devolver al Prestador</button>
                     </div>
-                    <button style="display:${this.modo == "C" ? "none" : ""}" btn1 id="rechazar" @click="${this.devolver}">Devolver al Prestador</button>
+                    <div modoC>
+                        <button
+                            style="display:${this.factura.IdFacturasPrestadoresEstado == 3 || this.factura.IdFacturasPrestadoresEstado == 7 ? "" : "none"}"
+                            btn3
+                            id="estadoAnterior"
+                            @click="${this.estadoAnterior}"
+                        >
+                            Pasar a estado Pendiente Aprobacion OS
+                        </button>
+                    </div>
+                    <div modoP><button btn1 id="controlar" @click="${this.controlar}">Guardar</button></div>
+
                     <div class="select no-padding" style="grid-template-rows:1fr">
                         <select id="selectImagenes" .value="${this.documentoActual}" @change="${this.cambiaImagen}">
                             ${this.factura.FacturasPrestadoresImagenes.map((c) => {
@@ -401,6 +416,42 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
     }
 
+    controlar(e) {
+        if (store.getState().api.loading == 0) {
+            const errores = this.validarFactura();
+            if (!errores) {
+                const tipoComprobante = this.shadowRoot.querySelector("#tipo").value;
+                const sucursal = this.shadowRoot.querySelector("#sucursal").value;
+                const numero = this.shadowRoot.querySelector("#numero").value;
+                const fecha = this.shadowRoot.querySelector("#fecha").value;
+                const cantidad = this.shadowRoot.querySelector("#cantidad").value;
+                const importe = this.shadowRoot.querySelector("#importe").value;
+                const cae = this.shadowRoot.querySelector("#cae").value;
+                const vtoCae = this.shadowRoot.querySelector("#vtoCae").value;
+
+                store.dispatch(
+                    controlar({
+                        forzado: false,
+                        FacturasPrestadores: {
+                            Id: this.factura.Id,
+                            IdFacturasPrestadoresEstado: 3,
+                            IdTipoComprobante: parseInt(this.shadowRoot.querySelector("#tipo").value, 10),
+                            Fecha: this.shadowRoot.querySelector("#fecha").value,
+                            PuntoVenta: parseInt(this.shadowRoot.querySelector("#sucursal").value, 10),
+                            NroComprobante: parseInt(this.shadowRoot.querySelector("#numero").value, 10),
+                            CAE: this.shadowRoot.querySelector("#cae").value,
+                            VtoCAE: this.shadowRoot.querySelector("#vtoCae").value,
+                            Cantidad: parseInt(this.shadowRoot.querySelector("#cantidad").value, 10),
+                            Importe: new Number(this.shadowRoot.querySelector("#importe").value),
+                        },
+                    })
+                );
+            } else {
+                store.dispatch(showError(errores));
+            }
+        }
+    }
+
     rechazar(e) {
         const motivo = this.shadowRoot.querySelector("#motivosRechazo").value;
         if (motivo == -1) {
@@ -450,14 +501,17 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
         if (name == SCREEN) {
             this.hidden = true;
-            const isCurrentScreen = ["detalleFactura", "detalleFacturaC"].includes(state.screen.name);
+            const isCurrentScreen = ["detalleFactura", "detalleFacturaC", "detalleFacturaP"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 store.dispatch(editing(this.factura.Id));
 
                 this.hidden = false;
-                if (state.screen.name == "detalleFactura") {
-                    this.modo = "";
-                } else {
+
+                this.modo = "";
+                if (state.screen.name == "detalleFacturaP") {
+                    this.modo = "P";
+                }
+                if (state.screen.name == "detalleFacturaC") {
                     this.modo = "C";
                 }
             }

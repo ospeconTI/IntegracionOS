@@ -30,9 +30,13 @@ import {
     GET_FACTURA_AND_SELECT,
     GET_FACTURA_AND_SELECT_ERROR,
     GET_FACTURA_AND_SELECT_SUCCESS,
+    CONTROLAR,
+    CONTROLAR_SUCCESS,
 } from "./actions";
 
-import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch } from "../fetchs";
+import { get as getPesentacionesCabecera } from "../../redux/presentacionesCabecera/actions";
+import { getResumen } from "../../redux/presentacionesErrores/actions";
+import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch, ControlarFacturaFetch } from "../fetchs";
 
 import { apiAdd, apiRequest, apiUpdate, apiAction, apiFunction, API_ADD } from "../api/actions";
 import { changed } from "../notifications/actions";
@@ -134,7 +138,7 @@ export const processGetFacturaAndSelect =
         next(action);
         if (action.type == GET_FACTURA_AND_SELECT_SUCCESS) {
             dispatch(setSelected(action.payload.receive[0]));
-            dispatch(goTo("detalleFacturaC"));
+            dispatch(goTo("detalleFacturaP"));
         }
     };
 
@@ -148,9 +152,9 @@ export const processError =
             if (errorMsg.innererror) {
                 alert(errorMsg.innererror.message);
             }
-            if (errorMsg.message) {
-                const erroresMsg = JSON.parse(errorMsg.message);
-                const textoErrores = erroresMsg.map((e) => e.Descripcion + "\n");
+            if (errorMsg.length) {
+                //const erroresMsg = JSON.parse(errorMsg.message);
+                const textoErrores = errorMsg.map((e) => e.Descripcion + "\n");
                 if (confirm(textoErrores + "\n ¿Lo APRUEBA de todas maneras?")) {
                     const aprobacion = getState().facturasPrestadores.preAprobacion;
                     aprobacion.entity.forzado = true;
@@ -197,6 +201,16 @@ export const aprobar =
         }
     };
 
+export const controlar =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === CONTROLAR) {
+            dispatch(apiAction(ControlarFacturaFetch, action.entity, null, "", CONTROLAR_SUCCESS, UPDATE_ERROR));
+        }
+    };
+
 export const rechazar =
     ({ dispatch, getState }) =>
     (next) =>
@@ -239,6 +253,22 @@ export const aprobarSuccess =
             }
         }
     };
+export const controlarSuccess =
+    ({ dispatch, getState }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === CONTROLAR_SUCCESS) {
+            dispatch(
+                getPesentacionesCabecera({
+                    filter: "IdEstadoPresentacionSSS eq 1 and Activo",
+                    orderby: "FechaPresentacion desc",
+                })
+            );
+            dispatch(getResumen());
+            dispatch(goTo("enProceso"));
+        }
+    };
 
 export const middleware = [
     get,
@@ -260,4 +290,6 @@ export const middleware = [
     pasarAPendienteOS,
     getFacturaAndSelect,
     processGetFacturaAndSelect,
+    controlar,
+    controlarSuccess,
 ];

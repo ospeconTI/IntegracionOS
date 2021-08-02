@@ -30,6 +30,7 @@ export const cambiarPasswordFetch = ODataEntity(expedienteOdataFactory, "Cambiar
 export const facturasPrestadoresRechazosFetch = ODataEntity(expedienteOdataFactory, "FacturasPrestadoresRechazos");
 export const RechazarFacturaFetch = ODataEntity(expedienteOdataFactory, "RechazarFactura");
 export const AprobarFacturaFetch = ODataEntity(expedienteOdataFactory, "AprobarFactura");
+export const ControlarFacturaFetch = ODataEntity(expedienteOdataFactory, "ControlaryCambiar");
 export const PasarAPendienteOSFacturaFetch = ODataEntity(expedienteOdataFactory, "PasarAPendienteOS");
 export const generaBonosPeriodoFetch = ODataEntity(expedienteOdataFactory, "GenerarBonosPeriodo");
 export const medidasFetch = ODataEntity(expedienteOdataFactory, "SSS_Medidas");

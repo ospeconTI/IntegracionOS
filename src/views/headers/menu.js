@@ -13,7 +13,7 @@ import { logout } from "../../redux/autorizacion/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 
 import { get as getPesentacionesCabecera } from "../../redux/presentacionesCabecera/actions";
-import { getResumen } from "../../redux/presentacionesErrores/actions";
+import { cleanSelected, getResumen } from "../../redux/presentacionesErrores/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -211,6 +211,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
         }
 
         if (e.currentTarget.option == "enProceso") {
+            store.dispatch(cleanSelected());
             store.dispatch(
                 getPesentacionesCabecera({
                     filter: "IdEstadoPresentacionSSS eq 1 and Activo",

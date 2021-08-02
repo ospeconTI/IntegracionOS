@@ -17,6 +17,8 @@ import {
     APROBAR,
     GET_BY_ERROR,
     GET_BY_ERROR_SUCCESS,
+    CONTROLAR_SUCCESS,
+    CONTROLAR,
 } from "./actions";
 
 const initialState = {
@@ -41,6 +43,7 @@ const initialState = {
     selectedError: null,
     entitiesWithError: null,
     entitiesWithErrorTimeStamp: null,
+    controlarTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -56,6 +59,7 @@ export const reducer = (state = initialState, action) => {
             newState.entitiesWithError = action.payload.receive;
             newState.entitiesWithErrorTimeStamp = new Date().getTime();
             break;
+        case CONTROLAR:
         case APROBAR:
             newState.preAprobacion = action;
             break;
@@ -136,6 +140,9 @@ export const reducer = (state = initialState, action) => {
         case PASAR_A_PENDIENTE_OS_ERROR:
             newState.pasarAPendienteOSError = action.payload.receive.message;
             newState.pasarAPendienteOSErrorTimeStamp = new Date().getTime();
+            break;
+        case CONTROLAR_SUCCESS:
+            newState.controlarTimeStamp = new Date().getTime();
             break;
     }
     return newState;

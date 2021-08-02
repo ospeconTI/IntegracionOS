@@ -32,6 +32,10 @@ export const PASAR_A_PENDIENTE_OS = "[facturasPrestadores] PASARAPENDIENTEOS";
 export const PASAR_A_PENDIENTE_OS_SUCCESS = "[facturasPrestadores] PASARAPENDIENTEOS_SUCCESS";
 export const PASAR_A_PENDIENTE_OS_ERROR = "[facturasPrestadores] PASARAPENDIENTEOS_ERROR";
 
+export const CONTROLAR = "[facturasPrestadores] CONTROLAR";
+export const CONTROLAR_SUCCESS = "[facturasPrestadores] CONTROLAR_SUCCESS";
+export const CONTROLAR_ERROR = "[facturasPrestadores] CONTROLAR_ERROR";
+
 export const APROBAR_SUCCESS = "[facturasPrestadores] APROBAR_SUCCESS";
 export const RECHAZAR_SUCCESS = "[facturasPrestadores] RECHAZAR_SUCCESS";
 export const CAMBIO = "[facturasPrestadores] CAMBIO";
@@ -64,7 +68,7 @@ export const getFacturaAndSelect = (id) => ({
     type: GET_FACTURA_AND_SELECT,
     options: {
         filter: "Id eq " + id,
-        expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+        expand: "FacturasPrestadoresErrores($filter=Activo),FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
     },
 });
 
@@ -99,6 +103,10 @@ export const aprobar = (entity) => ({
     entity: entity,
 });
 
+export const controlar = (entity) => ({
+    type: CONTROLAR,
+    entity: entity,
+});
 export const cambioEstado = (id, idFacturasPrestadoresEstado) => ({
     type: CAMBIO,
     entity: { Id: id, IdFacturasPrestadoresEstado: idFacturasPrestadoresEstado },

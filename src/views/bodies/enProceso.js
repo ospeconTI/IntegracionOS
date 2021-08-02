@@ -276,8 +276,9 @@ export class enProceso extends connect(store, PRESENTACIONES_CAB, MEDIA_CHANGE, 
             this.update();
         }
         if (name == FACTURAS) {
-            this.facturas = state.presentacionesErrores.facturasByError;
-            this.selectedError = state.presentacionesErrores.selectedError.Descripcion;
+            this.facturas = state.presentacionesErrores.facturasByError || [];
+            const selectedError = state.presentacionesErrores.selectedError;
+            this.selectedError = selectedError ? selectedError.Descripcion : "";
             this.update();
         }
     }

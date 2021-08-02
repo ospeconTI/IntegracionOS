@@ -1,6 +1,14 @@
 /** @format */
 
-import { GET_RESUMEN, GET_RESUMEN_SUCCESS, GET_RESUMEN_ERROR, GET_FACTURAS_BY_ERROR, GET_FACTURAS_BY_ERROR_SUCCESS, GET_FACTURAS_BY_ERROR_ERROR } from "./actions";
+import {
+    GET_RESUMEN,
+    GET_RESUMEN_SUCCESS,
+    GET_RESUMEN_ERROR,
+    GET_FACTURAS_BY_ERROR,
+    GET_FACTURAS_BY_ERROR_SUCCESS,
+    GET_FACTURAS_BY_ERROR_ERROR,
+    getFacturasByError as getFacturasError,
+} from "./actions";
 
 import { resumenFetch, facturasByErrorFetch } from "../fetchs";
 
@@ -27,11 +35,14 @@ export const getFacturasByError =
     };
 
 export const processGetResumen =
-    ({ dispatch }) =>
+    ({ dispatch, getState }) =>
     (next) =>
     (action) => {
         next(action);
         if (action.type === GET_RESUMEN_SUCCESS) {
+            if (getState().presentacionesErrores.selectedError) {
+                dispatch(getFacturasError(getState().presentacionesErrores.selectedError));
+            }
         }
     };
 
@@ -44,4 +55,13 @@ export const processError =
         }
     };
 
-export const middleware = [getResumen, getFacturasByError, processGetResumen, processError];
+export const processGetFacturaByError =
+    ({ dispatch, getState }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_FACTURAS_BY_ERROR_SUCCESS) {
+        }
+    };
+
+export const middleware = [getResumen, getFacturasByError, processGetResumen, processError, processGetFacturaByError];
