@@ -9,8 +9,13 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
+<<<<<<< HEAD
 import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS, controlar } from "../../redux/facturasPrestadores/actions";
+import { SEARCH } from "../../../assets/icons/svgs";
+=======
+import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS } from "../../redux/facturasPrestadores/actions";
 import { SEARCH, TIMELINE } from "../../../assets/icons/svgs";
+>>>>>>> main
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
 import { editing, closed } from "../../redux/notifications/actions";

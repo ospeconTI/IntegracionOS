@@ -20,6 +20,7 @@ export const facturasPrestadoresFetch = ODataEntity(expedienteOdataFactory, "Fac
 export const facturasPrestadoresImagenesFetch = ODataEntity(expedienteOdataFactory, "FacturasPrestadoresImagenes");
 export const grabarImagenesFetch = ODataEntity(expedienteOdataFactory, "Grabar");
 export const facturasPrestadoresEstadosFetch = ODataEntity(expedienteOdataFactory, "FacturasPrestadoresEstados");
+export const facturasPrestadoresLogFetch = ODataEntity(expedienteOdataFactory, "FacturasPrestadoresLog");
 export const prestadoresFetch = ODataEntity(expedienteOdataFactory, "Prestado");
 export const loginFetch = fetchFactory(webApi, "LoginOS");
 export const resumenFetch = fetchFactory(webApi, "Errores/GetResumen");
