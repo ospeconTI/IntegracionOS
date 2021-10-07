@@ -1,6 +1,23 @@
 /** @format */
 
-import { GET_SUCCESS, VALIDAR_SUCCESS, GET_ERROR, ADD_ERROR, ADD_SUCCESS, UPDATE_ERROR, UPDATE_SUCCESS, REMOVE_SUCCESS, SET_SELECTED, TIPO_ACCION } from "./actions";
+import {
+    GET_SUCCESS,
+    VALIDAR_SUCCESS,
+    GET_ERROR,
+    ADD_ERROR,
+    ADD_SUCCESS,
+    UPDATE_ERROR,
+    UPDATE_SUCCESS,
+    REMOVE_SUCCESS,
+    SET_SELECTED,
+    TIPO_ACCION,
+    GET_RESUMEN_SUCCESS,
+    GET_RESUMEN_ERROR,
+    GET_FACTURAS_BY_ERROR_SUCCESS,
+    GET_FACTURAS_BY_ERROR_ERROR,
+    GET_FACTURAS_BY_ERROR,
+    CLEAN_SELECTED,
+} from "./actions";
 
 const initialState = {
     entities: null,
@@ -16,6 +33,12 @@ const initialState = {
     selectedTimeStamp: null,
     tipoAction: "",
     tipoAccionTimeStamp: null,
+    presentacionResumen: null,
+    presentacionResumenTimeStamp: null,
+    presentacionResumenErrorTimeStamp: null,
+    facturasByError: null,
+    facturasByErrorTimeStamp: null,
+    selectedError: null,
 };
 
 export const reducer = (state = initialState, action, presentacionesEstadosState) => {
@@ -82,6 +105,21 @@ export const reducer = (state = initialState, action, presentacionesEstadosState
         case TIPO_ACCION:
             newState.tipoAction = action.tipo;
             newState.tipoAccionTimeStamp = new Date().getTime();
+            break;
+        case GET_RESUMEN_SUCCESS:
+            newState.presentacionResumen = action.payload.receive;
+            newState.presentacionResumenTimeStamp = new Date().getTime();
+        case GET_RESUMEN_ERROR:
+            newState.presentacionResumenErrorTimeStamp = new Date().getTime();
+            break;
+        case GET_FACTURAS_BY_ERROR_SUCCESS:
+            newState.facturasByError = action.payload.receive;
+            newState.facturasByErrorTimeStamp = new Date().getTime();
+        case GET_FACTURAS_BY_ERROR:
+            newState.selectedError = action.error;
+            break;
+        case CLEAN_SELECTED:
+            newState.selectedError = null;
             break;
     }
     return newState;

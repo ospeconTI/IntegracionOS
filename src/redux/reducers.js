@@ -25,6 +25,7 @@ import { reducer as periodosPresentacionesReducer } from "./periodosPresentacion
 import { reducer as facturasPrestadoresLogReducer } from "./facturasPrestadoresLog/reducer";
 import { reducer as presentacionesEstadosReducer } from "./presentacionesEstados/reducer";
 import { reducer as presentacionesErroresReducer } from "./presentacionesErrores/reducer";
+import { reducer as presentacionesSSSReducer } from "./presentacionSSS/reducer";
 
 export const rootReducer = (state = {}, action) => {
     const presentacionesEstadosRed = state.presentacionesEstados;
@@ -54,5 +55,6 @@ export const rootReducer = (state = {}, action) => {
         facturasPrestadoresLog: facturasPrestadoresLogReducer(state.facturasPrestadoresLog, action),
         presentacionesEstados: presentacionesEstadosReducer(state.presentacionesEstados, action),
         presentacionesErrores: presentacionesErroresReducer(state.presentacionesErrores, action),
+        presentacionesSSS: presentacionesSSSReducer(state.presentacionesSSS, action),
     };
 };

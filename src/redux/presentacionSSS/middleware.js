@@ -1,13 +1,64 @@
 /** @format */
 
-import { GET, GET_SUCCESS, GET_ERROR, ADD, ADD_SUCCESS, ADD_ERROR, UPDATE, UPDATE_SUCCESS, UPDATE_ERROR, UPDATE_ESTADO, UPDATE_ESTADO_SUCCESS, setSelected } from "./actions";
+import {
+    GET,
+    GET_SUCCESS,
+    GET_ERROR,
+    ADD,
+    ADD_SUCCESS,
+    ADD_ERROR,
+    UPDATE,
+    UPDATE_SUCCESS,
+    UPDATE_ERROR,
+    UPDATE_ESTADO,
+    UPDATE_ESTADO_SUCCESS,
+    setSelected,
+    GENERAR_SUCCESS,
+    GENERAR_ERROR,
+    GENERAR,
+} from "./actions";
 
-import { presentacionSSSFetch } from "../fetchs";
+import { presentacionSSSFetch, generarFetch } from "../fetchs";
 
 import { apiAdd, apiRequest, apiUpdate, apiAction, apiFunction, API_ADD } from "../api/actions";
 
 import { goTo } from "../routing/actions";
+import { showSpinner, hideSpinner } from "../api/actions";
 
+export const generar =
+    ({ dispatch, getState }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GENERAR) {
+            const url = SERVICE_URL + "/api/PresentacionSSS/Generar";
+            const authHeader = "Bearer " + getState().autorizacion.usuario.Profiles[0].Token;
+            const options = {
+                method: "POST",
+                headers: {
+                    Authorization: authHeader,
+                },
+            };
+            let fileName = "";
+            dispatch(showSpinner());
+            fetch(url, options)
+                .then((res) => {
+                    let contentDisposition = res.headers.get("content-disposition");
+                    fileName = contentDisposition.split(";")[1].split("=")[1];
+                    return res.blob();
+                })
+                .then((blob) => {
+                    let a = document.createElement("a");
+                    let url = window.URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = fileName;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    dispatch(hideSpinner());
+                });
+            //        dispatch(apiAdd(generarFetch, null, GENERAR_SUCCESS, GENERAR_ERROR));
+        }
+    };
 export const get =
     ({ dispatch }) =>
     (next) =>
@@ -82,4 +133,4 @@ export const processUpdate =
         }
     };
 
-export const middleware = [get, add, update, processGet, processError, processAdd, processUpdate, updateEstado];
+export const middleware = [get, add, update, processGet, processError, processAdd, processUpdate, updateEstado, generar];

@@ -9,5 +9,6 @@ export const largeRoute = [
     "11-generarBonos",
     "12-presentacionesCabecera",
     "13-enProceso",
-    "10-detalleFacturaP",
+    "20-detalleFacturaP",
+    "30-detallePresentacion",
 ];

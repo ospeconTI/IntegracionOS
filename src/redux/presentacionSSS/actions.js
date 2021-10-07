@@ -24,6 +24,10 @@ export const UPDATE_ESTADO_SUCCESS = "[PresentacionSSS] UPDATE_ESTADO_SUCCESS";
 
 export const SET_SELECTED = "[PresentacionSSS] SET_SELECTED";
 
+export const GENERAR = "[Presentacion SSS] GENERAR";
+export const GENERAR_SUCCESS = "[Presentacion SSS] GENERAR SUCCESS";
+export const GENERAR_ERROR = "[Presentacion SSS] GENERAR ERROR";
+
 export const get = (options) => ({
     type: GET,
     options: options,
@@ -47,4 +51,7 @@ export const updateEstado = (entity) => ({
 export const setSelected = (selected) => ({
     type: SET_SELECTED,
     selected: selected,
+});
+export const generar = () => ({
+    type: GENERAR,
 });

@@ -10,13 +10,15 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getPresentacionesCabecera, setSelected, setTipoAccion } from "../../redux/presentacionesCabecera/actions";
-import { PERSON, SEARCH } from "../../../assets/icons/svgs";
+import { PERSON, SEARCH, DOWNLOAD, UPLOAD } from "../../../assets/icons/svgs";
 import { filtrosPresentaciones } from "../componentes/filtrosPresentaciones";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
 import { formularioPresentaciones } from "./formularioPresentaciones";
 import { getResumen } from "../../redux/presentacionesErrores/actions";
+import { generar } from "../../redux/presentacionSSS/actions";
+import { getResumen as getResumenPresentacion } from "../../redux/presentacionesCabecera/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -50,7 +52,6 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                 display: grid;
                 grid-auto-flow: row;
                 align-content: start;
-
                 width: 98vw;
                 padding: 1vw;
             }
@@ -125,7 +126,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
 
             .rows {
                 overflow-y: auto;
-                height: 68vh;
+                height: 50vh;
                 gap: 0.3rem;
                 align-content: flex-start;
                 box-sizing: content-box;
@@ -140,28 +141,8 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             }
 
             .columnas {
-                grid-template-columns: 0.3fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr 0.4fr;
+                grid-template-columns: 0.3fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr;
                 padding: 0.3rem !important;
-            }
-            .myNet {
-                display: grid;
-                gap: -0.2rem;
-                grid-auto-flow: column;
-                align-items: center;
-                justify-items: start;
-                overflow-x: hidden;
-            }
-            .myNetNode {
-                place-content: center;
-                border-radius: 50%;
-                width: 1rem;
-                height: 1rem;
-                border: 2px solid var(--primary-color);
-                font-size: 0.5rem;
-            }
-
-            .complementaria {
-                font-size: 0.7rem !important;
             }
 
             svg {
@@ -172,16 +153,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             div[dirty] {
                 color: var(--color-gris);
             }
-            .botonAlta {
-                position: absolute;
-                top: 38rem;
-                left: 45rem;
-                padding: 1rem;
-            }
-            .botonAlta svg {
-                height: 3rem;
-                width: 3rem;
-            }
+
             .botonera {
                 grid-auto-flow: column;
                 display: grid;
@@ -230,7 +202,11 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                             `;
                         })}
                     </div>
-                    <button btn4 class="button botonAlta" @click=${this.agregar}>${ADD}</button>
+                    <div class="grid column center">
+                        <button btn3 class="button" @click="${this.agregar}" title="nueva presentacion">${ADD} Nueva</button>
+                        <button btn3 class="button" @click=${this.generar} title="generar presentacion para SSS">${UPLOAD} Presentar</button>
+                        <button btn3 class="button" @click="${this.aplicar}}" title="Aplicar novedades de SSS">${DOWNLOAD} Aplicar Novedades</button>
+                    </div>
                 </div>
                 <formulario-presentaciones class="body" id="formularioPresentacion" hidden></formulario-presentaciones>
             `;
@@ -239,27 +215,37 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         }
     }
 
-    // <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
-    // <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
-    // <button btn2 class="button" @click=${this.consultarDetalle} .item="${item}">${DETALLE}</button>
-
     poneBotonera(item) {
+        //en proceso
         if (item.IdEstadoPresentacionSSS == 1) {
             return html`
-                <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
-                <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
-                <button btn2 class="button" @click=${this.Detalle} .item="${item}">${DETALLE}</button>
+                <button btn2 class="button" @click=${this.delete} .item="${item}" title="elminar presentacion">${DELETE}</button>
+                <button btn2 class="button" @click=${this.modif} .item="${item}" title="modificar presentacion">${MODIF}</button>
+                <button btn2 class="button" @click=${this.detalle} .item="${item}" title="ver detalle">${DETALLE}</button>
             `;
         }
+
+        // cerrada
         if (item.IdEstadoPresentacionSSS == 2) {
-            return html` <button btn2 class="button" @click=${this.Detalle} .item="${item}">${DETALLE}</button> `;
+            return html` <button btn2 class="button" @click=${this.detalle} .item="${item}">${DETALLE}</button> `;
         }
+
+        //presentada
         if (item.IdEstadoPresentacionSSS == 3) {
             return html`
                 <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
                 <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
             `;
         }
+    }
+
+    aplicar(e) {}
+    generar(e) {
+        store.dispatch(generar());
+    }
+    detalle(e) {
+        store.dispatch(getResumenPresentacion(e.currentTarget.item.Id));
+        store.dispatch(goTo("detallePresentacion"));
     }
 
     delete(e) {
@@ -325,17 +311,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         }
         if (name == PRESENTACIONES_CAB) {
             this.items = state.presentacionesCabecera.entities;
-            this.update();
-        }
-
-        if (name == MY_NET) {
-            this.myNet = state.notifications.myNet.filter((item) => {
-                return item.Id != state.notifications.myNetId;
-            });
-            this.update();
-        }
-        if (name == MESSAGE) {
-            this.messages.push(state.notifications.singleMessage);
+            this.presentacionActiva = this.items.find((p) => p.IdEstadoPresentacionSSS == 1);
             this.update();
         }
     }
