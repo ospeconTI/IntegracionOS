@@ -21,10 +21,12 @@ import { middleware as notifications } from "./notifications/middleware";
 import { middleware as periodosBono } from "./periodosBono/middleware";
 import { middleware as medidas } from "./medidas/middleware";
 import { middleware as presentacionesCabecera } from "./presentacionesCabecera/middleware";
-import { middleware as presentacionesEstados } from "./PresentacionesEstados/middleware";
+import { middleware as presentacionesEstados } from "./presentacionesEstados/middleware";
+import { middleware as presentacionesDebitos } from "./presentacionesDebitos/middleware";
 import { middleware as facturasPrestadoresLog } from "./facturasPrestadoresLog/middleware";
 import { middleware as presentacionesErrores } from "./presentacionesErrores/middleware";
 import { middleware as presentacionSSS } from "./presentacionSSS/middleware";
+import { middleware as presentacionSSS_HistoricoDetalle } from "./presentacionSSS_HistoricoDetalle/middleware";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -48,9 +50,11 @@ let mdw = [
     ...medidas,
     ...presentacionesCabecera,
     ...presentacionesEstados,
+    ...presentacionesDebitos,
     ...facturasPrestadoresLog,
     ...presentacionesErrores,
     ...presentacionSSS,
+    ...presentacionSSS_HistoricoDetalle,
 ];
 
 if (process.env.NODE_ENV !== "production") {

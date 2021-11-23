@@ -166,7 +166,7 @@ export class prestadoresComponent extends connect(store, MEDIA_CHANGE, SCREEN, P
         }
         if (name == SCREEN) {
             this.hidden = true;
-            const isCurrentScreen = ["aprobacionFacturas", "consultarFacturas"].includes(state.screen.name);
+            const isCurrentScreen = ["aprobacionFacturas", "consultarFacturas", "presentacionesDebitos"].includes(state.screen.name);
             if (isInLayout(state, this.area) && isCurrentScreen) {
                 this.hidden = false;
             }

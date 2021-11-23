@@ -24,7 +24,7 @@ import { set as setFiltro } from "./redux/filtro/actions";
 import { listaPeriodosBono } from "./redux/periodosBono/actions";
 import { get as getMedidas } from "./redux/medidas/actions";
 import { lista as listaPeriodosPresentacion } from "./redux/periodosPresentaciones/actions";
-import { get as getPresentacionsEstados } from "./redux/PresentacionesEstados/actions";
+import { get as getPresentacionsEstados } from "./redux/presentacionesEstados/actions";
 
 if (process.env.NODE_ENV === "production") {
     registerSW();

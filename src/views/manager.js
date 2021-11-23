@@ -28,6 +28,7 @@ import { generarBonos } from "./bodies/generarBonos";
 import { presentacionSSSBody } from "./bodies/PresentacionSSS";
 import { logsFacturas } from "./componentes/logs";
 import { detallePresentcion } from "./bodies/detallePresentacion";
+import { presentacionesDebitos } from "./bodies/presentacionesDebitos";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -89,6 +90,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, SCREEN, SELECTION)
             <en-proceso class="body" id="enProceso"></en-proceso>
             <logs-facturas></logs-facturas>
             <detalle-presentacion class="body"></detalle-presentacion>
+            <presentaciones-debitos class="body" id="presentacionesDebitos"></presentaciones-debitos>
         `;
     }
 
