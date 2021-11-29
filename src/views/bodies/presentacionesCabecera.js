@@ -9,12 +9,12 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getPresentacionesCabecera, setSelected, setTipoAccion } from "../../redux/presentacionesCabecera/actions";
+import { get as getPresentacionesCabecera, setSelected, setTipoAccion, muestroForm } from "../../redux/presentacionesCabecera/actions";
 import { PERSON, SEARCH, DOWNLOAD, UPLOAD } from "../../../assets/icons/svgs";
 import { filtrosPresentaciones } from "../componentes/filtrosPresentaciones";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
-import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
+import { COPY, ADD, MODIF, DELETE, DETALLE, TIMELINE } from "../../../assets/icons/svgs";
 import { formularioPresentaciones } from "./formularioPresentaciones";
 import { getResumen } from "../../redux/presentacionesErrores/actions";
 import { generar } from "../../redux/presentacionSSS/actions";
@@ -160,6 +160,11 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                 display: grid;
                 justify-content: right;
             }
+            .botones {
+                color: var(--color-azul-oscuro) !important;
+                fill: var(--color-azul-oscuro) !important;
+                stroke: var(--color-azul-oscuro) !important;
+            }
         `;
     }
     render() {
@@ -220,24 +225,24 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         //en proceso
         if (item.IdEstadoPresentacionSSS == 1) {
             return html`
-                <button btn2 class="button" @click=${this.delete} .item="${item}" title="elminar presentacion">${DELETE}</button>
-                <button btn2 class="button" @click=${this.modif} .item="${item}" title="modificar presentacion">${MODIF}</button>
-                <button btn2 class="button" @click=${this.detalle} .item="${item}" title="ver detalle">${DETALLE}</button>
-                <button btn2 class="button" @click=${this.debitos} .item="${item}" title="ver Debitos">${DETALLE}</button>
+                <button btn2 class="button botones" @click=${this.delete} .item="${item}" title="elminar presentacion">${DELETE}</button>
+                <button btn2 class="button botones" @click=${this.modif} .item="${item}" title="modificar presentacion">${MODIF}</button>
+                <button btn2 class="button botones" @click=${this.detalle} .item="${item}" title="ver detalle">${COPY}</button>
+                <button btn2 class="button botones" @click=${this.debitos} .item="${item}" title="ver Debitos">${COPY}</button>
             `;
         }
 
         // cerrada
         if (item.IdEstadoPresentacionSSS == 2) {
-            return html` <button btn2 class="button" @click=${this.detalle} .item="${item}">${DETALLE}</button>
-                <button btn2 class="button" @click=${this.debitos} .item="${item}" title="ver Debitos">${DETALLE}</button>`;
+            return html` <button btn2 class="button botones" @click=${this.detalle} .item="${item}">${COPY}</button>
+                <button btn2 class="button botones" @click=${this.debitos} .item="${item}" title="ver Debitos">${COPY}</button>`;
         }
 
         //presentada
         if (item.IdEstadoPresentacionSSS == 3) {
             return html`
-                <button btn2 class="button" @click=${this.delete} .item="${item}">${DELETE}</button>
-                <button btn2 class="button" @click=${this.modif} .item="${item}">${MODIF}</button>
+                <button btn2 class="button botones" @click=${this.delete} .item="${item}">${DELETE}</button>
+                <button btn2 class="button botones" @click=${this.modif} .item="${item}">${MODIF}</button>
             `;
         }
     }
@@ -251,15 +256,26 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         store.dispatch(goTo("detallePresentacion"));
     }
     debitos(e) {
-        store.dispatch(getPresentacionesDebitos({ IdPresentacion: e.currentTarget.item.Id }));
+        store.dispatch(setSelected(e.currentTarget.item));
+        // var params = {
+        //     expand: "PresentacionSSS_Historico($expand=FacturasPrestadores($expand=prestado,SSS_TipoComprobantes,PresentacionSSS_Creditos,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))))",
+        //     filter: "IdPresentacionSSS eq " + e.currentTarget.item.Id + " and Activo eq true",
+        // };
+        var params = {
+            filter: "IdPresentacionSSS eq " + e.currentTarget.item.Id,
+        };
+
+        store.dispatch(getPresentacionesDebitos(params));
         store.dispatch(goTo("presentacionesDebitos"));
     }
     delete(e) {
+        store.dispatch(muestroForm(true));
         store.dispatch(setSelected(e.currentTarget.item));
         store.dispatch(setTipoAccion("D"));
     }
 
     modif(e) {
+        store.dispatch(muestroForm(true));
         store.dispatch(setSelected(e.currentTarget.item));
         store.dispatch(setTipoAccion("M"));
     }
@@ -276,6 +292,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             PeriodoPresentacion: 0,
             UsuarioUpdate: "",
         };
+        store.dispatch(muestroForm(true));
         store.dispatch(setSelected(itemVacio));
         store.dispatch(setTipoAccion("A"));
     }

@@ -9,9 +9,11 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getPresentacionesDebitos } from "../../redux/presentacionesDebitos/actions";
+import { get as getPresentacionesDebitos, remove as removePresentacionesDebitos } from "../../redux/presentacionesDebitos/actions";
+import { remove as removePresentacionesCreditos } from "../../redux/presentacionSSS_Creditos/actions";
 import { PERSON, SEARCH, DOWNLOAD, UPLOAD, TILDE } from "../../../assets/icons/svgs";
 import { filtrosFacturasHistoricas } from "../componentes/filtrosFacturasHistoricas";
+import { filtrosDebitos } from "../componentes/filtrosDebitos";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
@@ -20,15 +22,12 @@ const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const PRESENTACIONES_DEB = "presentacionesDebitos.getTimeStamp";
 const FILTROTS = "filtro.timeStamp";
-//const MY_NET = "notifications.myNetTimeStamp";
-//const MESSAGE = "notifications.singleMessageTimeStamp";
 
 export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, MEDIA_CHANGE, SCREEN, FILTROTS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
         this.myNet = [];
-        this.messages = [];
         this.items = [];
         this.order = "";
 
@@ -104,7 +103,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
                 cursor: pointer;
             }
 
-            filtros-presentaciones {
+            filtros-debitos {
                 position: fixed;
                 top: 0px;
                 width: 30%;
@@ -115,7 +114,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
                 transition: all 0.5s ease 0s;
             }
 
-            filtros-presentaciones[isOpen] {
+            filtros-debitos[isOpen] {
                 left: 0;
             }
 
@@ -136,7 +135,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
             }
 
             .columnas {
-                grid-template-columns: 2fr 1fr 2fr 2fr 2fr 2fr 2fr 8fr 8fr 0.5fr 0.5fr;
+                grid-template-columns: 2.4fr 2fr 4fr 2fr 2fr 2fr 2fr 2fr 7fr 7fr 0.5fr 0.5fr 0.5fr;
                 padding: 0.3rem !important;
             }
 
@@ -164,41 +163,53 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
                         <button btn3 class="justify-self-start" id="showfiltros" @click="${this.mostrarFiltros}">${SEARCH}</button>
                         <div class="sublabel justify-self-end">Cantidad:${this.items.length}</div>
                     </div>
-                    <filtros-presentaciones class="grid row start " id="filtros" hidden estado="2"></filtros-presentaciones>
+                    <filtros-debitos class="grid row start " id="filtros" hidden estado="2"></filtros-debitos>
                     <div class="grid columnas cabecera">
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacNro"}">Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaEmision"}">Fecha Emision</div>
-                        <div class="ordena" @click=${this.ordenar} .orden="${"CUITPrestador"}">CUIT Prestador</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"Prestador"}">Prestador</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"PeriodoPrestacion"}">Periodo Prestacion</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"ImporteComprobante"}">Importe Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"ImporteSolicitado"}">Importe Solicitado</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"ImporteSubsidiado"}">Importe Subsidiado</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"Expediente"}">Exp.</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"Practica"}">Practica</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"AfiNombre"}">Afiliado</div>
                         <div class="ordena">ND</div>
                         <div class="ordena">NC</div>
+                        <div>&nbsp;</div>
                     </div>
                     <div class="inner-grid  rows">
                         ${this.items.map((item) => {
                             return html`
-                                <div class="inner-grid columnas datos bordeRow" .item="${item}" ?dirty="${this.messages.find((e) => e.Document == item.Id)}">
-                                    <div>${item.FacNro}</div>
-                                    <div>${new Date(item.FechaEmision).toLocaleDateString()}</div>
-                                    <div>${item.CUITPrestador}</div>
-                                    <div>${item.PeriodoPrestacion}</div>
-                                    <div>${item.ImporteComprobante}</div>
-                                    <div>${item.ImporteSolicitado}</div>
-                                    <div>${item.ImporteSubsidiado}</div>
-                                    <div>${item.Practica}</div>
-                                    <div>${item.Hiscli + " - " + item.AfiNombre}</div>
+                                <div class="inner-grid columnas datos bordeRow" .item="${item}">
+                                    <div>
+                                        ${item.PresentacionSSS_Historico.PuntoVenta +
+                                        item.PresentacionSSS_Historico.FacturasPrestadores.SSS_TipoComprobantes.TipoFactura +
+                                        item.PresentacionSSS_Historico.NumeroComprobante}
+                                    </div>
+                                    <div>${new Date(item.PresentacionSSS_Historico.FechaEmision).toLocaleDateString()}</div>
+                                    <div>${item.PresentacionSSS_Historico.FacturasPrestadores.prestado.numero + " - " + item.PresentacionSSS_Historico.FacturasPrestadores.prestado.nombre}</div>
+                                    <div>${item.PresentacionSSS_Historico.PeriodoPrestacion}</div>
+                                    <div>${item.PresentacionSSS_Historico.ImporteComprobante}</div>
+                                    <div>${item.PresentacionSSS_Historico.ImporteSolicitado}</div>
+                                    <div>${item.PresentacionSSS_Historico.ImporteSubsidiado}</div>
+                                    <div>${item.PresentacionSSS_Historico.FacturasPrestadores.Expediente_Bono.Expediente}</div>
+                                    <div>${item.PresentacionSSS_Historico.FacturasPrestadores.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.Descripcion}</div>
+                                    <div>
+                                        ${item.PresentacionSSS_Historico.FacturasPrestadores.Expediente_Bono.Cabecera.Hiscli +
+                                        " - " +
+                                        item.PresentacionSSS_Historico.FacturasPrestadores.Expediente_Bono.Cabecera.Nombre}
+                                    </div>
                                     <div>${TILDE}</div>
-                                    <div>${item.Credito == "S" ? TILDE : ""}</div>
+                                    <div>${item.PresentacionSSS_Historico.FacturasPrestadores.PresentacionSSS_Creditos[0] != null ? TILDE : ""}</div>
+                                    <button btn2 class="button" @click=${this.delete} .item="${item}" style="padding:0">${DELETE}</button>
                                 </div>
                             `;
                         })}
                     </div>
                     <div class="grid column center">
-                        <button btn3 class="button" @click="${this.agregar}" title="nueva presentacion">${ADD} Nueva</button>
+                        <button btn3 class="button" @click="${this.agregar}" title="Nuevo Debito">${ADD} Nueva</button>
                     </div>
                 </div>
                 <filtros-facturashistoricas class="busqueda" id="filtroFacturasHistoricas"></filtros-facturashistoricas>
@@ -208,52 +219,23 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
         }
     }
 
-    aplicar(e) {}
-    generar(e) {
-        this.shadowRoot.querySelectorAll("filtroFacturasHistoricas").Mostrar = true;
-    }
-    detalle(e) {
-        //store.dispatch(getResumenPresentacion(e.currentTarget.item.Id));
-        //store.dispatch(goTo("detallePresentacion"));
-    }
-    debitos(e) {
-        //var debitosFiltros = { IdPresentacion: e.currentTarget.item.Id };
-        //store.dispatch(getPresentacionesDebitos(debitosFiltros));
-        //store.dispatch(getResumenPresentacion(e.currentTarget.item.Id));
-        //store.dispatch(goTo("detallePresentacion"));
-    }
     delete(e) {
-        //store.dispatch(setSelected(e.currentTarget.item));
-        //store.dispatch(setTipoAccion("D"));
-    }
-
-    modif(e) {
-        //store.dispatch(setSelected(e.currentTarget.item));
-        //store.dispatch(setTipoAccion("M"));
+        let item = e.currentTarget.item;
+        if (item.PresentacionSSS_Historico.FacturasPrestadores.PresentacionSSS_Creditos[0] != null) {
+            store.dispatch(removePresentacionesCreditos(item.PresentacionSSS_Historico.FacturasPrestadores.PresentacionSSS_Creditos[0]));
+        }
+        store.dispatch(removePresentacionesDebitos(item));
     }
 
     agregar(e) {
         this.shadowRoot.querySelector("#filtroFacturasHistoricas").Mostrar = true;
-        // const itemVacio = {
-        //     Activo: false,
-        //     FechaPresentacion: "",
-        //     FechaUpdate: "",
-        //     Id: 0,
-        //     IdEstadoPresentacionSSS: 0,
-        //     PeriodoDesde: 0,
-        //     PeriodoHasta: 0,
-        //     PeriodoPresentacion: 0,
-        //     UsuarioUpdate: "",
-        // };
-        //store.dispatch(setSelected(itemVacio));
-        //store.dispatch(setTipoAccion("A"));
     }
 
     mostrarFiltros() {
         this.shadowRoot.querySelector("#filtros").isOpen = true;
     }
 
-    ordenar(e) {
+    /*     ordenar(e) {
         this.order = this.order == "" ? "desc" : "";
         store.dispatch(
             getPresentacionesCabecera({
@@ -264,7 +246,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
             })
         );
         this.update();
-    }
+    } */
 
     filtrar(e) {
         const filtros = this.shadowRoot.querySelector("#filtros");

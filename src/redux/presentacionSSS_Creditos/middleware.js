@@ -1,6 +1,6 @@
-import { GET, GET_SUCCESS, GET_ERROR, ADD, ADD_SUCCESS, ADD_ERROR, REMOVE, REMOVE_SUCCESS, REMOVE_ERROR, get as getPresentacionesDebitos } from "./actions";
+import { GET, GET_SUCCESS, GET_ERROR, ADD, ADD_SUCCESS, ADD_ERROR, REMOVE, REMOVE_SUCCESS, REMOVE_ERROR } from "./actions";
 
-import { presentacionesDebitosFetch, presentacionSSS_Debitos } from "../fetchs";
+import { presentacionSSS_Creditos } from "../fetchs";
 
 import { apiRequest, apiAdd, apiDelete } from "../api/actions";
 import { RESTRequest } from "../rest/actions";
@@ -12,12 +12,9 @@ export const get =
         next(action);
         if (action.type === GET) {
             let token = getState().autorizacion.usuario.Profiles[0].Token;
-            let opt = action.options;
-            opt.expand =
-                "PresentacionSSS_Historico($expand=FacturasPrestadores($expand=prestado,SSS_TipoComprobantes,PresentacionSSS_Creditos($filter=Activo eq true),Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))))";
-            opt.filter = opt.filter == null || opt.filter == "" ? opt.filter + " Activo eq true " : opt.filter + " and Activo eq true";
-
-            dispatch(apiRequest(presentacionSSS_Debitos, opt, GET_SUCCESS, GET_ERROR));
+            //var idPres = action.options.IdPresentacion;
+            //dispatch(RESTRequest(presentacionesDebitosFetch, "?IdPresentacion=" + action.options.IdPresentacion, GET_SUCCESS, GET_ERROR, token));
+            dispatch(apiRequest(presentacionSSS_Creditos, action.options, GET_SUCCESS, GET_ERROR));
         }
     };
 
@@ -37,20 +34,16 @@ export const adicion =
         next(action);
         if (action.type === ADD) {
             const body = action.item;
-            dispatch(apiAdd(presentacionSSS_Debitos, body, ADD_SUCCESS, ADD_ERROR));
+            dispatch(apiAdd(presentacionSSS_Creditos, body, ADD_SUCCESS, ADD_ERROR));
         }
     };
 
 export const processAdd =
-    ({ dispatch, getState }) =>
+    ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
         if (action.type === ADD_SUCCESS) {
-            var params = {
-                filter: "IdPresentacionSSS eq " + action.payload.receive.IdPresentacionSSS,
-            };
-            dispatch(getPresentacionesDebitos(params));
         }
     };
 
@@ -60,20 +53,18 @@ export const remove =
     (action) => {
         next(action);
         if (action.type === REMOVE) {
-            dispatch(apiDelete(presentacionSSS_Debitos, action.item, REMOVE_SUCCESS, REMOVE_ERROR));
+            const body = action.item;
+
+            dispatch(apiDelete(presentacionSSS_Creditos, body, REMOVE_SUCCESS, REMOVE_ERROR));
         }
     };
 
 export const processRemove =
-    ({ dispatch, getState }) =>
+    ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
         if (action.type === REMOVE_SUCCESS) {
-            var params = {
-                filter: "IdPresentacionSSS eq " + action.payload.receive.IdPresentacionSSS,
-            };
-            dispatch(getPresentacionesDebitos(params));
         }
     };
 

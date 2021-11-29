@@ -7,15 +7,16 @@ import { button } from "../css/button";
 import { input } from "../css/input";
 import { select } from "../css/select";
 import { BUSCAR, AGREGAR, SAVE, CANCEL, DELETE, MODIF } from "../../../assets/icons/svgs";
-import { add, update, remove, validar, setSelected } from "../../redux/presentacionesCabecera/actions";
+import { add, update, remove, validar, setSelected, muestroForm } from "../../redux/presentacionesCabecera/actions";
 import { getPeriodosPresentacion } from "../../redux/periodosPresentaciones/actions";
 
 const SELECTED = "presentacionesCabecera.selectedTimeStamp";
+const MUESTRO_FORM = "presentacionesCabecera.muestroTimeStamp";
 const TIPO_ACCION = "presentacionesCabecera.tipoAccionTimeStamp";
 const GET_PERIODOS = "periodosPresentaciones.timeStampPeriodosPresentacion";
 const VALID = "presentacionesCabecera.esValidoTimeStamp";
 const PRESENTACION_ESTADO = "presentacionesEstados.getTimeStamp";
-export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCION, GET_PERIODOS, VALID, PRESENTACION_ESTADO)(LitElement) {
+export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_FORM, TIPO_ACCION, GET_PERIODOS, VALID, PRESENTACION_ESTADO)(LitElement) {
     constructor() {
         super();
         this.hidden = true;
@@ -28,6 +29,7 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
         this.estados = [];
         this.valido = false;
         this.aGrabar = false;
+        this.muestroForm = false;
     }
 
     static get styles() {
@@ -133,72 +135,74 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
     }
 
     formulario() {
-        if (this.item != null) {
-            return html`
-                <div class="form">
-                    <div class="divABM">
-                        <div class="select">
-                            <label>Periodo Presentación</label>
-                            <select id="periodoPresentacion" ?disabled="${this.modo != "A" ? true : false}" @change="${this.cambioPeriodo}">
-                                ${this.listaPeriodos.map((periodo) => {
-                                    if (this.item.PeriodoPresentacion == periodo) {
-                                        return html` <option value=${periodo} selected>${periodo}</option> `;
-                                    } else {
-                                        return html` <option value=${periodo}>${periodo}</option> `;
-                                    }
-                                })}
-                            </select>
+        if (this.muestroForm) {
+            if (this.item != null) {
+                return html`
+                    <div class="form">
+                        <div class="divABM">
+                            <div class="select">
+                                <label>Periodo Presentación</label>
+                                <select id="periodoPresentacion" ?disabled="${this.modo != "A" ? true : false}" @change="${this.cambioPeriodo}">
+                                    ${this.listaPeriodos.map((periodo) => {
+                                        if (this.item.PeriodoPresentacion == periodo) {
+                                            return html` <option value=${periodo} selected>${periodo}</option> `;
+                                        } else {
+                                            return html` <option value=${periodo}>${periodo}</option> `;
+                                        }
+                                    })}
+                                </select>
+                            </div>
+                            <div class="input">
+                                <label>Fecha Cierre</label>
+                                <input ?disabled="${this.modo == "D" ? true : false}" type="date" id="fechaPresentacion" autocomplete="off" .value="${this.item.FechaPresentacion.substr(0, 10)}" />
+                            </div>
                         </div>
-                        <div class="input">
-                            <label>Fecha Cierre</label>
-                            <input ?disabled="${this.modo == "D" ? true : false}" type="date" id="fechaPresentacion" autocomplete="off" .value="${this.item.FechaPresentacion.substr(0, 10)}" />
+                        <div class="divABM">
+                            <div class="select">
+                                <label>Periodo Desde</label>
+                                <select id="periodoDesde" ?disabled="${this.modo == "D" ? true : false}">
+                                    ${this.periodosPresentacion.map((periodo) => {
+                                        if (this.item.PeriodoDesde == periodo) {
+                                            return html` <option value=${periodo} selected>${periodo}</option> `;
+                                        } else {
+                                            return html` <option value=${periodo}>${periodo}</option> `;
+                                        }
+                                    })}
+                                </select>
+                            </div>
+                            <div class="select">
+                                <label>Periodo Hasta</label>
+                                <select id="periodoHasta" ?disabled="${this.modo == "D" ? true : false}">
+                                    ${this.periodosPresentacion.map((periodo) => {
+                                        if (this.item.PeriodoHasta == periodo) {
+                                            return html` <option value=${periodo} selected>${periodo}</option> `;
+                                        } else {
+                                            return html` <option value=${periodo}>${periodo}</option> `;
+                                        }
+                                    })}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- <div class="select" id="divEstados">
+                            <label>Estado Presentacion</label>
+                            <select id="estado" ?disabled="${this.modo == "D" ? true : false}">
+                                ${this.estados.map((estado) => {
+                            if (this.item.IdEstadoPresentacionSSS == estado.Id) {
+                                return html` <option value=${estado.Id} selected>${estado.Descripcion}</option> `;
+                            } else {
+                                return html` <option value=${estado.Id}>${estado.Descripcion}</option> `;
+                            }
+                        })}
+                            </select>
+                        </div> -->
+                        <label id="mensaje">${this.mensaje}</label>
+                        <div class="botonera">
+                            <button btn2 class="button" @click=${this.validar} .item=${this.item}>${SAVE}</button>
+                            <button btn2 class="button" @click=${this.cerrar}>${CANCEL}</button>
                         </div>
                     </div>
-                    <div class="divABM">
-                        <div class="select">
-                            <label>Periodo Desde</label>
-                            <select id="periodoDesde" ?disabled="${this.modo == "D" ? true : false}">
-                                ${this.periodosPresentacion.map((periodo) => {
-                                    if (this.item.PeriodoDesde == periodo) {
-                                        return html` <option value=${periodo} selected>${periodo}</option> `;
-                                    } else {
-                                        return html` <option value=${periodo}>${periodo}</option> `;
-                                    }
-                                })}
-                            </select>
-                        </div>
-                        <div class="select">
-                            <label>Periodo Hasta</label>
-                            <select id="periodoHasta" ?disabled="${this.modo == "D" ? true : false}">
-                                ${this.periodosPresentacion.map((periodo) => {
-                                    if (this.item.PeriodoHasta == periodo) {
-                                        return html` <option value=${periodo} selected>${periodo}</option> `;
-                                    } else {
-                                        return html` <option value=${periodo}>${periodo}</option> `;
-                                    }
-                                })}
-                            </select>
-                        </div>
-                    </div>
-                    <!-- <div class="select" id="divEstados">
-                        <label>Estado Presentacion</label>
-                        <select id="estado" ?disabled="${this.modo == "D" ? true : false}">
-                            ${this.estados.map((estado) => {
-                        if (this.item.IdEstadoPresentacionSSS == estado.Id) {
-                            return html` <option value=${estado.Id} selected>${estado.Descripcion}</option> `;
-                        } else {
-                            return html` <option value=${estado.Id}>${estado.Descripcion}</option> `;
-                        }
-                    })}
-                        </select>
-                    </div> -->
-                    <label id="mensaje">${this.mensaje}</label>
-                    <div class="botonera">
-                        <button btn2 class="button" @click=${this.validar} .item=${this.item}>${SAVE}</button>
-                        <button btn2 class="button" @click=${this.cerrar}>${CANCEL}</button>
-                    </div>
-                </div>
-            `;
+                `;
+            }
         }
     }
 
@@ -221,7 +225,7 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
             PeriodoPresentacion: 0,
             UsuarioUpdate: "",
         };
-
+        store.dispatch(muestroForm(false));
         store.dispatch(setSelected(itemVacio));
         store.dispatch(setSelected(this.itemOld));
         this.hidden = true;
@@ -263,6 +267,10 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
     }
 
     stateChanged(state, name) {
+        if (name === MUESTRO_FORM) {
+            this.muestroForm = state.presentacionesCabecera.muestroForm;
+            this.update();
+        }
         if (name === SELECTED) {
             this.item = state.presentacionesCabecera.selected;
             this.itemOld = state.presentacionesCabecera.selected;
@@ -293,7 +301,7 @@ export class formularioPresentaciones extends connect(store, SELECTED, TIPO_ACCI
             this.periodosPresentacion = state.periodosPresentaciones.periodosPresentacion;
             this.listaPeriodos = state.periodosPresentaciones.listaPeriodos;
 
-            if (this.item != null) {
+            if (this.item != null && this.muestroForm) {
                 this.hidden = false;
             } else {
                 this.hidden = true;

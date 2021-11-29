@@ -22,6 +22,7 @@ export const reducer = (state = initialState, action) => {
         case GET_SUCCESS:
             newState.entities = action.payload.receive;
             newState.getTimeStamp = new Date().getTime();
+            break;
     }
     return newState;
 };

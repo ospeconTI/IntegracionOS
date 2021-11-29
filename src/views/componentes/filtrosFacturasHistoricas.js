@@ -10,8 +10,9 @@ import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { select } from "../css/select";
 import { onOff } from "../css/onOff";
-import { prestadoresComponent } from "./prestadores";
-import { get as getFacturas } from "../../redux/facturasPrestadores/actions";
+import { get as getPresentacionSSS_Historico } from "../../redux/presentacionSSS_Historico/actions";
+import { add as addPresentacionesDebitos } from "../../redux/presentacionesDebitos/actions";
+import { add as addPresentacionesCreditos } from "../../redux/presentacionSSS_Creditos/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 
 import { SEARCH } from "../../../assets/icons/svgs";
@@ -19,23 +20,19 @@ import { SEARCH } from "../../../assets/icons/svgs";
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
 const COMPROBANTES = "tipoComprobantes.timeStamp";
-const PERIODOS = "periodosMensuales.listaTimeStamp";
-const PERIODOSMES = "periodosMensuales.timeStamp";
-const ESTADOS = "facturasPrestadoresEstados.timeStamp";
-//const SETFILTRO = "filtro.timeStamp"
-
-export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCREEN, PERIODOS, PERIODOSMES, COMPROBANTES, ESTADOS)(LitElement) {
+const HISTORICO_TIMESTAMP = "presentacionSSS_Historico.getTimeStamp";
+const PRESENTACIONES_TIMESTAMP = "presentacionesCabecera.selectedTimeStamp";
+export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCREEN, COMPROBANTES, HISTORICO_TIMESTAMP, PRESENTACIONES_TIMESTAMP)(LitElement) {
     constructor() {
         super();
         this.area = "body";
         this.tipoComprobantes = [];
-        this.periodos = [];
         this.estados = [];
-        this.periodoActual = null;
         this.Mostrar = false;
         this.items = [];
         this.isOpen = true;
         this.hidden = false;
+        this.idPresentacion = 0;
     }
     static get styles() {
         return css`
@@ -109,7 +106,7 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
                 width: 80rem;
             }
             .columnas {
-                grid-template-columns: 2fr 1fr 2fr 2fr 2fr 2fr 2fr 8fr 8fr;
+                grid-template-columns: 2.8fr 2.8fr 4fr 2fr 2.5fr 2.5fr 2.5fr 2fr 8fr 7fr 5fr;
                 padding: 0.3rem !important;
             }
             .rows {
@@ -118,6 +115,7 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
                 gap: 0.3rem;
                 align-content: flex-start;
                 box-sizing: content-box;
+                font-size: 0.7rem;
             }
             .cabecera {
                 background-color: white;
@@ -127,6 +125,10 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
                 font-size: 0.7rem;
                 font-weight: bold;
                 align-items: end;
+            }
+            .btnChico {
+                font-size: 0.6rem !important;
+                padding: 0.3rem !important;
             }
         `;
     }
@@ -152,13 +154,13 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
                                 <select id="tipo">
                                     <option value="-1" selected>Todos</option>
                                     ${this.tipoComprobantes.map((c) => {
-                                        return html`<option value="${c.Id}">${c.Nombre}</option>`;
+                                        return html`<option value="${c.CodigoSSS}">${c.Nombre}</option>`;
                                     })}
                                 </select>
                             </div>
                             <div class="input">
                                 <label>Punto de venta</label>
-                                <input type="number" id="sucursal" autocomplete="off" maxlength="4" @input=${this.maxLength} />
+                                <input type="number" id="sucursal" autocomplete="off" maxlength="5" @input=${this.maxLength} />
                             </div>
                             <div class="input">
                                 <label>Número</label>
@@ -176,106 +178,129 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
                     <div class="grid columnas cabecera">
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacNro"}">Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaEmision"}">Fecha Emision</div>
-                        <div class="ordena" @click=${this.ordenar} .orden="${"CUITPrestador"}">CUIT Prestador</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"CUITPrestador"}">Prestador</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"PeriodoPrestacion"}">Periodo Prestacion</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"ImporteComprobante"}">Importe Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"ImporteSolicitado"}">Importe Solicitado</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"ImporteSubsidiado"}">Importe Subsidiado</div>
+                        <div class="ordena" @click=${this.ordenar} .orden="${"Expediente"}">Expediente</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"Practica"}">Practica</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"AfiNombre"}">Afiliado</div>
+                        <div></div>
                     </div>
                     <div class="inner-grid  rows">
-                        ${this.items.map((item) => {
-                            return html`
-                                <div class="inner-grid columnas datos bordeRow" .item="${item}" ?dirty="${this.messages.find((e) => e.Document == item.Id)}">
-                                    <div>${item.FacNro}</div>
-                                    <div>${new Date(item.FechaEmision).toLocaleDateString()}</div>
-                                    <div>${item.CUITPrestador}</div>
-                                    <div>${item.PeriodoPrestacion}</div>
-                                    <div>${item.ImporteComprobante}</div>
-                                    <div>${item.ImporteSolicitado}</div>
-                                    <div>${item.ImporteSubsidiado}</div>
-                                    <div>${item.Practica}</div>
-                                    <div>${item.Hiscli + " - " + item.AfiNombre}</div>
-                                </div>
-                            `;
-                        })}
+                        ${this.items != null
+                            ? this.items.map((item) => {
+                                  return html`
+                                      <div class="inner-grid columnas datos bordeRow" .item="${item}">
+                                          <div>${item.PuntoVenta + item.FacturasPrestadores.SSS_TipoComprobantes.TipoFactura + item.NumeroComprobante}</div>
+                                          <div>${new Date(item.FechaEmision).toLocaleDateString()}</div>
+                                          <div>${item.FacturasPrestadores.prestado.numero + " - " + item.FacturasPrestadores.prestado.nombre}</div>
+                                          <div>${item.PeriodoPrestacion}</div>
+                                          <div>${item.ImporteComprobante}</div>
+                                          <div>${item.ImporteSolicitado}</div>
+                                          <div>${item.ImporteSubsidiado}</div>
+                                          <div>${item.FacturasPrestadores.Expediente_Bono.Expediente}</div>
+                                          <div>${item.FacturasPrestadores.Expediente_Bono.Cabecera.Detalle.SSS_Prestaciones.Descripcion}</div>
+                                          <div>${item.FacturasPrestadores.Expediente_Bono.Cabecera.Hiscli + " - " + item.FacturasPrestadores.Expediente_Bono.Cabecera.Nombre}</div>
+                                          <div class="grid column">
+                                              <button btn1 class="btnChico" @click="${this.generaND}" .item="${item}">ND</button>
+                                              <button btn1 class="btnChico" @click="${this.generaNDNC}" .item="${item}">ND y NC</button>
+                                          </div>
+                                      </div>
+                                  `;
+                              })
+                            : html``}
                     </div>
                 </div>
             </div>
         `;
     }
 
+    generaND(e) {
+        var item = e.currentTarget.item;
+
+        var itemND = {
+            IdPresentacionSSS: this.idPresentacion,
+            IdPresentacionSSS_Historico: item.Id,
+            IdPresentacionSSS_DebitosEstado: 1,
+            UsuarioUpdate: "",
+            FechaUpdate: new Date(),
+            Activo: true,
+        };
+        store.dispatch(addPresentacionesDebitos(itemND));
+
+        this.cerrar();
+    }
+
+    generaNDNC(e) {
+        var item = e.currentTarget.item;
+        //[IdPresentacionSSS], [IdFacturasPrestadores], [IdPresentacion_CreditosEstado], [UsuarioUpdate], [FechaUpdate], [Activo]
+        var itemNC = {
+            IdPresentacionSSS: this.idPresentacion,
+            IdFacturasPrestadores: item.FacturasPrestadores.Id,
+            IdPresentacion_CreditosEstado: 1,
+            UsuarioUpdate: "Usuario",
+            FechaUpdate: new Date(),
+            Activo: true,
+        };
+        store.dispatch(addPresentacionesCreditos(itemNC));
+
+        this.generaND(e);
+    }
+
     cerrar() {
         this.Mostrar = false;
+        this.limpiar();
         this.update();
     }
 
     limpiar() {
-        const orden = this.shadowRoot.querySelector("#orden");
         const expediente = this.shadowRoot.querySelector("#expediente");
         const hiscli = this.shadowRoot.querySelector("#hiscli");
-        const periodo = this.shadowRoot.querySelector("#periodo");
+        const prestador = this.shadowRoot.querySelector("#prestador");
         const tipo = this.shadowRoot.querySelector("#tipo");
         const sucursal = this.shadowRoot.querySelector("#sucursal");
         const numero = this.shadowRoot.querySelector("#numero");
-        const estados = this.shadowRoot.querySelector("#estados");
-        const prestador = this.shadowRoot.querySelector("#prestador");
-        const integracion = this.shadowRoot.querySelector("#esIntegracion");
-        const cuit = this.shadowRoot.querySelector("#cuit");
 
-        orden.value = "";
-        hiscli.value = "";
         expediente.value = "";
-        periodo.value = -1;
+        hiscli.value = "";
+        prestador.value = "";
         tipo.value = -1;
         sucursal.value = "";
         numero.value = "";
-        estados.value = this.estado;
-        prestador.value = "";
-        integracion.value = -1;
-        cuit.value = "";
 
         let filtro = "";
+        //siempre debe traer solo las facturas aprobadas por SSS
+        filtro += "FacturasPrestadores/IdFacturasPrestadoresEstado eq 5 and ";
 
-        if (periodo.value != -1) {
-            filtro += "Expediente_Bono/Periodo eq " + periodo.value + " and ";
+        if (expediente != 0 && expediente != "") {
+            filtro += "FacturasPrestadores/Expediente_Bono/Expediente eq " + expediente + " and ";
         }
 
-        if (orden.value != 0 && orden.value != "") {
-            filtro += "Expediente_Bono/Id eq " + orden.value + " and ";
-        }
-
-        if (expediente.value != 0 && expediente.value != "") {
-            filtro += "Expediente_Bono/Expediente eq " + expediente.value + " and ";
+        if (hiscli != 0 && hiscli != "") {
+            filtro += "FacturasPrestadores/Expediente_Bono/Cabecera/Hiscli eq " + hiscli + " and ";
         }
 
         if (prestador.value && prestador.value != "") {
-            filtro += "IdPrestador eq " + prestador.value + " and ";
+            filtro += "FacturasPrestadores/Expediente_Bono/Cabecera/Prestador eq " + prestador.value + " and ";
         }
 
-        if (tipo.value != -1) {
-            filtro += "IdTipoComprobante eq " + tipo.value + " and ";
+        if (tipo != -1) {
+            filtro += "TipoComprobante eq '" + tipo + "' and ";
         }
 
-        if (sucursal.value != 0) {
-            filtro += "PuntoVenta eq " + sucursal.value + " and ";
+        if (sucursal != 0) {
+            filtro += "PuntoVenta eq '" + sucursal + "' and ";
         }
 
-        if (numero.value != 0) {
-            filtro += " NroComprobante eq " + numero.value + " and ";
-        }
-
-        if (estados.value != -1) {
-            filtro += " IdFacturasPrestadoresEstado eq " + estados.value + " and ";
-        }
-
-        if (integracion != -1) {
-            filtro += "Expediente_Bono/Cabecera/Evento eq " + integracion.value + " and ";
+        if (numero != 0) {
+            filtro += " NumeroComprobante eq '" + numero + "' and ";
         }
 
         filtro = filtro.slice(0, -5);
         //store.dispatch(setFiltro(filtro));
+        this.items = [];
 
         this.update();
     }
@@ -287,40 +312,59 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         const sucursal = this.shadowRoot.querySelector("#sucursal").value;
         const numero = this.shadowRoot.querySelector("#numero").value;
 
+        let tieneFiltro = false;
         let filtro = "";
+        //siempre debe traer solo las facturas aprobadas por SSS
+        filtro += "FacturasPrestadores/IdFacturasPrestadoresEstado eq 5 and ";
+        filtro += "PresentacionSSS/UltimaClave eq Clave and ";
+        filtro += "TipoArchivo eq 'DS' and ";
+        //El siguiente paso hace que no se muestren las fact que ya son débitos
+        //filtro += "PresentacionSSS_Debitos/all(f:f/IdPresentacionSSS_Historico ne Id) and ";
 
         if (expediente != 0 && expediente != "") {
-            filtro += "Expediente_Bono/Expediente eq " + expediente + " and ";
+            filtro += "FacturasPrestadores/Expediente_Bono/Expediente eq " + expediente + " and ";
+            tieneFiltro = true;
         }
 
         if (hiscli != 0 && hiscli != "") {
-            filtro += "Expediente_Bono/Cabecera/Hiscli eq " + hiscli + " and ";
+            filtro += "FacturasPrestadores/Expediente_Bono/Cabecera/Hiscli eq " + hiscli + " and ";
+            tieneFiltro = true;
         }
 
         if (prestador.value && prestador.value != "") {
-            filtro += "IdPrestador eq " + prestador.value + " and ";
+            filtro += "FacturasPrestadores/Expediente_Bono/Cabecera/Prestador eq " + prestador.value + " and ";
+            tieneFiltro = true;
         }
 
         if (tipo != -1) {
-            filtro += "IdTipoComprobante eq " + tipo + " and ";
+            filtro += "TipoComprobante eq '" + tipo + "' and ";
+            tieneFiltro = true;
         }
 
         if (sucursal != 0) {
-            filtro += "PuntoVenta eq " + sucursal + " and ";
+            filtro += "PuntoVenta eq '" + sucursal + "' and ";
+            tieneFiltro = true;
         }
 
         if (numero != 0) {
-            filtro += " NroComprobante eq " + numero + " and ";
+            filtro += " NumeroComprobante eq '" + numero + "' and ";
+            tieneFiltro = true;
         }
 
         filtro = filtro.slice(0, -5);
 
-        store.dispatch(setFiltro(filtro));
-        this.cerrar();
-        /*  store.dispatch(getFacturas({
-            expand: "prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
-            filter: filtro , 
-            orderby: "NroComprobante desc"}))     */
+        //store.dispatch(setFiltro(filtro));
+        //this.cerrar();
+        if (tieneFiltro == true) {
+            store.dispatch(
+                getPresentacionSSS_Historico({
+                    expand: "PresentacionSSS_Debitos,FacturasPrestadores($expand=prestado,SSS_TipoComprobantes,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones))))",
+                    filter: filtro,
+                })
+            );
+        } else {
+            alert("Debe hacer algún filtro");
+        }
     }
 
     maxLength(e) {
@@ -346,23 +390,19 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
             this.update();
         }
 
-        if (name == ESTADOS) {
-            this.estados = state.facturasPrestadoresEstados.entities;
-
-            this.update();
-        }
-
         if (name == COMPROBANTES) {
             this.tipoComprobantes = state.tipoComprobantes.entities;
             this.update();
         }
 
-        if (name == PERIODOS) {
-            this.periodos = state.periodosMensuales.entities;
+        if (name == HISTORICO_TIMESTAMP) {
+            this.items = state.presentacionSSS_Historico.entities;
             this.update();
         }
-        if (name == PERIODOSMES) {
-            (this.periodoActual = state.periodosMensuales.periodoMensualActual), this.update();
+
+        if (name === PRESENTACIONES_TIMESTAMP) {
+            this.idPresentacion = state.presentacionesCabecera.selected.Id;
+            this.update();
         }
     }
 

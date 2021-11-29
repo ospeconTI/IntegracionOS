@@ -40,11 +40,13 @@ export const REMOVE_ERROR = "[presentacionesCabecera] REMOVE_ERROR";
 
 export const SET_SELECTED = "[presentacionesCabecera] SET_SELECTED";
 export const TIPO_ACCION = "[presentacionesCabecera] Seteo el tipo de Accion";
+export const MUESTRO_FORM = "[presentacionesCabecera] Muestro Form de Edicion";
 
 export const VALIDAR = "[presentacionesCabecera] Validar";
 export const VALIDAR_SUCCESS = "[presentacionesCabecera] Validar success";
 export const VALIDAR_ERROR = "[presentacionesCabecera] Validar error";
 export const CLEAN_SELECTED = "[presentacionesCabecera] CLEAN_SELECTED";
+
 export const get = (options) => ({
     type: GET,
     options: options,
@@ -91,4 +93,8 @@ export const setSelected = (selected) => ({
 export const setTipoAccion = (tipo) => ({
     type: TIPO_ACCION,
     tipo: tipo,
+});
+export const muestroForm = (muestroForm) => ({
+    type: MUESTRO_FORM,
+    muestroForm: muestroForm,
 });

@@ -27,7 +27,8 @@ import { reducer as presentacionesEstadosReducer } from "./presentacionesEstados
 import { reducer as presentacionesErroresReducer } from "./presentacionesErrores/reducer";
 import { reducer as presentacionesSSSReducer } from "./presentacionSSS/reducer";
 import { reducer as presentacionesDebitosReducer } from "./presentacionesDebitos/reducer";
-import { reducer as presentacionSSS_HistoricoDetalleReducer } from "./presentacionSSS_HistoricoDetalle/reducer";
+import { reducer as presentacionSSS_CreditosReducer } from "./presentacionSSS_Creditos/reducer";
+import { reducer as presentacionSSS_HistoricoReducer } from "./presentacionSSS_Historico/reducer";
 
 export const rootReducer = (state = {}, action) => {
     const presentacionesEstadosRed = state.presentacionesEstados;
@@ -57,8 +58,9 @@ export const rootReducer = (state = {}, action) => {
         facturasPrestadoresLog: facturasPrestadoresLogReducer(state.facturasPrestadoresLog, action),
         presentacionesEstados: presentacionesEstadosReducer(state.presentacionesEstados, action),
         presentacionesDebitos: presentacionesDebitosReducer(state.presentacionesDebitos, action),
+        presentacionSSS_Creditos: presentacionSSS_CreditosReducer(state.presentacionSSS_Creditos, action),
         presentacionesErrores: presentacionesErroresReducer(state.presentacionesErrores, action),
         presentacionesSSS: presentacionesSSSReducer(state.presentacionesSSS, action),
-        presentacionSSS_HistoricoDetalle: presentacionSSS_HistoricoDetalleReducer(state.presentacionSSS_HistoricoDetalle, action),
+        presentacionSSS_Historico: presentacionSSS_HistoricoReducer(state.presentacionSSS_Historico, action),
     };
 };

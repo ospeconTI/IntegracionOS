@@ -1,6 +1,6 @@
 import { GET, GET_SUCCESS, GET_ERROR } from "./actions";
 
-import { presentacionSSS_HistoricoDetalleFetch } from "../fetchs";
+import { PresentacionSSS_HistoricoFetch } from "../fetchs";
 
 import { apiRequest } from "../api/actions";
 import { RESTRequest } from "../rest/actions";
@@ -12,8 +12,7 @@ export const get =
         next(action);
         if (action.type === GET) {
             let token = getState().autorizacion.usuario.Profiles[0].Token;
-            //var idPres = action.options.IdPresentacion;
-            dispatch(RESTRequest(presentacionSSS_HistoricoDetalleFetch, null, GET_SUCCESS, GET_ERROR, token));
+            dispatch(apiRequest(PresentacionSSS_HistoricoFetch, action.options, GET_SUCCESS, GET_ERROR));
         }
     };
 

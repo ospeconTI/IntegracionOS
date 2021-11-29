@@ -1,6 +1,6 @@
 /** @format */
 
-import { SET, GET_SUCCESS } from "./actions";
+import { SET, GET_SUCCESS, ADD_SUCCESS, REMOVE_SUCCESS } from "./actions";
 
 const initialState = {
     numero: null,
@@ -22,6 +22,11 @@ export const reducer = (state = initialState, action) => {
         case GET_SUCCESS:
             newState.entities = action.payload.receive;
             newState.getTimeStamp = new Date().getTime();
+            break;
+        case ADD_SUCCESS:
+            break;
+        case REMOVE_SUCCESS:
+            break;
     }
     return newState;
 };

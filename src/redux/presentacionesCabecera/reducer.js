@@ -17,6 +17,7 @@ import {
     GET_FACTURAS_BY_ERROR_ERROR,
     GET_FACTURAS_BY_ERROR,
     CLEAN_SELECTED,
+    MUESTRO_FORM,
 } from "./actions";
 
 const initialState = {
@@ -39,6 +40,8 @@ const initialState = {
     facturasByError: null,
     facturasByErrorTimeStamp: null,
     selectedError: null,
+    muestroForm: false,
+    muestroTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action, presentacionesEstadosState) => {
@@ -120,6 +123,10 @@ export const reducer = (state = initialState, action, presentacionesEstadosState
             break;
         case CLEAN_SELECTED:
             newState.selectedError = null;
+            break;
+        case MUESTRO_FORM:
+            newState.muestroForm = action.muestroForm;
+            newState.muestroTimeStamp = new Date().getTime();
             break;
     }
     return newState;
