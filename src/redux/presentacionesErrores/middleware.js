@@ -8,11 +8,15 @@ import {
     GET_FACTURAS_BY_ERROR_SUCCESS,
     GET_FACTURAS_BY_ERROR_ERROR,
     getFacturasByError as getFacturasError,
+    GET_ERRORES_BY_FACTURA,
+    GET_ERRORES_BY_FACTURA_SUCCESS,
+    GET_ERRORES_BY_FACTURA_ERROR,
 } from "./actions";
 
-import { resumenFetch, facturasByErrorFetch } from "../fetchs";
+import { resumenFetch, facturasByErrorFetch, getErroresByFacturaFetch } from "../fetchs";
 
 import { RESTAdd, RESTRequest } from "../rest/actions";
+import { apiRequest } from "../api/actions";
 
 export const getResumen =
     ({ dispatch }) =>
@@ -31,6 +35,18 @@ export const getFacturasByError =
         next(action);
         if (action.type === GET_FACTURAS_BY_ERROR) {
             dispatch(RESTAdd(facturasByErrorFetch, action.error.Id, GET_FACTURAS_BY_ERROR_SUCCESS, GET_FACTURAS_BY_ERROR_ERROR, "", ""));
+        }
+    };
+
+export const getErroresByFactura =
+    ({ dispatch, getState }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_ERRORES_BY_FACTURA) {
+            let token = getState().autorizacion.usuario.Profiles[0].Token;
+            dispatch(RESTAdd(getErroresByFacturaFetch, action.factura, GET_ERRORES_BY_FACTURA_SUCCESS, GET_ERRORES_BY_FACTURA_ERROR, "", ""));
+            //dispatch(RESTRequest(getErroresByFacturaFetch, action.factura , GET_ERRORES_BY_FACTURA_SUCCESS, GET_ERRORES_BY_FACTURA_ERROR, token));
         }
     };
 
@@ -64,4 +80,13 @@ export const processGetFacturaByError =
         }
     };
 
-export const middleware = [getResumen, getFacturasByError, processGetResumen, processError, processGetFacturaByError];
+export const processGetErroresByFactura =
+    ({ dispatch, getState }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_ERRORES_BY_FACTURA_SUCCESS) {
+        }
+    };
+
+export const middleware = [getResumen, getFacturasByError, processGetResumen, processError, processGetFacturaByError, getErroresByFactura, processGetErroresByFactura];

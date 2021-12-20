@@ -42,3 +42,6 @@ export const presentacionSSSFetch = ODataEntity(expedienteOdataFactory, "vPresen
 export const presentacionsEstadosFetch = ODataEntity(expedienteOdataFactory, "PresentacionSSS_Estados");
 export const getResumenFetch = fetchFactory(webApi, "Presentacion/GetResumen");
 export const getFacturasByErrorFetch = fetchFactory(webApi, "Presentacion/GetFacturasByError");
+export const getErroresByFacturaFetch = fetchFactory(webApi, "Presentacion/GetErroresByFactura");
+export const facturasRechazadasSSS = ODataEntity(expedienteOdataFactory, "TraeRechazosSSS");
+export const representarFacturasFetch = ODataEntity(expedienteOdataFactory, "RepresentarFacturas");

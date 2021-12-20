@@ -11,4 +11,5 @@ export const largeRoute = [
     "13-enProceso",
     "20-detalleFacturaP",
     "30-detallePresentacion",
+    "40-representarFacturas",
 ];

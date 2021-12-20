@@ -1,6 +1,6 @@
 /** @format */
 
-import { GET_RESUMEN_SUCCESS, GET_RESUMEN_ERROR, GET_FACTURAS_BY_ERROR_SUCCESS, GET_FACTURAS_BY_ERROR_ERROR, GET_FACTURAS_BY_ERROR, CLEAN_SELECTED } from "./actions";
+import { GET_RESUMEN_SUCCESS, GET_RESUMEN_ERROR, GET_FACTURAS_BY_ERROR_SUCCESS, GET_FACTURAS_BY_ERROR_ERROR, GET_FACTURAS_BY_ERROR, CLEAN_SELECTED, GET_ERRORES_BY_FACTURA_SUCCESS } from "./actions";
 
 const initialState = {
     entities: null,
@@ -9,6 +9,8 @@ const initialState = {
     facturasByError: null,
     facturasByErrorTimeStamp: null,
     selectedError: null,
+    erroresByFactura: null,
+    erroresByFacturaTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action, presentacionesEstadosState) => {
@@ -36,6 +38,10 @@ export const reducer = (state = initialState, action, presentacionesEstadosState
             break;
         case CLEAN_SELECTED:
             newState.selectedError = null;
+            break;
+        case GET_ERRORES_BY_FACTURA_SUCCESS:
+            newState.erroresByFactura = action.payload.receive;
+            newState.erroresByFacturaTimeStamp = new Date().getTime();
             break;
     }
     return newState;
