@@ -10,10 +10,10 @@ export const listar =
         if (action.type === LISTAPERIODOSBONO) {
             let lista = [];
             const fechaHoy = new Date();
-            const periodoActual = fechaHoy.getFullYear() * 100 + (fechaHoy.getMonth() + 1);
 
             for (let i = action.periodosBack; i >= 0; i--) {
-                lista.push(fechaHoy.getFullYear() * 100 + (fechaHoy.getMonth() + 1 - i));
+                lista.push(fechaHoy.getFullYear() * 100 + (fechaHoy.getMonth() + 1));
+                fechaHoy.setMonth(fechaHoy.getMonth() - 1);
             }
             dispatch({
                 type: LISTAPERIODOSBONO_SUCCESS,

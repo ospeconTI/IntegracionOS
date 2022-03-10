@@ -32,11 +32,18 @@ import {
     GET_FACTURA_AND_SELECT_SUCCESS,
     CONTROLAR,
     CONTROLAR_SUCCESS,
+    GET_FACTURAS_RECHAZADAS_SSS,
+    GET_FACTURAS_RECHAZADAS_SSS_SUCCESS,
+    GET_FACTURAS_RECHAZADAS_SSS_ERROR,
+    REPRESENTAR,
+    REPRESENTAR_ERROR,
+    REPRESENTAR_SUCCESS,
 } from "./actions";
 
+import { getFacturasRechazadasSSS } from "../../redux/facturasPrestadores/actions";
 import { get as getPesentacionesCabecera } from "../../redux/presentacionesCabecera/actions";
 import { getResumen } from "../../redux/presentacionesErrores/actions";
-import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch, ControlarFacturaFetch } from "../fetchs";
+import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch, ControlarFacturaFetch, facturasRechazadasSSS, representarFacturasFetch } from "../fetchs";
 
 import { apiAdd, apiRequest, apiUpdate, apiAction, apiFunction, API_ADD } from "../api/actions";
 import { changed } from "../notifications/actions";
@@ -117,7 +124,7 @@ export const processGet =
     (next) =>
     (action) => {
         next(action);
-        if (action.type === GET_SUCCESS) {
+        if (action.type === GET_SUCCESS || action.type === GET_FACTURAS_RECHAZADAS_SSS_SUCCESS) {
         }
     };
 
@@ -231,6 +238,15 @@ export const pasarAPendienteOS =
         }
     };
 
+export const traerFacurasRechazadasSSS =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_FACTURAS_RECHAZADAS_SSS) {
+            dispatch(apiAction(facturasRechazadasSSS, null, null, "", GET_FACTURAS_RECHAZADAS_SSS_SUCCESS, GET_FACTURAS_RECHAZADAS_SSS_ERROR));
+        }
+    };
 export const rechazarSuccess =
     ({ dispatch, getState }) =>
     (next) =>
@@ -240,6 +256,16 @@ export const rechazarSuccess =
             dispatch(changed(getState().facturasPrestadores.selected.Id));
         }
     };
+export const representarSuccess =
+    ({ dispatch, getState }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === REPRESENTAR_SUCCESS) {
+            dispatch(getFacturasRechazadasSSS());
+        }
+    };
+
 export const aprobarSuccess =
     ({ dispatch, getState }) =>
     (next) =>
@@ -253,6 +279,7 @@ export const aprobarSuccess =
             }
         }
     };
+
 export const controlarSuccess =
     ({ dispatch, getState }) =>
     (next) =>
@@ -267,6 +294,16 @@ export const controlarSuccess =
             );
             dispatch(getResumen());
             dispatch(goTo("enProceso"));
+        }
+    };
+
+export const representar =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === REPRESENTAR) {
+            dispatch(apiAction(representarFacturasFetch, action.body, null, "", REPRESENTAR_SUCCESS, REPRESENTAR_ERROR));
         }
     };
 
@@ -292,4 +329,7 @@ export const middleware = [
     processGetFacturaAndSelect,
     controlar,
     controlarSuccess,
+    traerFacurasRechazadasSSS,
+    representar,
+    representarSuccess,
 ];

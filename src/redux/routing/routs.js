@@ -12,4 +12,5 @@ export const largeRoute = [
     "14-presentacionesDebitos",
     "20-detalleFacturaP",
     "30-detallePresentacion",
+    "40-representarFacturas",
 ];

@@ -52,6 +52,14 @@ export const GET_FACTURA_AND_SELECT = "[facturasPrestadores] GET_FACTURA_AND_SEL
 export const GET_FACTURA_AND_SELECT_SUCCESS = "[facturasPrestadores] GET_FACTURA_AND_SELECT_SUCCESS";
 export const GET_FACTURA_AND_SELECT_ERROR = "[facturasPrestadores] GET_FACTURA_AND_SELECT_ERROR";
 
+export const GET_FACTURAS_RECHAZADAS_SSS = "[facturasPrestadores] GET_FACTURAS_RECHAZADAS_SSS";
+export const GET_FACTURAS_RECHAZADAS_SSS_SUCCESS = "[facturasPrestadores] GET_FACTURAS_RECHAZADAS_SSS_SUCCESS";
+export const GET_FACTURAS_RECHAZADAS_SSS_ERROR = "[facturasPrestadores] GET_FACTURAS_RECHAZADAS_SSS_ERROR";
+
+export const REPRESENTAR = "[facturasPrestadores] REPRESENTAR";
+export const REPRESENTAR_SUCCESS = "[facturasPrestadores] REPRESENTAR_SUCCESS";
+export const REPRESENTAR_ERROR = "[facturasPrestadores] REPRESENTAR_ERROR";
+
 export const get = (options) => ({
     type: GET,
     options: options,
@@ -122,4 +130,17 @@ export const rechazar = (id, Motivo) => ({
 export const pasarAPendienteOS = (id) => ({
     type: PASAR_A_PENDIENTE_OS,
     id: id,
+});
+
+export const getFacturasRechazadasSSS = () => ({
+    type: GET_FACTURAS_RECHAZADAS_SSS,
+});
+
+export const representar = (facturas) => ({
+    type: REPRESENTAR,
+    body: {
+        FacturasaRepresentarDTO: {
+            Facturas: facturas,
+        },
+    },
 });
