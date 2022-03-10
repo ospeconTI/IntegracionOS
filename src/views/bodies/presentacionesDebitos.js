@@ -14,6 +14,7 @@ import { remove as removePresentacionesCreditos } from "../../redux/presentacion
 import { PERSON, SEARCH, DOWNLOAD, UPLOAD, TILDE } from "../../../assets/icons/svgs";
 import { filtrosFacturasHistoricas } from "../componentes/filtrosFacturasHistoricas";
 import { filtrosDebitos } from "../componentes/filtrosDebitos";
+import { filtrosND } from "../componentes/filtrosND";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 import { COPY, ADD, MODIF, DELETE, DETALLE } from "../../../assets/icons/svgs";
