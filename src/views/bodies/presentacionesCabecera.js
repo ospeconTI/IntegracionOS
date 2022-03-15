@@ -38,6 +38,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         this.messages = [];
         this.items = [];
         this.order = "";
+        this.presentacionActiva = {};
 
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
     }
