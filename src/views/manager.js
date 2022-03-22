@@ -31,6 +31,7 @@ import { detallePresentcion } from "./bodies/detallePresentacion";
 import { presentacionesDebitos } from "./bodies/presentacionesDebitos";
 import { representarFacturas } from "./bodies/representarFacturas";
 import { erroresFacturas } from "./componentes/errores";
+import { pantallaConfirm } from "./bodies/confirm";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -95,6 +96,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, SCREEN, SELECTION)
             <presentaciones-debitos class="body" id="presentacionesDebitos"></presentaciones-debitos>
             <representar-facturas class="body"></representar-facturas>
             <errores-facturas></errores-facturas>
+            <pantalla-confirm></pantalla-confirm>
         `;
     }
 

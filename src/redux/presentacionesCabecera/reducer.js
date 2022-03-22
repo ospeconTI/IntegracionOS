@@ -18,6 +18,7 @@ import {
     GET_FACTURAS_BY_ERROR,
     CLEAN_SELECTED,
     MUESTRO_FORM,
+    CERRAR_ABRIR_SUCCESS,
 } from "./actions";
 
 const initialState = {
@@ -65,41 +66,14 @@ export const reducer = (state = initialState, action, presentacionesEstadosState
             break;
         case UPDATE_ERROR:
             newState.errorTimeStamp = new Date().getTime();
+            addTimeStamp;
             break;
         case ADD_SUCCESS:
-            //newState.addTimeStamp = new Date().getTime();
-            //newState.selected = action.payload.receive;
-            const itemAdd = action.payload.receive;
-            const estado = presentacionesEstadosState.entities.find((e) => {
-                return e.Id == itemAdd.IdEstadoPresentacionSSS;
-            });
-            itemAdd.PresentacionSSS_Estados = estado;
-            newState.entities.push(itemAdd);
-            newState.timeStamp = new Date().getTime();
-            break;
         case UPDATE_SUCCESS:
-            const itemRecibido = action.payload.receive;
-            const estadoU = presentacionesEstadosState.entities.find((e) => {
-                return e.Id == itemRecibido.IdEstadoPresentacionSSS;
-            });
-            let item = newState.entities.find((item) => {
-                return item.Id == itemRecibido.Id;
-            });
-            for (const property in item) {
-                item[property] = itemRecibido[property];
-            }
-            item.PresentacionSSS_Estados = estadoU;
-            newState.timeStamp = new Date().getTime();
-            newState.selected = itemRecibido;
-            break;
+        case CERRAR_ABRIR_SUCCESS:
         case REMOVE_SUCCESS:
-            const itemBorrado = action.payload.receive;
-            let itemB = newState.entities.find((item) => {
-                return item.Id == itemBorrado.Id;
-            });
-            itemB.Activo = false;
-            newState.removeTimeStamp = new Date().getTime();
-            newState.selected = null;
+            newState.updateTimeStamp = new Date().getTime();
+            newState.selected = {};
             break;
         case SET_SELECTED:
             newState.selected = action.selected;

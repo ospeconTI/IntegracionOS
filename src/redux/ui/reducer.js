@@ -1,6 +1,26 @@
 /** @format */
 
-import { SHOW_SPINNER, HIDE_SPINNER, SHOW_ERROR, HIDE_ERROR, SET_MEDIA, SET_MEDIA_ORIENTATION, SELECTION, VELO, VER_PANTALLA_LOGIN, VER_PANTALLA_MIEMBRO, VER_PANTALLA_CAMBIO_CLAVE, VER_PANTALLA_PASES, VER_PANTALLA_CAMBIO_ADMINISTRADOR, VER_PANTALLA_CAMBIO_NOMBRE_CUENTA, VER_PANTALLA_USUARIO_ASIGNAR, SHOW_WARNING, HIDE_WARNING, STEP } from "./actions";
+import {
+    SHOW_SPINNER,
+    HIDE_SPINNER,
+    SHOW_ERROR,
+    HIDE_ERROR,
+    SET_MEDIA,
+    SET_MEDIA_ORIENTATION,
+    SELECTION,
+    VELO,
+    VER_PANTALLA_LOGIN,
+    VER_PANTALLA_MIEMBRO,
+    VER_PANTALLA_CAMBIO_CLAVE,
+    VER_PANTALLA_PASES,
+    VER_PANTALLA_CAMBIO_ADMINISTRADOR,
+    VER_PANTALLA_CAMBIO_NOMBRE_CUENTA,
+    VER_PANTALLA_USUARIO_ASIGNAR,
+    SHOW_WARNING,
+    HIDE_WARNING,
+    SHOW_CONFIRM,
+    STEP,
+} from "./actions";
 
 const initialState = {
     spinner: {
@@ -31,6 +51,13 @@ const initialState = {
     loginOk: false,
     steps: {
         step: 1,
+    },
+    confirm: {
+        timeStamp: null,
+        titulo: "",
+        pregunta: "",
+        onOK: null,
+        onCancel: null,
     },
 };
 
@@ -83,6 +110,13 @@ export const reducer = (state = initialState, action) => {
             break;
         case STEP:
             newState.steps.step = action.step;
+            break;
+        case SHOW_CONFIRM:
+            newState.confirm.timeStamp = new Date().getTime();
+            newState.confirm.titulo = action.titulo;
+            newState.confirm.pregunta = action.pregunta;
+            newState.confirm.onOK = action.onOK;
+            newState.confirm.onCancel = action.onCancel;
             break;
     }
     return newState;

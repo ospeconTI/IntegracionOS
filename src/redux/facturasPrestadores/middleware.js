@@ -289,7 +289,7 @@ export const controlarSuccess =
             dispatch(
                 getPesentacionesCabecera({
                     filter: "IdEstadoPresentacionSSS eq 1 and Activo",
-                    orderby: "FechaPresentacion desc",
+                    orderby: "PeriodoPresentacion desc",
                 })
             );
             dispatch(getResumen());

@@ -55,10 +55,12 @@ export const generar =
                     a.click();
                     window.URL.revokeObjectURL(url);
                     dispatch(hideSpinner());
+                    dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "PeriodoPresentacion desc", count: true }));
                 });
             //        dispatch(apiAdd(generarFetch, null, GENERAR_SUCCESS, GENERAR_ERROR));
         }
     };
+
 export const get =
     ({ dispatch }) =>
     (next) =>
