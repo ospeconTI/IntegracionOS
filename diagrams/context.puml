@@ -1,0 +1,19 @@
+// Ejemplos en : https://github.com/plantuml-stdlib/C4-PlantUML#supported-diagram-types
+@startuml context
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+SHOW_PERSON_OUTLINE()
+HIDE_STEREOTYPE()
+Person(prestador, "Prestador" )
+Container(integracion, "Sistema de Integración", "web app", "Presenta facturas" )
+System_Boundary(ospecon, "OsPeCon","Sistemas") {
+        Container(integracionOS, "Sistema de Integración OS", "web app","Aprueba/Rechaza Facturas. Genera Presentaciones" )
+}
+
+Rel(prestador, integracion, "Usa")
+Rel(integracion, integracionOS, "Envia")
+
+
+
+@enduml

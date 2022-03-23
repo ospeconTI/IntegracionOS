@@ -1,0 +1,33 @@
+// Ejemplos en : https://github.com/plantuml-stdlib/C4-PlantUML#supported-diagram-types
+@startuml circuito
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+HIDE_STEREOTYPE()
+
+System_Ext(sss, "Superintendecia Servicios de Salud")
+System_Boundary(integracionOS, "Integracion OS") {
+    Container(enProceso,"Procesos de correccion de errores","Opcion En Proceso","Informa alertas, errores, solución de errores")
+    Container(presentacion,"Proceso generación de presentaciones","Opcion Presentaciones","Crea, genera, aplica novedades")
+    Container(representacion,"Proceso representación","Opción Representación","Volver a presentar facturas rechazadas")
+    Container(nueva,"Nueva presentación")
+    Container(archivo,"Archivo para SSS")
+    Container(novedades,"Captura de novedades","inmediatas 1º y definitvas 2º")
+    Container(NCND,"Notas de credito/debito")
+    Container(facturas,"Facturas")
+    Container(facturasPres,"Facturas de la presentación")
+}
+
+
+Rel(presentacion,nueva,"Abrir")
+Rel(presentacion,archivo,"Crear")
+Rel_U(NCND,nueva,"Crear")
+Rel(enProceso,facturas,"Corregir")
+Rel_U(facturasPres,nueva,"Corregir")
+Rel(representacion,facturas,"Cambiar Estado")
+Rel(archivo,sss,"Envia")
+Rel(sss,novedades,"Recibe")
+Rel_U(novedades,presentacion,"Aplicar")
+
+
+
+@enduml
