@@ -248,6 +248,9 @@ export class representarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, 
         } else {
             if (clickOnErrores) {
                 store.dispatch(getErroresByFactura(e.currentTarget.item.Id));
+            } else {
+                store.dispatch(setSelected(e.currentTarget.item));
+                store.dispatch(goTo("detalleFacturaC"));
             }
         }
     }
