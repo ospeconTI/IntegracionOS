@@ -1,0 +1,23 @@
+// Ejemplos en : https://github.com/plantuml-stdlib/C4-PlantUML#supported-diagram-types
+@startuml procesos
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+HIDE_STEREOTYPE()
+System_Ext(sss, "Superintendecia Servicios de Salud")
+System_Boundary(integracionOS, "Procesos") {
+    Container(diaria,"Alertas","Opción En Proceso","Corregir facturas de la actual presentación segun validación automática")
+    Container(eventual,"Presentación","Opción Presentacion","Corregir facturas, ND,NC de presentacion atual y/o pendiente, segun informe la SSS")
+    Container(archivo,"Archivo para SSS")
+    Container(novedades,"Archivo de novedades de la SSS","Inmeditas y definitivas")
+}
+
+Rel(diaria,diaria,"trabajo continuo (diario)")
+Rel(eventual,archivo,"crea")
+Rel_U(novedades,eventual,"aplicar")
+Rel(archivo,sss,"envia")
+Rel(sss,novedades,"recibe")
+
+
+
+@enduml

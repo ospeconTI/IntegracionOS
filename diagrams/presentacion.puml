@@ -1,0 +1,20 @@
+// Ejemplos en : https://github.com/plantuml-stdlib/C4-PlantUML#supported-diagram-types
+@startuml presentacion
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+HIDE_STEREOTYPE()
+System_Boundary(integracionOS, "Elementos de la presentación") {
+    Container(presentacion,"Presentaciones","Opcion Presentaciones","Ceear y administrar novedades")
+    Container(NCND,"Notas de credito/debito","Opción Presentación/Detalle/Nuevo")
+    Container(facturas,"Facturas del período",,"Las ingresadas por los prestadores")
+    Container(facturasRepresentar,"Facturas rechazadas en presentaciones anteriores","Opción Representacion")
+}
+
+Rel(presentacion,NCND,"Incluye")
+Rel(presentacion,facturas,"Incluye")
+Rel(presentacion,facturasRepresentar,"Incluye")
+
+
+
+@enduml
