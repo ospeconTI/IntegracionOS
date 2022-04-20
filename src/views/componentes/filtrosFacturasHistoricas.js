@@ -139,6 +139,10 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
                     <div class="grid column">
                         <div class="grid column">
                             <div class="input">
+                                <label>Orden</label>
+                                <input type="number" id="orden" autocomplete="off" maxlength="8" @input=${this.maxLength} />
+                            </div>
+                            <div class="input">
                                 <label>DNI</label>
                                 <input type="number" id="hiscli" autocomplete="off" maxlength="8" @input=${this.maxLength} />
                             </div>
@@ -256,6 +260,7 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
     }
 
     limpiar() {
+        const orden = this.shadowRoot.querySelector("#orden");
         const expediente = this.shadowRoot.querySelector("#expediente");
         const hiscli = this.shadowRoot.querySelector("#hiscli");
         const prestador = this.shadowRoot.querySelector("#prestador");
@@ -263,6 +268,7 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         const sucursal = this.shadowRoot.querySelector("#sucursal");
         const numero = this.shadowRoot.querySelector("#numero");
 
+        orden.value = "";
         expediente.value = "";
         hiscli.value = "";
         prestador.value = "";
@@ -273,6 +279,10 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         let filtro = "";
         //siempre debe traer solo las facturas aprobadas por SSS
         filtro += "FacturasPrestadores/IdFacturasPrestadoresEstado eq 5 and ";
+
+        if (orden != 0 && orden != "") {
+            filtro += "FacturasPrestadores/Id eq " + orden + " and ";
+        }
 
         if (expediente != 0 && expediente != "") {
             filtro += "FacturasPrestadores/Expediente_Bono/Expediente eq " + expediente + " and ";
@@ -305,6 +315,7 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         this.update();
     }
     buscar(e) {
+        const orden = this.shadowRoot.querySelector("#orden").value;
         const hiscli = this.shadowRoot.querySelector("#hiscli").value;
         const expediente = this.shadowRoot.querySelector("#expediente").value;
         const prestador = this.shadowRoot.querySelector("#prestador");
@@ -320,6 +331,11 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         filtro += "TipoArchivo eq 'DS' and ";
         //El siguiente paso hace que no se muestren las fact que ya son débitos
         //filtro += "PresentacionSSS_Debitos/all(f:f/IdPresentacionSSS_Historico ne Id) and ";
+
+        if (orden != 0 && orden != "") {
+            filtro += "FacturasPrestadores/Id eq " + orden + " and ";
+            tieneFiltro = true;
+        }
 
         if (expediente != 0 && expediente != "") {
             filtro += "FacturasPrestadores/Expediente_Bono/Expediente eq " + expediente + " and ";
