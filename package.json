@@ -1,6 +1,6 @@
 {
     "name": "integracion",
-    "version": "1.10.1",
+    "version": "1.11.0",
     "description": "Control Integración",
     "main": "./src/sandbox.js",
     "scripts": {
@@ -21,7 +21,7 @@
     "dependencies": {
         "@brunomon/helpers": "^3.0.0",
         "@brunomon/nano-input": "^2.0.4",
-        "@brunomon/odata-fetch-factory": "^3.1.0",
+        "@brunomon/odata-fetch-factory": "^3.1.4",
         "@material-ui/icons": "^4.11.2",
         "css-loader": "^3.4.1",
         "file-loader": "^5.0.2",
