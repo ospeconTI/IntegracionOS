@@ -6,18 +6,19 @@ import { connect } from "@brunomon/helpers";
 import { label } from "../css/label";
 import { button } from "../css/button";
 import { gridLayout } from "../css/gridLayout";
+import { hideWarning } from "../../redux/ui/actions";
 
-const MEDIA_CHANGE = "ui.media.timeStamp";
+const CONFIRM = "ui.confirm.timeStamp";
 const SCREEN = "screen.timeStamp";
-const ERROR_MESSAGES = "ui.error.messages";
-const FACTURA_ERROR = "facturasPrestadores.errorTimeStamp";
-const PASAR_A_PENDIENTE_OS_ERROR = "facturasPrestadores.pasarAPendienteOSErrorTimeStamp";
-export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR, PASAR_A_PENDIENTE_OS_ERROR)(LitElement) {
+const MEDIA_CHANGE = "ui.media.timeStamp";
+export class pantallaConfirm extends connect(store, CONFIRM, MEDIA_CHANGE, SCREEN)(LitElement) {
     constructor() {
         super();
         this.hidden = true;
-        this.titulo = "Atención";
-        this.mensaje = "";
+        this.titulo = "";
+        this.pregunta = "";
+        this.onOK = null;
+        this.onCancel = null;
     }
 
     static get styles() {
@@ -41,7 +42,6 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
             :host([hidden]) {
                 display: none;
             }
-
             #titulo {
                 font-size: var(--font-header-h1-menos-size);
                 font-weight: var(--font-header-h2-weight);
@@ -49,9 +49,6 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
             #cuerpo {
                 padding: 1rem;
                 font-size: var(--font-error-size);
-            }
-            #cuerpo div {
-                padding: 0.3rem;
             }
             .botonera {
             }
@@ -66,34 +63,31 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
         return html`
             <div class="ventana grid row">
                 <label id="titulo">${this.titulo} </label>
-                <div id="cuerpo">${this.mensaje}</div>
-                <button btn1 id="Ok" @click=${this.ok}>Ok</button>
+                <label id="cuerpo">${this.pregunta} </label>
+                <div class="botonera grid column">
+                    <button btn1 id="Confirmar" @click=${this.ok}>Confirmar</button>
+                    <button btn1 id="Cancelar" @click=${this.cancel}>Cancelar</button>
+                </div>
             </div>
         `;
     }
     ok() {
+        if (this.onOK) store.dispatch(this.onOK);
+        this.hidden = true;
+    }
+    cancel() {
+        if (this.onCancel) store.dispatch(this.onCancel);
         this.hidden = true;
     }
 
     stateChanged(state, name) {
-        if (name == SCREEN || name == MEDIA_CHANGE) {
-            this.mediaSize = state.ui.media.size;
+        if (name == CONFIRM) {
+            this.hidden = false;
+            this.titulo = state.ui.confirm.titulo;
+            this.pregunta = state.ui.confirm.pregunta;
+            this.onOK = state.ui.confirm.onOK;
+            this.onCancel = state.ui.confirm.onCancel;
             this.update();
-        }
-        if (name == ERROR_MESSAGES) {
-            this.hidden = false;
-            this.mensaje = html` ${state.ui.error.messages.map((msg) => {
-                return html`<div>${"• " + msg.campo + (msg.campo ? ": " : "") + msg.mensaje}</div>`;
-            })}`;
-        }
-        if (name == FACTURA_ERROR) {
-            this.hidden = false;
-            if (state.facturasPrestadores.errorMessage) this.mensaje = html`<div>${state.facturasPrestadores.errorMessage}</div>`;
-        }
-
-        if (name == PASAR_A_PENDIENTE_OS_ERROR) {
-            this.hidden = false;
-            this.mensaje = html`<div>${state.facturasPrestadores.pasarAPendienteOSError}</div>`;
         }
     }
     firstUpdated() {}
@@ -109,12 +103,8 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
                 type: Boolean,
                 reflect: true,
             },
-            mensaje: {
-                type: String,
-                reflect: true,
-            },
         };
     }
 }
 
-window.customElements.define("alerta-errores", alertaErrores);
+window.customElements.define("pantalla-confirm", pantallaConfirm);

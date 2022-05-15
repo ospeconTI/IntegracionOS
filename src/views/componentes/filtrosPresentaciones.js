@@ -185,7 +185,7 @@ export class filtrosPresentaciones extends connect(store, MEDIA_CHANGE, SCREEN, 
         filtro = filtro.slice(0, -5);
 
         //store.dispatch(setFiltro(filtro));
-        const options = { filter: filtro };
+        const options = { filter: filtro, orderby: "PeriodoPresentacion desc" };
         store.dispatch(getPresentacionesCabecera(options));
 
         this.cerrar();

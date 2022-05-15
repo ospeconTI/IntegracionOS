@@ -271,6 +271,7 @@ export class representarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, 
         }
         if (name == FACTURAS) {
             this.facturas = state.facturasPrestadores.getFacturasRechazadasSSS;
+            this.marcaDesmarca();
             this.update();
         }
     }

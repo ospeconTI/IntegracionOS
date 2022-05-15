@@ -7,16 +7,17 @@ import { button } from "../css/button";
 import { input } from "../css/input";
 import { select } from "../css/select";
 import { BUSCAR, AGREGAR, SAVE, CANCEL, DELETE, MODIF } from "../../../assets/icons/svgs";
-import { add, update, remove, validar, setSelected, muestroForm } from "../../redux/presentacionesCabecera/actions";
+import { add, update, remove, setSelected, muestroForm } from "../../redux/presentacionesCabecera/actions";
 import { getPeriodosPresentacion } from "../../redux/periodosPresentaciones/actions";
 
 const SELECTED = "presentacionesCabecera.selectedTimeStamp";
 const MUESTRO_FORM = "presentacionesCabecera.muestroTimeStamp";
 const TIPO_ACCION = "presentacionesCabecera.tipoAccionTimeStamp";
+const ADD_OK = "presentacionesCabecera.addTimeStamp";
+const UPDATE_OK = "presentacionesCabecera.updateTimeStamp";
 const GET_PERIODOS = "periodosPresentaciones.timeStampPeriodosPresentacion";
-const VALID = "presentacionesCabecera.esValidoTimeStamp";
 const PRESENTACION_ESTADO = "presentacionesEstados.getTimeStamp";
-export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_FORM, TIPO_ACCION, GET_PERIODOS, VALID, PRESENTACION_ESTADO)(LitElement) {
+export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_FORM, TIPO_ACCION, GET_PERIODOS, PRESENTACION_ESTADO, ADD_OK, UPDATE_OK)(LitElement) {
     constructor() {
         super();
         this.hidden = true;
@@ -27,8 +28,6 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
         this.periodosPresentacion = [];
         this.listaPeriodos = [];
         this.estados = [];
-        this.valido = false;
-        this.aGrabar = false;
         this.muestroForm = false;
     }
 
@@ -48,12 +47,6 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
                 width: 100%;
                 z-index: 1000;
                 background-color: rgba(0, 0, 0, 0.6);
-            }
-            :host([valido]) #mensaje {
-                display: none;
-            }
-            :host(:not([valido])) #mensaje {
-                display: grid;
             }
             :host([modo="A"]) #divEstados {
                 display: none;
@@ -82,11 +75,6 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
                 display: grid;
                 font-weight: bold;
                 font-size: var(--font-header-size);
-            }
-            .mensaje {
-                display: grid;
-                grid-gap: 0.5rem;
-                opacity: 0.8;
             }
             .titulo {
                 font-size: var(--font-label-size);
@@ -183,19 +171,6 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="select" id="divEstados">
-                            <label>Estado Presentacion</label>
-                            <select id="estado" ?disabled="${this.modo == "D" ? true : false}">
-                                ${this.estados.map((estado) => {
-                            if (this.item.IdEstadoPresentacionSSS == estado.Id) {
-                                return html` <option value=${estado.Id} selected>${estado.Descripcion}</option> `;
-                            } else {
-                                return html` <option value=${estado.Id}>${estado.Descripcion}</option> `;
-                            }
-                        })}
-                            </select>
-                        </div> -->
-                        <label id="mensaje">${this.mensaje}</label>
                         <div class="botonera">
                             <button btn2 class="button" @click=${this.validar} .item=${this.item}>${SAVE}</button>
                             <button btn2 class="button" @click=${this.cerrar}>${CANCEL}</button>
@@ -208,9 +183,7 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
 
     cambioPeriodo(e) {
         const periodo = e.currentTarget.value;
-        this.aGrabar = false;
         store.dispatch(getPeriodosPresentacion(periodo));
-        store.dispatch(validar(periodo));
     }
 
     cerrar(e) {
@@ -223,6 +196,7 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
             PeriodoDesde: 0,
             PeriodoHasta: 0,
             PeriodoPresentacion: 0,
+            EstadoArchivoSSS: 0,
             UsuarioUpdate: "",
         };
         store.dispatch(muestroForm(false));
@@ -232,37 +206,28 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
     }
 
     validar(e) {
-        if (this.modo == "A") {
-            const periodo = this.shadowRoot.querySelector("#periodoPresentacion").value;
-            store.dispatch(validar(periodo));
-            this.aGrabar = true;
-        } else {
-            this.grabar(e);
-        }
+        this.grabar(e);
     }
     grabar(e) {
-        if (this.valido) {
-            const item = {};
-            item.Activo = true;
-            item.FechaUpdate = new Date();
-            item.Id = this.item.Id;
-            //item.IdEstadoPresentacionSSS = this.shadowRoot.querySelector("#estado").value;
-            item.PeriodoDesde = this.shadowRoot.querySelector("#periodoDesde").value;
-            item.PeriodoHasta = this.shadowRoot.querySelector("#periodoHasta").value;
-            item.PeriodoPresentacion = this.shadowRoot.querySelector("#periodoPresentacion").value;
-            item.FechaPresentacion = this.shadowRoot.querySelector("#fechaPresentacion").value;
-            item.UsuarioUpdate = "";
+        const item = {};
+        item.Activo = true;
+        item.FechaUpdate = new Date();
+        item.Id = this.item.Id;
+        item.PeriodoDesde = parseInt(this.shadowRoot.querySelector("#periodoDesde").value, 10);
+        item.PeriodoHasta = parseInt(this.shadowRoot.querySelector("#periodoHasta").value, 10);
+        item.PeriodoPresentacion = parseInt(this.shadowRoot.querySelector("#periodoPresentacion").value, 10);
+        item.FechaPresentacion = this.shadowRoot.querySelector("#fechaPresentacion").value;
+        item.EstadoArchivoSSS = this.item.EstadoArchivoSSS;
+        item.UsuarioUpdate = "";
 
-            if (this.modo == "M") {
-                store.dispatch(update(item));
-            }
-            if (this.modo == "D") {
-                store.dispatch(remove(item));
-            }
-            if (this.modo == "A") {
-                store.dispatch(add(item));
-            }
-            this.hidden = true;
+        if (this.modo == "M") {
+            store.dispatch(update(item));
+        }
+        if (this.modo == "D") {
+            store.dispatch(remove(item));
+        }
+        if (this.modo == "A") {
+            store.dispatch(add(item));
         }
     }
 
@@ -274,7 +239,6 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
         if (name === SELECTED) {
             this.item = state.presentacionesCabecera.selected;
             this.itemOld = state.presentacionesCabecera.selected;
-            this.valido = true;
             let periodoInical = this.item.PeriodoPresentacion;
             if (periodoInical == 0) {
                 periodoInical = state.periodosPresentaciones.listaPeriodos[0];
@@ -308,13 +272,8 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
             }
             this.update();
         }
-        if (name === VALID) {
-            this.valido = state.presentacionesCabecera.esValido;
-            this.mensaje = state.presentacionesCabecera.mensaje;
-            if (this.valido && this.aGrabar) {
-                this.grabar();
-            }
-            this.update();
+        if (name === UPDATE_OK) {
+            this.cerrar();
         }
     }
 
@@ -328,11 +287,6 @@ export class formularioPresentaciones extends connect(store, SELECTED, MUESTRO_F
             disabled: {
                 type: Boolean,
                 reflect: true,
-            },
-            valido: {
-                type: Boolean,
-                reflect: true,
-                value: true,
             },
             modo: {
                 type: String,

@@ -20,6 +20,7 @@ export const STEP = "[ui] step";
 //oculta o muestra ventana de error
 export const SHOW_WARNING = "[ui] show warning";
 export const HIDE_WARNING = "[ui] hide warning";
+export const SHOW_CONFIRM = "[ui] show confirm";
 
 export const showSpinner = () => ({
     type: SHOW_SPINNER,
@@ -43,6 +44,15 @@ export const showWarning = (pagina = "", nroWarning = -1, backgroundColor = "fon
     backgroundColor: backgroundColor,
     timeOut: timeOut,
 });
+
+export const showConfirm = (titulo = "", pregunta = "", onOK = null, onCancel = null) => ({
+    type: SHOW_CONFIRM,
+    titulo: titulo,
+    pregunta: pregunta,
+    onOK: onOK,
+    onCancel: onCancel,
+});
+
 export const hideWarning = () => ({
     type: HIDE_WARNING,
 });

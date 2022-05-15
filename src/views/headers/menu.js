@@ -207,7 +207,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             store.dispatch(
                 getPesentacionesCabecera({
                     filter: "Activo",
-                    orderby: "FechaPresentacion desc",
+                    orderby: "PeriodoPresentacion desc",
                 })
             );
         }
@@ -217,7 +217,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             store.dispatch(
                 getPesentacionesCabecera({
                     filter: "IdEstadoPresentacionSSS eq 1 and Activo",
-                    orderby: "FechaPresentacion desc",
+                    orderby: "PeriodoPresentacion desc",
                 })
             );
             store.dispatch(getResumen());

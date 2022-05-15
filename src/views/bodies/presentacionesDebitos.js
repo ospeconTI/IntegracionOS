@@ -136,7 +136,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
             }
 
             .columnas {
-                grid-template-columns: 2.4fr 2fr 4fr 2fr 2fr 2fr 2fr 2fr 7fr 7fr 0.5fr 0.5fr 0.5fr;
+                grid-template-columns: 1.5fr 2.4fr 2fr 4fr 2fr 2fr 2fr 2fr 2fr 7fr 7fr 0.5fr 0.5fr 0.5fr;
                 padding: 0.3rem !important;
             }
 
@@ -166,6 +166,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
                     </div>
                     <filtros-debitos class="grid row start " id="filtros" hidden estado="2"></filtros-debitos>
                     <div class="grid columnas cabecera">
+                        <div class="ordena" @click=${this.ordenar} .orden="${"IdReferencia"}">Orden</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FacNro"}">Comprobante</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"FechaEmision"}">Fecha Emision</div>
                         <div class="ordena" @click=${this.ordenar} .orden="${"Prestador"}">Prestador</div>
@@ -184,6 +185,7 @@ export class presentacionesDebitos extends connect(store, PRESENTACIONES_DEB, ME
                         ${this.items.map((item) => {
                             return html`
                                 <div class="inner-grid columnas datos bordeRow" .item="${item}">
+                                    <div>${item.PresentacionSSS_Historico.IdReferencia}</div>
                                     <div>
                                         ${item.PresentacionSSS_Historico.PuntoVenta +
                                         item.PresentacionSSS_Historico.FacturasPrestadores.SSS_TipoComprobantes.TipoFactura +

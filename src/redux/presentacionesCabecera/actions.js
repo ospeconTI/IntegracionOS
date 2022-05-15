@@ -21,21 +21,15 @@ export const GET_FACTURAS_BY_ERROR_SUCCESS = "[presentacionesCabecera] GET_FACTU
 export const GET_FACTURAS_BY_ERROR_ERROR = "[presentacionesCabecera] GET_FACTURAS_BY_ERROR error";
 
 export const ADD = "[presentacionesCabecera] ADD";
-
 export const ADD_SUCCESS = "[presentacionesCabecera] ADD_SUCCESS";
-
 export const ADD_ERROR = "[presentacionesCabecera] ADD_ERROR";
 
 export const UPDATE = "[presentacionesCabecera] UPDATE";
-
 export const UPDATE_SUCCESS = "[presentacionesCabecera] UPDATE_SUCCESS";
-
 export const UPDATE_ERROR = "[presentacionesCabecera] UPDATE_ERROR";
 
 export const REMOVE = "[presentacionesCabecera] REMOVE";
-
 export const REMOVE_SUCCESS = "[presentacionesCabecera] REMOVE_SUCCESS";
-
 export const REMOVE_ERROR = "[presentacionesCabecera] REMOVE_ERROR";
 
 export const SET_SELECTED = "[presentacionesCabecera] SET_SELECTED";
@@ -45,7 +39,16 @@ export const MUESTRO_FORM = "[presentacionesCabecera] Muestro Form de Edicion";
 export const VALIDAR = "[presentacionesCabecera] Validar";
 export const VALIDAR_SUCCESS = "[presentacionesCabecera] Validar success";
 export const VALIDAR_ERROR = "[presentacionesCabecera] Validar error";
+
 export const CLEAN_SELECTED = "[presentacionesCabecera] CLEAN_SELECTED";
+
+export const CERRAR_ABRIR = "[PresentacionesCabecera] Cerrar y Abrir Presentacion";
+export const CERRAR_ABRIR_SUCCESS = "[PresentacionesCabecera] Cerrar y Abrir Presentacion Success";
+export const CERRAR_ABRIR_ERROR = "[PresentacionesCabecera] Cerrar y Abrir Presentacion Error";
+
+export const APLICAR_NOVEDADES = "[PresentacionesCabecera] Aplicar Novedades";
+export const APLICAR_NOVEDADES_SUCCESS = "[PresentacionesCabecera] Aplicar Novedades Success";
+export const APLICAR_NOVEDADES_ERROR = "[PresentacionesCabecera] Aplicar Novedades Error";
 
 export const get = (options) => ({
     type: GET,
@@ -60,15 +63,6 @@ export const getFacturasByError = (idPresentacion, idError) => ({
     type: GET_FACTURAS_BY_ERROR,
     idPresentacion: idPresentacion,
     idError: idError,
-});
-
-export const cleanSelected = () => ({
-    type: CLEAN_SELECTED,
-});
-
-export const validar = (periodo) => ({
-    type: VALIDAR,
-    periodo: periodo,
 });
 
 export const add = (entity) => ({
@@ -97,4 +91,12 @@ export const setTipoAccion = (tipo) => ({
 export const muestroForm = (muestroForm) => ({
     type: MUESTRO_FORM,
     muestroForm: muestroForm,
+});
+export const cerrarAbrir = (item) => ({
+    type: CERRAR_ABRIR,
+    item: item,
+});
+export const aplicarNovedades = (periodoPresentacion) => ({
+    type: APLICAR_NOVEDADES,
+    periodoPresentacion: periodoPresentacion,
 });

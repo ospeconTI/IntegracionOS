@@ -4,8 +4,6 @@ import {
     GET,
     GET_SUCCESS,
     GET_ERROR,
-    VALIDAR,
-    VALIDAR_SUCCESS,
     VALIDAR_ERROR,
     ADD,
     ADD_SUCCESS,
@@ -23,12 +21,18 @@ import {
     GET_FACTURAS_BY_ERROR,
     GET_FACTURAS_BY_ERROR_ERROR,
     GET_FACTURAS_BY_ERROR_SUCCESS,
+    CERRAR_ABRIR,
+    CERRAR_ABRIR_SUCCESS,
+    CERRAR_ABRIR_ERROR,
+    APLICAR_NOVEDADES,
+    APLICAR_NOVEDADES_SUCCESS,
+    APLICAR_NOVEDADES_ERROR,
 } from "./actions";
-
-import { presentacionesCabeceraFetch, getResumenFetch, getFacturasByErrorFetch } from "../fetchs";
-
-import { apiRequest, apiUpdate, apiAdd, apiDelete } from "../api/actions";
+import { presentacionesCabeceraFetch, getResumenFetch, getFacturasByErrorFetch, CierrayAbrePresentacionFetch, AplicarNovedadesFetch } from "../fetchs";
+import { apiRequest, apiUpdate, apiAdd, apiDelete, apiAction, apiFunction } from "../api/actions";
 import { RESTRequest } from "../rest/actions";
+import { showError, showConfirm } from "../../redux/ui/actions";
+import { cerrarAbrir } from "../../redux/presentacionesCabecera/actions";
 
 export const get =
     ({ dispatch }) =>
@@ -39,6 +43,15 @@ export const get =
             const options = action.options;
             options.expand = "PresentacionSSS_Estados";
             dispatch(apiRequest(presentacionesCabeceraFetch, action.options, GET_SUCCESS, GET_ERROR));
+        }
+    };
+
+export const processGet =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_SUCCESS) {
         }
     };
 
@@ -66,17 +79,6 @@ export const getFacturasByError =
         }
     };
 
-export const validar =
-    ({ dispatch }) =>
-    (next) =>
-    (action) => {
-        next(action);
-        if (action.type === VALIDAR) {
-            const options = { filter: "PeriodoPresentacion eq " + action.periodo + " and Activo" };
-            dispatch(apiRequest(presentacionesCabeceraFetch, options, VALIDAR_SUCCESS, VALIDAR_ERROR));
-        }
-    };
-
 export const add =
     ({ dispatch }) =>
     (next) =>
@@ -85,6 +87,16 @@ export const add =
         if (action.type === ADD) {
             const body = action.item;
             dispatch(apiAdd(presentacionesCabeceraFetch, body, ADD_SUCCESS, ADD_ERROR));
+        }
+    };
+
+export const processAdd =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === ADD_SUCCESS) {
+            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "PeriodoPresentacion desc", count: true }));
         }
     };
 
@@ -98,6 +110,16 @@ export const update =
         }
     };
 
+export const processUpdate =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === UPDATE_SUCCESS) {
+            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "PeriodoPresentacion desc", count: true }));
+        }
+    };
+
 export const remove =
     ({ dispatch }) =>
     (next) =>
@@ -108,21 +130,13 @@ export const remove =
         }
     };
 
-export const processGet =
+export const processRemove =
     ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
-        if (action.type === GET_SUCCESS) {
-        }
-    };
-
-export const processValidar =
-    ({ dispatch }) =>
-    (next) =>
-    (action) => {
-        next(action);
-        if (action.type === VALIDAR_SUCCESS) {
+        if (action.type === REMOVE_SUCCESS) {
+            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "PeriodoPresentacion desc", count: true }));
         }
     };
 
@@ -131,34 +145,92 @@ export const processError =
     (next) =>
     (action) => {
         next(action);
-        if (action.type === GET_ERROR || action.type === VALIDAR_ERROR || action.type === ADD_ERROR || action.type == UPDATE_ERROR || action.type == REMOVE_ERROR) {
-            alert(JSON.parse(action.payload.receive.message).innererror.message);
+        if (action.type === GET_ERROR || action.type === VALIDAR_ERROR || action.type == REMOVE_ERROR || action.type == APLICAR_NOVEDADES_ERROR) {
+            alert(action.payload.receive.message);
         }
     };
 
-export const processAdd =
+export const processErrorGrabacion =
     ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
-        if (action.type === ADD_SUCCESS) {
+        if (action.type === ADD_ERROR || action.type == UPDATE_ERROR) {
+            const errorMsg = action.payload.receive.message;
+            const codigoError = errorMsg.substring(0, 3);
+
+            if (isNaN(codigoError)) {
+                dispatch(showError([{ campo: "Presentación", mensaje: errorMsg.message }]));
+            } else {
+                const mensajeError = errorMsg.substring(4);
+                if (codigoError != "200") {
+                    dispatch(showError([{ campo: "Presentación", mensaje: mensajeError }]));
+                } else {
+                    const item = action.payload.send;
+                    dispatch(showConfirm("Presentaciones", mensajeError + "\n ¿Desea cerrarla y crear la nueva?", cerrarAbrir(item), null));
+                }
+            }
         }
     };
-export const processUpdate =
+
+export const procsessCerrarAbrir =
     ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
-        if (action.type === UPDATE_SUCCESS) {
+        if (action.type === CERRAR_ABRIR) {
+            const body = { Entidad: action.item };
+            dispatch(apiAction(CierrayAbrePresentacionFetch, body, null, "", CERRAR_ABRIR_SUCCESS, CERRAR_ABRIR_ERROR));
         }
     };
-export const processRemove =
+
+export const processCerrarAbrirSuccess =
     ({ dispatch }) =>
     (next) =>
     (action) => {
         next(action);
-        if (action.type === REMOVE_SUCCESS) {
-            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "FechaPresentacion desc", count: true }));
+        if (action.type === CERRAR_ABRIR_SUCCESS) {
+            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "PeriodoPresentacion desc", count: true }));
         }
     };
-export const middleware = [get, validar, add, update, remove, processValidar, processGet, processError, processAdd, processUpdate, processRemove, getResumen, getFacturasByError];
+
+export const processAplicarNovedades =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === APLICAR_NOVEDADES) {
+            //const param = { customParameters: "(" + action.periodoPresentacion + ")" };
+            //dispatch(apiFunction(AplicarNovedadesFetch, null, APLICAR_NOVEDADES_SUCCESS, APLICAR_NOVEDADES_ERROR));
+            dispatch(apiAction(AplicarNovedadesFetch, null, "pPeriodo=" + action.periodoPresentacion, "", APLICAR_NOVEDADES_SUCCESS, APLICAR_NOVEDADES_ERROR));
+        }
+    };
+
+export const processAplicarNovedadesSuccess =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === APLICAR_NOVEDADES_SUCCESS) {
+            dispatch(getPresentaciones({ top: 100, filter: "Activo", orderby: "PeriodoPresentacion desc", count: true }));
+        }
+    };
+
+export const middleware = [
+    get,
+    add,
+    update,
+    remove,
+    processGet,
+    processError,
+    processAdd,
+    processErrorGrabacion,
+    processUpdate,
+    processRemove,
+    getResumen,
+    getFacturasByError,
+    procsessCerrarAbrir,
+    processCerrarAbrirSuccess,
+    processAplicarNovedades,
+    processAplicarNovedadesSuccess,
+];

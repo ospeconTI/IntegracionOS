@@ -18,8 +18,10 @@ import { COPY, ADD, MODIF, DELETE, DETALLE, TIMELINE } from "../../../assets/ico
 import { formularioPresentaciones } from "./formularioPresentaciones";
 import { getResumen } from "../../redux/presentacionesErrores/actions";
 import { generar } from "../../redux/presentacionSSS/actions";
-import { getResumen as getResumenPresentacion } from "../../redux/presentacionesCabecera/actions";
+import { getResumen as getResumenPresentacion, aplicarNovedades } from "../../redux/presentacionesCabecera/actions";
 import { get as getPresentacionesDebitos } from "../../redux/presentacionesDebitos/actions";
+import { nothing } from "lit-html";
+import { showError, showConfirm } from "../../redux/ui/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -39,8 +41,9 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         this.items = [];
         this.order = "";
         this.presentacionActiva = {};
-
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
+        this.hidden = true;
+        this.hideGenerar = true;
     }
     static get styles() {
         return css`
@@ -62,6 +65,9 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                 display: none;
             }
 
+            .botones[hidden] {
+                display: none;
+            }
             h1,
             h2,
             h3,
@@ -143,7 +149,7 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             }
 
             .columnas {
-                grid-template-columns: 0.3fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr;
+                grid-template-columns: 0.3fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr 3fr;
                 padding: 0.3rem !important;
             }
 
@@ -160,9 +166,9 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                 grid-auto-flow: column;
                 display: grid;
                 justify-content: right;
+                grid-gap: 0.5rem;
             }
             .botones {
-                color: var(--color-azul-oscuro) !important;
                 fill: var(--color-azul-oscuro) !important;
                 stroke: var(--color-azul-oscuro) !important;
             }
@@ -204,15 +210,32 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
                                     <div>${item.PeriodoHasta}</div>
                                     <div>${new Date(item.FechaPresentacion).toLocaleDateString()}</div>
                                     <div>${item.PresentacionSSS_Estados.Descripcion}</div>
-                                    <div class="botonera">${this.poneBotonera(item)}</div>
+                                    <div class="botonera">
+                                        <button
+                                            btn3
+                                            class="button botones"
+                                            ?hidden=${item.EstadoArchivoSSS == 0 || item.EstadoArchivoSSS == 3}
+                                            @click="${this.aplicar}}"
+                                            title="Aplicar novedades de SSS"
+                                        >
+                                            Aplicar Novedades
+                                        </button>
+                                        <button btn3 class="button botones" ?hidden=${item.IdEstadoPresentacionSSS == 2} @click=${this.delete} .item="${item}" title="elminar presentacion">
+                                            Eliminar
+                                        </button>
+                                        <button btn3 class="button botones" ?hidden=${item.IdEstadoPresentacionSSS == 2} @click=${this.modif} .item="${item}" title="modificar presentacion">
+                                            Modificar
+                                        </button>
+                                        <button btn3 class="button botones" @click=${this.detalle} .item="${item}" title="ver detalle">Detalle</button>
+                                        <button btn3 class="button botones" @click=${this.debitos} .item="${item}" title="ver Debitos">Ver Debitos</button>
+                                    </div>
                                 </div>
                             `;
                         })}
                     </div>
                     <div class="grid column center">
                         <button btn3 class="button" @click="${this.agregar}" title="nueva presentacion">${ADD} Nueva</button>
-                        <button btn3 class="button" @click=${this.generar} title="generar presentacion para SSS">${UPLOAD} Presentar</button>
-                        <button btn3 class="button" @click="${this.aplicar}}" title="Aplicar novedades de SSS">${DOWNLOAD} Aplicar Novedades</button>
+                        <button btn3 class="button botones" ?hidden=${this.hideGenerar} @click=${this.generar} title="generar presentacion para SSS">${UPLOAD} Presentar</button>
                     </div>
                 </div>
                 <formulario-presentaciones class="body" id="formularioPresentacion" hidden></formulario-presentaciones>
@@ -222,35 +245,17 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         }
     }
 
-    poneBotonera(item) {
-        //en proceso
-        if (item.IdEstadoPresentacionSSS == 1) {
-            return html`
-                <button btn2 class="button botones" @click=${this.delete} .item="${item}" title="elminar presentacion">${DELETE}</button>
-                <button btn2 class="button botones" @click=${this.modif} .item="${item}" title="modificar presentacion">${MODIF}</button>
-                <button btn2 class="button botones" @click=${this.detalle} .item="${item}" title="ver detalle">${COPY}</button>
-                <button btn2 class="button botones" @click=${this.debitos} .item="${item}" title="ver Debitos">${COPY}</button>
-            `;
-        }
-
-        // cerrada
-        if (item.IdEstadoPresentacionSSS == 2) {
-            return html` <button btn2 class="button botones" @click=${this.detalle} .item="${item}">${COPY}</button>
-                <button btn2 class="button botones" @click=${this.debitos} .item="${item}" title="ver Debitos">${COPY}</button>`;
-        }
-
-        //presentada
-        if (item.IdEstadoPresentacionSSS == 3) {
-            return html`
-                <button btn2 class="button botones" @click=${this.delete} .item="${item}">${DELETE}</button>
-                <button btn2 class="button botones" @click=${this.modif} .item="${item}">${MODIF}</button>
-            `;
-        }
+    aplicar(e) {
+        store.dispatch(aplicarNovedades(this.presentacionActiva.PeriodoPresentacion));
     }
-
-    aplicar(e) {}
     generar(e) {
-        store.dispatch(generar());
+        let mensajeError;
+        if (this.presentacionActiva.EstadoArchivoSSS != 1) {
+            store.dispatch(generar());
+        } else {
+            mensajeError = "La presentación ya fue generada. Debe leer los archivos de respuesta desde SSS";
+            store.dispatch(showError([{ campo: "", mensaje: mensajeError }]));
+        }
     }
     detalle(e) {
         store.dispatch(getResumenPresentacion(e.currentTarget.item.Id));
@@ -271,17 +276,17 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
     }
     delete(e) {
         store.dispatch(muestroForm(true));
-        store.dispatch(setSelected(e.currentTarget.item));
         store.dispatch(setTipoAccion("D"));
+        store.dispatch(setSelected(e.currentTarget.item));
     }
 
     modif(e) {
         store.dispatch(muestroForm(true));
-        store.dispatch(setSelected(e.currentTarget.item));
         store.dispatch(setTipoAccion("M"));
+        store.dispatch(setSelected(e.currentTarget.item));
     }
 
-    agregar(e) {
+    itemVacio() {
         const itemVacio = {
             Activo: false,
             FechaPresentacion: "",
@@ -293,8 +298,12 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             PeriodoPresentacion: 0,
             UsuarioUpdate: "",
         };
+        return itemVacio;
+    }
+
+    agregar(e) {
         store.dispatch(muestroForm(true));
-        store.dispatch(setSelected(itemVacio));
+        store.dispatch(setSelected(this.itemVacio()));
         store.dispatch(setTipoAccion("A"));
     }
 
@@ -336,6 +345,15 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
         if (name == PRESENTACIONES_CAB) {
             this.items = state.presentacionesCabecera.entities;
             this.presentacionActiva = this.items.find((p) => p.IdEstadoPresentacionSSS == 1);
+            if (this.presentacionActiva) this.hideGenerar = this.presentacionActiva.EstadoArchivoSSS == 1 || this.presentacionActiva.IdEstadoPresentacionSSS != 1 ? true : false;
+
+            //this.novedadAplicada = this.presentacionActiva.EstadoArchivoSSS;
+            //this.novedadAplicada = 1;
+            //if (this.presentacionActiva != undefined) {
+            //     if (this.presentacionActiva.EstadoArchivoSSS == undefined) {
+            //    this.presentacionActiva.EstadoArchivoSSS = 1;
+            //     }
+            //}
             this.update();
         }
     }
@@ -357,6 +375,10 @@ export class presentacionesCabecera extends connect(store, PRESENTACIONES_CAB, M
             },
             area: {
                 type: String,
+            },
+            hideGenerar: {
+                type: Boolean,
+                reflect: true,
             },
         };
     }
