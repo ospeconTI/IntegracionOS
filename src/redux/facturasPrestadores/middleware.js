@@ -255,7 +255,7 @@ export const traerFacurasRechazadasSSS =
     (action) => {
         next(action);
         if (action.type === GET_FACTURAS_RECHAZADAS_SSS) {
-            dispatch(apiAction(facturasRechazadasSSS, null, null, "", GET_FACTURAS_RECHAZADAS_SSS_SUCCESS, GET_FACTURAS_RECHAZADAS_SSS_ERROR));
+            dispatch(apiRequest(facturasRechazadasSSS, {}, GET_FACTURAS_RECHAZADAS_SSS_SUCCESS, GET_FACTURAS_RECHAZADAS_SSS_ERROR));
         }
     };
 export const rechazarSuccess =
