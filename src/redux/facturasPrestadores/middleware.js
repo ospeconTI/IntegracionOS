@@ -244,7 +244,12 @@ export const traerFacurasRechazadasSSS =
     (action) => {
         next(action);
         if (action.type === GET_FACTURAS_RECHAZADAS_SSS) {
-            dispatch(apiAction(facturasRechazadasSSS, null, null, "", GET_FACTURAS_RECHAZADAS_SSS_SUCCESS, GET_FACTURAS_RECHAZADAS_SSS_ERROR));
+            let options = {};
+            if (action.options) {
+                options = { filter: action.options };
+            }
+            //dispatch(apiAction(facturasRechazadasSSS, null, action.options, "", GET_FACTURAS_RECHAZADAS_SSS_SUCCESS, GET_FACTURAS_RECHAZADAS_SSS_ERROR));
+            dispatch(apiRequest(facturasRechazadasSSS, options, GET_FACTURAS_RECHAZADAS_SSS_SUCCESS, GET_FACTURAS_RECHAZADAS_SSS_ERROR));
         }
     };
 export const rechazarSuccess =

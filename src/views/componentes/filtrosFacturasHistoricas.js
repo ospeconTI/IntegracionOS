@@ -276,42 +276,8 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         sucursal.value = "";
         numero.value = "";
 
-        let filtro = "";
-        //siempre debe traer solo las facturas aprobadas por SSS
-        filtro += "FacturasPrestadores/IdFacturasPrestadoresEstado eq 5 and ";
-
-        if (orden != 0 && orden != "") {
-            filtro += "FacturasPrestadores/Id eq " + orden + " and ";
-        }
-
-        if (expediente != 0 && expediente != "") {
-            filtro += "FacturasPrestadores/Expediente_Bono/Expediente eq " + expediente + " and ";
-        }
-
-        if (hiscli != 0 && hiscli != "") {
-            filtro += "FacturasPrestadores/Expediente_Bono/Cabecera/Hiscli eq " + hiscli + " and ";
-        }
-
-        if (prestador.value && prestador.value != "") {
-            filtro += "FacturasPrestadores/Expediente_Bono/Cabecera/Prestador eq " + prestador.value + " and ";
-        }
-
-        if (tipo != -1) {
-            filtro += "TipoComprobante eq '" + tipo + "' and ";
-        }
-
-        if (sucursal != 0) {
-            filtro += "PuntoVenta eq '" + sucursal + "' and ";
-        }
-
-        if (numero != 0) {
-            filtro += " NumeroComprobante eq '" + numero + "' and ";
-        }
-
-        filtro = filtro.slice(0, -5);
-        //store.dispatch(setFiltro(filtro));
+        let filtro = null;
         this.items = [];
-
         this.update();
     }
     buscar(e) {
@@ -358,19 +324,16 @@ export class filtrosFacturasHistoricas extends connect(store, MEDIA_CHANGE, SCRE
         }
 
         if (sucursal != 0) {
-            filtro += "PuntoVenta eq '" + sucursal + "' and ";
+            filtro += "PuntoVenta eq '" + sucursal.padStart(4, "0") + "' and ";
             tieneFiltro = true;
         }
 
         if (numero != 0) {
-            filtro += " NumeroComprobante eq '" + numero + "' and ";
+            filtro += " NumeroComprobante eq '" + numero.padStart(8, "0") + "' and ";
             tieneFiltro = true;
         }
-
         filtro = filtro.slice(0, -5);
 
-        //store.dispatch(setFiltro(filtro));
-        //this.cerrar();
         if (tieneFiltro == true) {
             store.dispatch(
                 getPresentacionSSS_Historico({

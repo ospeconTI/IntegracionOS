@@ -132,8 +132,9 @@ export const pasarAPendienteOS = (id) => ({
     id: id,
 });
 
-export const getFacturasRechazadasSSS = () => ({
+export const getFacturasRechazadasSSS = (options) => ({
     type: GET_FACTURAS_RECHAZADAS_SSS,
+    options: options,
 });
 
 export const representar = (facturas) => ({

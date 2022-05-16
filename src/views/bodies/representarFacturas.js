@@ -11,7 +11,7 @@ import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { setSelected, representar } from "../../redux/facturasPrestadores/actions";
 import { SEARCH, TIMELINE, ALERTA } from "../../../assets/icons/svgs";
-import { filtrosFacturas } from "../componentes/filtrosFacturas";
+import { filtrosFacturasReproceso } from "../componentes/filtrosFacturasReproceso";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
 import { get as getLog } from "../../redux/facturasPrestadoresLog/actions";
@@ -94,7 +94,7 @@ export class representarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, 
                 cursor: pointer;
             }
 
-            filtros-facturas {
+            filtros-facturasreproceso {
                 position: fixed;
                 top: 0px;
                 width: 30%;
@@ -105,7 +105,7 @@ export class representarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, 
                 transition: all 0.5s ease 0s;
             }
 
-            filtros-facturas[isOpen] {
+            filtros-facturasreproceso[isOpen] {
                 left: 0;
             }
 
@@ -144,7 +144,7 @@ export class representarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, 
                     <div class="grid column ">
                         <button class="justify-self-end" btn1 id="marcar" @click="${this.cambiarEstado}">Volver a Pesentar</button>
                     </div>
-                    <filtros-facturas class="grid row start " id="filtros" hidden estado="-1"></filtros-facturas>
+                    <filtros-facturasreproceso class="grid row start " id="filtros" hidden estado="-1"></filtros-facturasreproceso>
                     <div class="grid columnas cabecera ">
                         <div class="ordena">Orden</div>
                         <div class="ordena">Ingreso</div>
