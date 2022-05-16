@@ -155,9 +155,20 @@ export const processError =
     (action) => {
         next(action);
         if (action.type === GET_ERROR || action.type === ADD_ERROR || action.type == UPDATE_ERROR) {
-            const errorMsg = JSON.parse(action.payload.receive.message);
+            let errorMsg = "";
+            try {
+                errorMsg = JSON.parse(action.payload.receive.message);
+            } catch {
+                //procesa los custom errors
+                errorMsg = action.payload.receive.message;
+            }
+            if (typeof errorMsg === "string") {
+                alert(errorMsg);
+                return;
+            }
             if (errorMsg.innererror) {
                 alert(errorMsg.innererror.message);
+                return;
             }
             if (errorMsg.length) {
                 //const erroresMsg = JSON.parse(errorMsg.message);
