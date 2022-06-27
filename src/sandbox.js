@@ -89,7 +89,7 @@ if ("credentials" in navigator) {
     store.dispatch(goTo("login"));
 }
 
-store.dispatch(listaPeriodosBono(3));
+store.dispatch(listaPeriodosBono(6));
 store.dispatch(getDocumentacion({ filter: "Prestador" }));
 export default {
     login: (email, password) => {

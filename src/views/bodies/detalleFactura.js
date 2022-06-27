@@ -113,11 +113,11 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
     render() {
         if (this.factura) {
             return html`
-                <div class="grid fit18 tarjeta ">
+                <div class="grid fit22 tarjeta ">
                     <div>Nº: ${this.factura.Id}</div>
                     <div>Int: <span>${this.factura.Expediente_Bono.Cabecera.Evento == 4 ? "SI" : "NO"}</span></div>
-                    <div>Prestador: ${this.factura.prestado.nombre + " - " + this.factura.IdPrestador}</div>
-                    <div>Beneficiario: ${this.factura.Expediente_Bono.Cabecera.Nombre}</div>
+                    <div>Prestador: ${"(" + this.factura.prestado.Cuit + ") " + this.factura.prestado.nombre + " - " + this.factura.IdPrestador}</div>
+                    <div>Beneficiario: ${this.factura.Expediente_Bono.Cabecera.Nombre + "(" + this.factura.Expediente_Bono.Cabecera.Hiscli + ")"}</div>
                     <div>Expediente: ${this.factura.Expediente_Bono.Expediente}</div>
                     <div>Dependencia: ${this.factura.Expediente_Bono.Cabecera.Detalle.Dependencia == "N" ? "NO" : "SI"}</div>
                     <div>Periodo: ${this.factura.Expediente_Bono.Periodo.toString().replace(/^(\d{4})(\d{2})/, "$2-$1")}</div>
@@ -127,7 +127,6 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div .complementaria="${this.factura.IdFacturaPrestador}" @click="${this.complementaria}">
                         ${this.factura.IdFacturaPrestador ? "Tipo: " + _tipoComplementarias[this.factura.TipoComplementaria] + " (" + this.factura.IdFacturaPrestador.toString() + ")" : ""}
                     </div>
-                    <button btn3 @click="${this.verLogs}" class="justify-self-end">${TIMELINE} Ver log</button>
                 </div>
 
                 <div class="grid column">
@@ -164,6 +163,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                             })}
                         </select>
                     </div>
+                    <button btn3 @click="${this.verLogs}" class="justify-self-end">${TIMELINE} Ver log</button>
                 </div>
 
                 <div class="grid column columnas align-start">
