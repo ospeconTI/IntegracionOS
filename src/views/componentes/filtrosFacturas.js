@@ -33,6 +33,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         this.estados = [];
         this.periodoActual = null;
         this.open = false;
+        this.periodosRev = [];
     }
     static get styles() {
         return css`
@@ -109,11 +110,21 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
                     <input type="number" id="expediente" autocomplete="off" maxlength="8" @input=${this.maxLength} />
                 </div>
                 <div class="select">
-                    <label>Período</label>
-                    <select id="periodo">
-                        <option value="-1">Cualquier Período</option>
+                    <label>Período Desde</label>
+                    <select id="periodod" @change="${this.periodo}">
+                        <option value="-1" selected>Cualquier Período</option>
                         ${this.periodos.map((c) => {
                             return html`<option value="${c}">${c}</option>`;
+                        })}
+                    </select>
+                </div>
+
+                <div class="select">
+                    <label>Período Hasta</label>
+                    <select id="periodoh" disabled>
+                        <option value="-1">Seleccione Opcion</option>
+                        ${this.periodosRev.map((c) => {
+                            return html`<option value="${c}" ?selected="${this.periodoActual == c}">${c}</option>`;
                         })}
                     </select>
                 </div>
@@ -168,11 +179,21 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         this.update();
     }
 
+    periodo() {
+        const desde = this.shadowRoot.querySelector("#periodod");
+        const hasta = this.shadowRoot.querySelector("#periodoh");
+        hasta.disabled = false;
+        if (desde.value == -1) {
+            hasta.disabled = true;
+        }
+    }
+
     limpiar() {
         const orden = this.shadowRoot.querySelector("#orden");
         const expediente = this.shadowRoot.querySelector("#expediente");
         const hiscli = this.shadowRoot.querySelector("#hiscli");
-        const periodo = this.shadowRoot.querySelector("#periodo");
+        const periodod = this.shadowRoot.querySelector("#periodod");
+        const periodoh = this.shadowRoot.querySelector("#periodoh");
         const tipo = this.shadowRoot.querySelector("#tipo");
         const sucursal = this.shadowRoot.querySelector("#sucursal");
         const numero = this.shadowRoot.querySelector("#numero");
@@ -184,7 +205,8 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         orden.value = "";
         hiscli.value = "";
         expediente.value = "";
-        periodo.value = -1;
+        periodod.value = -1;
+        periodoh.value = this.periodoActual;
         tipo.value = -1;
         sucursal.value = "";
         numero.value = "";
@@ -238,7 +260,8 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
     }
     buscar(e) {
         const orden = this.shadowRoot.querySelector("#orden").value;
-        const periodo = this.shadowRoot.querySelector("#periodo").value;
+        const periodod = this.shadowRoot.querySelector("#periodod").value;
+        const periodoh = this.shadowRoot.querySelector("#periodoh").value;
         const expediente = this.shadowRoot.querySelector("#expediente").value;
         const prestador = this.shadowRoot.querySelector("#prestador");
         const tipo = this.shadowRoot.querySelector("#tipo").value;
@@ -250,8 +273,13 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         const hiscli = this.shadowRoot.querySelector("#hiscli").value;
         let filtro = "";
 
-        if (periodo != -1) {
-            filtro += "Expediente_Bono/Periodo eq " + periodo + " and ";
+        if (periodod != -1) {
+            if (periodod <= periodoh) {
+                filtro += "Expediente_Bono/Periodo ge " + periodod + " and Expediente_Bono/Periodo le " + periodoh + " and ";
+            } else {
+                alert("Periodo desde debe ser menor o igual al período hasta");
+                return false;
+            }
         }
 
         if (orden != 0 && orden != "") {
@@ -340,6 +368,7 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
 
         if (name == PERIODOS) {
             this.periodos = state.periodosMensuales.entities;
+            this.periodosRev = this.periodos.reverse();
             this.update();
         }
         if (name == PERIODOSMES) {

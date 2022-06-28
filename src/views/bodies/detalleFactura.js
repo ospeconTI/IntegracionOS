@@ -475,7 +475,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
     volver(e) {
         store.dispatch(
             getFacturas({
-                top: 100,
+                top: 200,
                 expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value,
                 orderby: " Id ",

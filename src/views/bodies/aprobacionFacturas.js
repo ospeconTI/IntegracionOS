@@ -266,7 +266,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
     ordenar(e) {
         store.dispatch(
             getFacturas({
-                top: 100,
+                top: 200,
                 expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value, // "IdFacturasPrestadoresEstado eq 2",
                 orderby: e.currentTarget.orden,
@@ -309,7 +309,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
         if (name == FILTROTS) {
             store.dispatch(
                 getFacturas({
-                    top: 100,
+                    top: 200,
                     expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id ",

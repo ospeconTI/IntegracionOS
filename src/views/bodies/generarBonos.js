@@ -171,6 +171,7 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                             <option value="E">Expediente</option>
                             <option value="D">DNI</option>
                             <option value="P">Prestador</option>
+                            <option value="C">CUIT</option>
                         </select>
                     </div>
                     <div class="input">
@@ -297,6 +298,8 @@ export class generarBonos extends connect(store, MEDIA_CHANGE, SCREEN, LISTARPER
                 break;
             case "P":
                 filtro = "Prestador eq ";
+            case "C":
+                filtro = "prestado/Cuit eq ";
         }
         filtro += valor;
 

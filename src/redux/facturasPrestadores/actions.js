@@ -83,7 +83,7 @@ export const getFacturaAndSelect = (id) => ({
 export const getByError = (error) => ({
     type: GET_BY_ERROR,
     error: error,
-    options: { top: 100 },
+    options: { top: 200 },
 });
 
 export const add = (entity) => ({

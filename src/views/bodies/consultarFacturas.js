@@ -128,8 +128,6 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                 grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 2fr 0.5fr;
                 padding: 0.3rem !important;
             }
-            .log {
-            }
         `;
     }
     render() {
@@ -217,7 +215,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
     ordenar(e) {
         store.dispatch(
             getFacturas({
-                top: 100,
+                top: 200,
                 expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                 filter: store.getState().filtro.value,
                 orderby: e.currentTarget.orden,
@@ -257,7 +255,7 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
         if (name == FILTROTS) {
             store.dispatch(
                 getFacturas({
-                    top: 100,
+                    top: 200,
                     expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
                     filter: state.filtro.value,
                     orderby: " Id ",
