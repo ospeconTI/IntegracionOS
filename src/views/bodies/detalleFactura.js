@@ -108,6 +108,10 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             :host(:not([modo=""])) div[modo] {
                 display: none;
             }
+            .log svg {
+                height: 1.3rem;
+                width: 1.3rem;
+            }
         `;
     }
     render() {
@@ -163,7 +167,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                             })}
                         </select>
                     </div>
-                    <button btn3 @click="${this.verLogs}" class="justify-self-end">${TIMELINE} Ver log</button>
+                    <button btn3 @click="${this.verLogs}" class=" log justify-self-end">${TIMELINE} Ver log</button>
                 </div>
 
                 <div class="grid column columnas align-start">
