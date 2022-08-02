@@ -40,7 +40,7 @@ export const traeParaBonos = (periodo, filtro) => ({
         filter:
             " Detalle/Periodo_Desde le '" +
             periodo +
-            "' and Detalle/Periodo_Hasta gt '" +
+            "' and Detalle/Periodo_Hasta ge '" +
             periodo +
             "' and not Expediente_Bono/any(d:d/Periodo eq " +
             periodo +
