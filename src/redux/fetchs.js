@@ -53,3 +53,4 @@ export const facturasRechazadasSSS = ODataEntity(expedienteOdataFactory, "TraeRe
 export const representarFacturasFetch = ODataEntity(expedienteOdataFactory, "RepresentarFacturas");
 export const CierrayAbrePresentacionFetch = ODataEntity(expedienteOdataFactory, "CierrayAbrePresentacion");
 export const AplicarNovedadesFetch = ODataEntity(expedienteOdataFactory, "AplicarNovedades");
+export const CantidadFacturasFetch = ODataEntity(expedienteOdataFactory, "FacturasPorFecha");

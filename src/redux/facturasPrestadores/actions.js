@@ -60,6 +60,11 @@ export const REPRESENTAR = "[facturasPrestadores] REPRESENTAR";
 export const REPRESENTAR_SUCCESS = "[facturasPrestadores] REPRESENTAR_SUCCESS";
 export const REPRESENTAR_ERROR = "[facturasPrestadores] REPRESENTAR_ERROR";
 
+export const GET_CANTIDAD_FACTURAS = "[facturasPrestadores] GET_CANTIDAD_FACTURAS";
+export const GET_CANTIDAD_FACTURAS_SUCCESS = "[facturasPrestadores] GET_CANTIDAD_FACTURAS_SUCCESS";
+export const GET_CANTIDAD_FACTURAS_ERROR = "[facturasPrestadores] GET_CANTIDAD_FACTURAS_ERROR";
+
+
 export const get = (options) => ({
     type: GET,
     options: options,
@@ -144,4 +149,10 @@ export const representar = (facturas) => ({
             Facturas: facturas,
         },
     },
+});
+
+export const getCantidadFacturas = (desde, hasta) => ({
+    type: GET_CANTIDAD_FACTURAS,
+    desde: desde,
+    hasta: hasta
 });

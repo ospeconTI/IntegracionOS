@@ -38,12 +38,15 @@ import {
     REPRESENTAR,
     REPRESENTAR_ERROR,
     REPRESENTAR_SUCCESS,
+    GET_CANTIDAD_FACTURAS,
+    GET_CANTIDAD_FACTURAS_SUCCESS,
+    GET_CANTIDAD_FACTURAS_ERROR,
 } from "./actions";
 
 import { getFacturasRechazadasSSS } from "../../redux/facturasPrestadores/actions";
 import { get as getPesentacionesCabecera } from "../../redux/presentacionesCabecera/actions";
 import { getResumen } from "../../redux/presentacionesErrores/actions";
-import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch, ControlarFacturaFetch, facturasRechazadasSSS, representarFacturasFetch } from "../fetchs";
+import { facturasPrestadoresFetch, RechazarFacturaFetch, AprobarFacturaFetch, PasarAPendienteOSFacturaFetch, ControlarFacturaFetch, facturasRechazadasSSS, representarFacturasFetch, CantidadFacturasFetch } from "../fetchs";
 
 import { apiAdd, apiRequest, apiUpdate, apiAction, apiFunction, API_ADD } from "../api/actions";
 import { changed } from "../notifications/actions";
@@ -69,6 +72,21 @@ export const getByError =
             dispatch(apiRequest(facturasPrestadoresFetch, action.options, GET_BY_ERROR_SUCCESS, GET_BY_ERROR_ERROR));
         }
     };
+
+export const traerCantidadFacturas =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_CANTIDAD_FACTURAS) {
+            const body={
+                pDesde: action.desde,
+                pHasta: action.hasta
+
+            }
+            dispatch(apiAdd(CantidadFacturasFetch,body, GET_CANTIDAD_FACTURAS_SUCCESS, GET_CANTIDAD_FACTURAS_ERROR));
+        }
+    };    
 
 export const getComplementaria =
     ({ dispatch }) =>
@@ -148,6 +166,8 @@ export const processGetFacturaAndSelect =
             dispatch(goTo("detalleFacturaP"));
         }
     };
+
+    
 
 export const processError =
     ({ dispatch, getState }) =>
@@ -348,4 +368,5 @@ export const middleware = [
     traerFacurasRechazadasSSS,
     representar,
     representarSuccess,
+    traerCantidadFacturas
 ];

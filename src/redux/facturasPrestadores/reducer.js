@@ -21,6 +21,9 @@ import {
     CONTROLAR,
     GET_FACTURAS_RECHAZADAS_SSS_SUCCESS,
     REPRESENTAR_SUCCESS,
+    GET_CANTIDAD_FACTURAS_SUCCESS,
+    cantidadFacturas,
+    GET_CANTIDAD_FACTURAS
 } from "./actions";
 
 const initialState = {
@@ -49,6 +52,8 @@ const initialState = {
     getFacturasRechazadasSSS: null,
     facturasRechazadasSSSTimeStamp: null,
     facturasaRepresentarTimeStamp: null,
+    cantidadFacturas: null,
+    cantidadFacturasTimeStamp: null
 };
 
 export const reducer = (state = initialState, action) => {
@@ -155,6 +160,10 @@ export const reducer = (state = initialState, action) => {
             break;
         case REPRESENTAR_SUCCESS:
             newState.facturasaRepresentarTimeStamp = new Date().getTime();
+            break;
+        case GET_CANTIDAD_FACTURAS_SUCCESS:
+            newState.cantidadFacturas= action.payload.receive;
+            newState.cantidadFacturasTimeStamp = new Date().getTime();
             break;
     }
     return newState;
