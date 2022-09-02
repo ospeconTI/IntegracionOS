@@ -200,6 +200,20 @@ export class cantidadFacturas extends connect(store, MEDIA_CHANGE, SCREEN, ESTAD
    buscar(){
     const desde = this.shadowRoot.querySelector("#desde").value
     const hasta = this.shadowRoot.querySelector("#hasta").value
+
+    if (!desde || desde==""){
+        alert("Debe Completar Fecha Desde")
+        return false
+    }
+
+    if (!hasta || hasta==""){
+        alert("Debe Completar Fecha Hasta")
+        return false
+    }
+    if (desde>hasta){
+        alert("La fecha Desde no puede ser mayor a la fecha Hasta")
+        return false
+    }
     store.dispatch(getCantidadFacturas(desde, hasta))
    }
 
