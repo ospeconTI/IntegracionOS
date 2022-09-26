@@ -54,3 +54,4 @@ export const representarFacturasFetch = ODataEntity(expedienteOdataFactory, "Rep
 export const CierrayAbrePresentacionFetch = ODataEntity(expedienteOdataFactory, "CierrayAbrePresentacion");
 export const AplicarNovedadesFetch = ODataEntity(expedienteOdataFactory, "AplicarNovedades");
 export const CantidadFacturasFetch = ODataEntity(expedienteOdataFactory, "FacturasPorFecha");
+export const vAmparosFetch = ODataEntity(expedienteOdataFactory, "vAmparos");

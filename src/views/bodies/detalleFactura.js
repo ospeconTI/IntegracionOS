@@ -10,7 +10,7 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS, controlar } from "../../redux/facturasPrestadores/actions";
-import { SEARCH, TIMELINE } from "../../../assets/icons/svgs";
+import { EXCLAMATION, SEARCH, TIMELINE } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
 import { editing, closed } from "../../redux/notifications/actions";
@@ -22,13 +22,14 @@ const SCREEN = "screen.timeStamp";
 const FACTURA = "facturasPrestadores.selectedTimeStamp";
 const ESTADOS = "facturasPrestadoresEstados.timeStamp";
 const COMPROBANTES = "tipoComprobantes.timeStamp";
+const AMPAROS = "vAmparos.timeStamp"
 
 const APROBADO = "facturasPrestadores.aprobarTimeStamp";
 const RECHAZADO = "facturasPrestadores.rechazarTimeStamp";
 const MOTIVOSRECHAZO = "facturasPrestadoresRechazos.timeStamp";
 const PASAR_A_PENDIENTE_OS = "facturasPrestadores.pasarAPendienteOSTimeStamp";
 
-export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO, PASAR_A_PENDIENTE_OS)(LitElement) {
+export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO, PASAR_A_PENDIENTE_OS, AMPAROS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
@@ -41,6 +42,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
         this.rechazos = null;
         this.modo = "";
+        this.amparos=[]
     }
     static get styles() {
         return css`
@@ -112,6 +114,12 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                 height: 1.3rem;
                 width: 1.3rem;
             }
+            .amparo svg {
+                fill: red;
+                height:1.2rem;
+                width: 1.2rem
+                
+            }
         `;
     }
     render() {
@@ -131,6 +139,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div .complementaria="${this.factura.IdFacturaPrestador}" @click="${this.complementaria}">
                         ${this.factura.IdFacturaPrestador ? "Tipo: " + _tipoComplementarias[this.factura.TipoComplementaria] + " (" + this.factura.IdFacturaPrestador.toString() + ")" : ""}
                     </div>
+                    <div class="amparo">${this.amparos.find((a)=>a.Id==this.factura.Expediente_Bono.Cabecera.Hiscli)? html`${EXCLAMATION} Beneficiario en Gestión de Riesgo`:""}</div>
                 </div>
 
                 <div class="grid column">
@@ -256,6 +265,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             `;
         }
     }
+
+    
     verLogs(e) {
         store.dispatch(getLog({ filter: "IdFacturasPrestadores eq " + this.factura.Id, orderby: "Fecha desc" }));
     }
@@ -555,6 +566,10 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         if (name == MOTIVOSRECHAZO) {
             this.rechazos = state.facturasPrestadoresRechazos.entities;
             this.update();
+        }
+        if (name== AMPAROS){
+            this.amparos= state.vAmparos.entities
+            this.update()
         }
     }
 

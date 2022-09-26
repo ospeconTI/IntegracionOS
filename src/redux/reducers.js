@@ -29,6 +29,7 @@ import { reducer as presentacionesSSSReducer } from "./presentacionSSS/reducer";
 import { reducer as presentacionesDebitosReducer } from "./presentacionesDebitos/reducer";
 import { reducer as presentacionSSS_CreditosReducer } from "./presentacionSSS_Creditos/reducer";
 import { reducer as presentacionSSS_HistoricoReducer } from "./presentacionSSS_Historico/reducer";
+import { reducer as vAmparosReducer } from "./vAmparos/reducer";
 
 export const rootReducer = (state = {}, action) => {
     const presentacionesEstadosRed = state.presentacionesEstados;
@@ -62,5 +63,6 @@ export const rootReducer = (state = {}, action) => {
         presentacionesErrores: presentacionesErroresReducer(state.presentacionesErrores, action),
         presentacionesSSS: presentacionesSSSReducer(state.presentacionesSSS, action),
         presentacionSSS_Historico: presentacionSSS_HistoricoReducer(state.presentacionSSS_Historico, action),
+        vAmparos: vAmparosReducer(state.vAmparos, action)
     };
 };

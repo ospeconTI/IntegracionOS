@@ -14,7 +14,9 @@ import { PERSON, SEARCH } from "../../../assets/icons/svgs";
 import { filtrosFacturas } from "../componentes/filtrosFacturas";
 import { goTo } from "../../redux/routing/actions";
 import { set as setFiltro } from "../../redux/filtro/actions";
-import { COPY } from "../../../assets/icons/svgs";
+import { COPY, EXCLAMATION } from "../../../assets/icons/svgs";
+import { get as getAmparos } from "../../redux/vAmparos/actions";
+import { Store } from "@material-ui/icons";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -23,14 +25,16 @@ const ESTADOS = "facturasPrestadoresEstados.timeStamp";
 const FILTROTS = "filtro.timeStamp";
 const MY_NET = "notifications.myNetTimeStamp";
 const MESSAGE = "notifications.singleMessageTimeStamp";
+const AMPAROS = "vAmparos.timeStamp"
 
-export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS, MY_NET, MESSAGE)(LitElement) {
+export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS, MY_NET, MESSAGE, AMPAROS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
         this.estados = [];
         this.myNet = [];
         this.messages = [];
+        this.amparos =[];
 
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
     }
@@ -136,7 +140,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             }
 
             .columnas {
-                grid-template-columns: 0.5fr 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 1fr;
+                grid-template-columns: 0.5fr 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 1fr .3fr;
                 padding: 0.3rem !important;
             }
             .myNet {
@@ -168,6 +172,13 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             div[dirty] {
                 color: var(--color-gris);
             }
+
+            .amparo svg {
+                fill: red;
+                height:1.2rem;
+                width: 1.2rem
+                
+            }
         `;
     }
     render() {
@@ -195,6 +206,7 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                         <div class="ordena" @click=${this.ordenar} .orden="${"facturasPrestadores.Expediente_Bono.Periodo"}">Periodo</div>
                         <div class="justify-self-end">Importe</div>
                         <div class="justify-self-center">${COPY}</div>
+                        <div>Gestión Riesgo</div>
                     </div>
                     <div class="inner-grid  rows">
                         ${this.facturas.map((item) => {
@@ -232,6 +244,9 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                                         ${item.IdFacturaPrestador
                                             ? html`<button class="complementaria" btn3 id="btnComplementaria">${item.TipoComplementaria == "C" ? "Ver Orig" : "Ver Comp"}</button>`
                                             : ""}
+                                    </div>
+                                    <div class="amparo">
+                                        ${this.amparos.find((a)=>a.Id==item.Expediente_Bono.Cabecera.Hiscli)? html`${EXCLAMATION}`:""}
                                     </div>
                                 </div>
                             `;
@@ -315,7 +330,8 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
                     orderby: " Id ",
                     count: true,
                 })
-            );
+            );   
+            store.dispatch(getAmparos({}))         
         }
         if (name == MY_NET) {
             this.myNet = state.notifications.myNet.filter((item) => {
@@ -327,6 +343,11 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
             this.messages.push(state.notifications.singleMessage);
             this.update();
         }
+
+         if (name == AMPAROS){
+            this.amparos = state.vAmparos.entities
+            this.update()   
+        } 
     }
 
     static get properties() {

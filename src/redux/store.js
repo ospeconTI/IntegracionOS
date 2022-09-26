@@ -28,6 +28,7 @@ import { middleware as presentacionesErrores } from "./presentacionesErrores/mid
 import { middleware as presentacionSSS } from "./presentacionSSS/middleware";
 import { middleware as presentacionSSS_Historico } from "./presentacionSSS_Historico/middleware";
 import { middleware as presentacionSSS_Creditos } from "./presentacionSSS_Creditos/middleware";
+import { middleware as vAmparos } from "./vAmparos/middleware";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -57,6 +58,7 @@ let mdw = [
     ...presentacionSSS,
     ...presentacionSSS_Historico,
     ...presentacionSSS_Creditos,
+    ...vAmparos,
 ];
 
 if (process.env.NODE_ENV !== "production") {
