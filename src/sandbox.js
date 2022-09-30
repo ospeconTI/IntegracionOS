@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 store.dispatch(captureMedia());
-store.dispatch(getTipoComprobantes({ filter: "TipoFactura ne null" }));
+store.dispatch(getTipoComprobantes({ filter: "CodigoSSS ne '00'" }));
 
 store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
 store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
