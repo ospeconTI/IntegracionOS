@@ -16,7 +16,7 @@ import { register as registerSW, activate as activateSW } from "./libs/serviceWo
 import { get as getTipoComprobantes } from "./redux/tipoComprobantes/actions";
 import { get as getDocumentacion } from "./redux/documentacion/actions";
 import { get as getFacturasEstados } from "./redux/facturasPrestadoresEstados/actions";
-import { get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/actions";
+import { add, get as getFacturasRechazos } from "./redux/facturasPrestadoresRechazos/actions";
 import { get as getPesentacionesCabecera } from "./redux/presentacionesCabecera/actions";
 import { lista, set } from "./redux/periodo/actions";
 import { listaMensuales, set as setMensual } from "./redux/periodosMensuales/actions";
@@ -88,6 +88,10 @@ if ("credentials" in navigator) {
 } else {
     store.dispatch(goTo("login"));
 }
+/* import { add as addRecha, update } from "./redux/facturasPrestadoresRechazos/actions";
+const body = { Descripcion: "Nuevo rechazo" };
+const bodyUpdate = { Id: 28, Descripcion: "Nuevo rechazo" };
+store.dispatch(update(body)); */
 
 store.dispatch(listaPeriodosBono(6));
 store.dispatch(getDocumentacion({ filter: "Prestador" }));
