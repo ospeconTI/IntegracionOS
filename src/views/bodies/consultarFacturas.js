@@ -22,13 +22,14 @@ const SCREEN = "screen.timeStamp";
 const FACTURAS = "facturasPrestadores.timeStamp";
 const ESTADOS = "facturasPrestadoresEstados.timeStamp";
 const FILTROTS = "filtro.timeStamp";
-const AMPAROS = "vAmparos.timeStamp"
+const AMPAROS = "vAmparos.timeStamp";
 
 export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SCREEN, ESTADOS, FACTURAS, FILTROTS, AMPAROS)(LitElement) {
     constructor() {
         super();
         this.area = "body";
         this.estados = [];
+        this.amparos = [];
 
         this.periodoActual = new Date().getFullYear().toString() + (new Date().getMonth() + 1).toString();
     }
@@ -127,14 +128,13 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
             }
 
             .columnas {
-                grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 2fr 0.5fr .3fr;
+                grid-template-columns: 0.5fr 1fr 1fr 1fr 3fr 1fr 4fr 0.5fr 0.5fr 2fr 0.8fr 1fr 2fr 0.5fr 0.3fr;
                 padding: 0.3rem !important;
             }
             .amparo svg {
                 fill: red;
-                height:1.2rem;
-                width: 1.2rem
-                
+                height: 1.2rem;
+                width: 1.2rem;
             }
         `;
     }
@@ -196,11 +196,8 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                                     <div class="justify-self-end">${item.Importe}</div>
                                     <div>${item.FacturasPrestadoresEstados.Descripcion}</div>
                                     <div id="timeline" .item="${item}">${TIMELINE}</div>
-                                    <div class="amparo">
-                                        ${this.amparos.find((a)=>a.Id==item.Expediente_Bono.Cabecera.Hiscli)? html`${EXCLAMATION}`:""}
-                                    </div>
+                                    <div class="amparo">${this.amparos.find((a) => a.Id == item.Expediente_Bono.Cabecera.Hiscli) ? html`${EXCLAMATION}` : ""}</div>
                                 </div>
-
                             `;
                         })}
                     </div>
@@ -275,13 +272,13 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
                     count: true,
                 })
             );
-            store.dispatch(getAmparos({}))    
+            store.dispatch(getAmparos({}));
         }
 
-        if (name == AMPAROS){
-            this.amparos = state.vAmparos.entities
-            this.update()   
-        } 
+        if (name == AMPAROS) {
+            this.amparos = state.vAmparos.entities;
+            this.update();
+        }
     }
 
     static get properties() {
