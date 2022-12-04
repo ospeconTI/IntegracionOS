@@ -10,7 +10,7 @@ import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
 import { get as getFacturas, rechazar, aprobar, setSelected, cambioEstado, pasarAPendienteOS, controlar } from "../../redux/facturasPrestadores/actions";
-import { EXCLAMATION, SEARCH, TIMELINE } from "../../../assets/icons/svgs";
+import { EXCLAMATION, SEARCH, TIMELINE, VERIFIED } from "../../../assets/icons/svgs";
 import { goHistoryPrev } from "../../redux/routing/actions";
 import { showError } from "../../redux/ui/actions";
 import { editing, closed } from "../../redux/notifications/actions";
@@ -22,7 +22,7 @@ const SCREEN = "screen.timeStamp";
 const FACTURA = "facturasPrestadores.selectedTimeStamp";
 const ESTADOS = "facturasPrestadoresEstados.timeStamp";
 const COMPROBANTES = "tipoComprobantes.timeStamp";
-const AMPAROS = "vAmparos.timeStamp"
+const AMPAROS = "vAmparos.timeStamp";
 
 const APROBADO = "facturasPrestadores.aprobarTimeStamp";
 const RECHAZADO = "facturasPrestadores.rechazarTimeStamp";
@@ -42,7 +42,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         this.documentoActual = ID_TIPO_DOCUMENTO_FACTURA;
         this.rechazos = null;
         this.modo = "";
-        this.amparos=[]
+        this.amparos = [];
     }
     static get styles() {
         return css`
@@ -94,6 +94,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                 background-color: white;
                 box-shadow: var(--shadow-elevation-2-box);
                 font-size: 0.8rem;
+                position: relative;
             }
 
             .columnas {
@@ -116,9 +117,19 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             }
             .amparo svg {
                 fill: red;
-                height:1.2rem;
-                width: 1.2rem
-                
+                height: 1.2rem;
+                width: 1.2rem;
+            }
+            .afip {
+                position: absolute;
+                bottom: 0.1rem;
+                right: 1.5rem;
+                cursor: pointer;
+            }
+            .afip svg {
+                fill: green;
+                height: 2rem;
+                width: 2rem;
             }
         `;
     }
@@ -139,7 +150,8 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div .complementaria="${this.factura.IdFacturaPrestador}" @click="${this.complementaria}">
                         ${this.factura.IdFacturaPrestador ? "Tipo: " + _tipoComplementarias[this.factura.TipoComplementaria] + " (" + this.factura.IdFacturaPrestador.toString() + ")" : ""}
                     </div>
-                    <div class="amparo">${this.amparos.find((a)=>a.Id==this.factura.Expediente_Bono.Cabecera.Hiscli)? html`${EXCLAMATION} Beneficiario en Gestión de Riesgo`:""}</div>
+                    <div class="amparo">${this.amparos.find((a) => a.Id == this.factura.Expediente_Bono.Cabecera.Hiscli) ? html`${EXCLAMATION} Beneficiario en Gestión de Riesgo` : ""}</div>
+                    <div class="afip" title="Verificado x AFIP" ?hidden="${!this.factura.VerificacionAfip}">${VERIFIED}</div>
                 </div>
 
                 <div class="grid column">
@@ -266,7 +278,6 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
     }
 
-    
     verLogs(e) {
         store.dispatch(getLog({ filter: "IdFacturasPrestadores eq " + this.factura.Id, orderby: "Fecha desc" }));
     }
@@ -567,9 +578,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
             this.rechazos = state.facturasPrestadoresRechazos.entities;
             this.update();
         }
-        if (name== AMPAROS){
-            this.amparos= state.vAmparos.entities
-            this.update()
+        if (name == AMPAROS) {
+            this.amparos = state.vAmparos.entities;
+            this.update();
         }
     }
 

@@ -15,6 +15,7 @@ import { set as setFiltro } from "../../redux/filtro/actions";
 import { get as getPesentacionesCabecera } from "../../redux/presentacionesCabecera/actions";
 import { cleanSelected, getResumen } from "../../redux/presentacionesErrores/actions";
 import { getFacturasRechazadasSSS } from "../../redux/facturasPrestadores/actions";
+import { get as getRechazos } from "../../redux/facturasPrestadoresRechazos/actions";
 
 const MEDIA_CHANGE = "ui.media.timeStamp";
 const SCREEN = "screen.timeStamp";
@@ -202,6 +203,10 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             store.dispatch(setFiltro("IdFacturasPrestadoresEstado eq " + ESTADO_FACTURA_PRESENTADA));
             store.dispatch(goTo(e.currentTarget.option));
             return;
+        }
+
+        if (e.currentTarget.option == "consultarFacturas") {
+            store.dispatch(getRechazos({}));
         }
 
         if (e.currentTarget.option == "presentacionesCabecera") {

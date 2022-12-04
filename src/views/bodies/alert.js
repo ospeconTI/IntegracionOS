@@ -53,8 +53,7 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
             #cuerpo div {
                 padding: 0.3rem;
             }
-            .botonera {
-            }
+
             .ventana {
                 background-color: var(--color-gris-medio-claro);
                 padding: 2rem;
@@ -81,14 +80,16 @@ export class alertaErrores extends connect(store, ERROR_MESSAGES, FACTURA_ERROR,
             this.update();
         }
         if (name == ERROR_MESSAGES) {
-            this.hidden = false;
+            this.hidden = state.ui.error.messages.length == 0;
             this.mensaje = html` ${state.ui.error.messages.map((msg) => {
                 return html`<div>${"• " + msg.campo + (msg.campo ? ": " : "") + msg.mensaje}</div>`;
             })}`;
         }
         if (name == FACTURA_ERROR) {
-            this.hidden = false;
-            if (state.facturasPrestadores.errorMessage) this.mensaje = html`<div>${state.facturasPrestadores.errorMessage}</div>`;
+            if (state.facturasPrestadores.errorMessage) {
+                this.hidden = false;
+                this.mensaje = html`<div>${state.facturasPrestadores.errorMessage}</div>`;
+            }
         }
 
         if (name == PASAR_A_PENDIENTE_OS_ERROR) {
