@@ -149,6 +149,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
                 <div class="menuItem" @click=${this.click} .option=${"enProceso"}>En Proceso</div>
                 <div class="menuItem" @click=${this.click} .option=${"representarFacturas"}>Representar</div>
                 <div class="menuItem" @click=${this.click} .option=${"cantidadFacturas"}>Cantidad Facturas</div>
+                <div class="menuItem" @click=${this.click} .option=${"motivosRechazo"}>Motivos de Rechazo</div>
                 <div class="menuItem" @click=${this.click} .option=${"logout"}>Salir</div>
             </div>
         `;
@@ -218,6 +219,15 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
             );
         }
 
+        if (e.currentTarget.option == "motivosRechazo") {
+            store.dispatch(
+                getRechazos({
+                    filter: "Activo",
+                    orderby: "Descripcion",
+                })
+            );
+        }
+
         if (e.currentTarget.option == "enProceso") {
             store.dispatch(cleanSelected());
             store.dispatch(
@@ -252,6 +262,7 @@ export class menuPrincipal extends connect(store, MEDIA_CHANGE, SCREEN, USUARIO)
 
             this.update();
         }
+
         if (name == USUARIO) {
             if (state.autorizacion.usuario.Profiles && state.autorizacion.usuario.Profiles.length != 0) {
                 this.usuario = state.autorizacion.usuario;

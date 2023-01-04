@@ -1,10 +1,11 @@
 /** @format */
 
-import { GET, GET_SUCCESS, GET_ERROR, ADD_SUCCESS, ADD_ERROR, UPDATE, ADD, UPDATE_SUCCESS, UPDATE_ERROR } from "./actions";
+import { get as getFactuarasPrestadoresRechazos, GET, GET_SUCCESS, GET_ERROR, ADD_SUCCESS, ADD_ERROR, UPDATE, ADD, UPDATE_SUCCESS, UPDATE_ERROR } from "./actions";
 
 import { facturasPrestadoresRechazosFetch } from "../fetchs";
 
 import { apiAdd, apiRequest, apiUpdate } from "../api/actions";
+import { store } from "../store";
 
 export const get =
     ({ dispatch }) =>
@@ -31,7 +32,13 @@ export const processGet =
     (next) =>
     (action) => {
         next(action);
-        if (action.type === GET_SUCCESS || action.type === ADD_SUCCESS) {
+        if (action.type === UPDATE_SUCCESS || action.type === ADD_SUCCESS) {
+            dispatch(
+                getFactuarasPrestadoresRechazos({
+                    filter: "Activo",
+                    orderby: "Descripcion",
+                })
+            );
         }
     };
 

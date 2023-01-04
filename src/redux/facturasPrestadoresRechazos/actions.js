@@ -11,6 +11,7 @@ export const ADD_ERROR = "[facturasPrestadoresRechazos] ADD error";
 export const UPDATE = "[facturasPrestadoresRechazos] UPDATE";
 export const UPDATE_SUCCESS = "[facturasPrestadoresRechazos] UPDATE success";
 export const UPDATE_ERROR = "[facturasPrestadoresRechazos] UPDATE error";
+export const SET = "[facturasPrestadoresRechazos] SET";
 
 export const get = (options) => ({
     type: GET,
@@ -25,4 +26,9 @@ export const add = (entity) => ({
 export const update = (entity) => ({
     type: UPDATE,
     entity: entity,
+});
+
+export const set = (entity) => ({
+    type: SET,
+    options: entity,
 });

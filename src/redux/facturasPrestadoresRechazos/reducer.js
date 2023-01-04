@@ -1,6 +1,6 @@
 /** @format */
 
-import { GET_SUCCESS, GET_ERROR, ADD_SUCCESS, UPDATE_SUCCESS } from "./actions";
+import { GET_SUCCESS, GET_ERROR, ADD_SUCCESS, UPDATE_SUCCESS, SET } from "./actions";
 
 const initialState = {
     entities: null,
@@ -8,6 +8,8 @@ const initialState = {
     errorTimeStamp: null,
     addTimeStamp: null,
     updateTimeStamp: null,
+    selected: null,
+    selectedTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -29,6 +31,9 @@ export const reducer = (state = initialState, action) => {
         case UPDATE_SUCCESS:
             newState.updateTimeStamp = new Date().getTime();
             break;
+        case SET:
+            newState.selected = action.options;
+            newState.selectedTimeStamp = new Date().getTime();
     }
     return newState;
 };
