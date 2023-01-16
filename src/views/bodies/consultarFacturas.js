@@ -213,7 +213,8 @@ export class consultarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, SC
     }
 
     seleccionar(e) {
-        const clickOnTimeline = e.path.find((control) => control.id == "timeline");
+        // const clickOnTimeline = e.path.find((control) => control.id == "timeline");
+        const clickOnTimeline = e.composedPath().find((control) => control.id == "timeline");
         if (clickOnTimeline) {
             store.dispatch(getLog({ filter: "IdFacturasPrestadores eq " + e.currentTarget.item.Id, orderby: "Fecha desc" }));
         } else {

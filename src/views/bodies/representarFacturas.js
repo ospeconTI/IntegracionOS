@@ -241,8 +241,10 @@ export class representarFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, 
     }
 
     seleccionar(e) {
-        const clickOnTimeline = e.path.find((control) => control.id == "timeline");
-        const clickOnErrores = e.path.find((control) => control.id == "errores");
+        /* const clickOnTimeline = e.path.find((control) => control.id == "timeline");
+        const clickOnErrores = e.path.find((control) => control.id == "errores"); */
+        const clickOnTimeline = e.composedPath().find((control) => control.id == "timeline");
+        const clickOnErrores = e.composedPath().find((control) => control.id == "errores");
         if (clickOnTimeline) {
             store.dispatch(getLog({ filter: "IdFacturasPrestadores eq " + e.currentTarget.item.Id, orderby: "Fecha desc" }));
         } else {
