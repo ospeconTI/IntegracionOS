@@ -32,13 +32,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 store.dispatch(captureMedia());
-store.dispatch(getTipoComprobantes({ filter: "CodigoSSS ne '00'" }));
-
-store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
-store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
-store.dispatch(getPesentacionesCabecera({ top: 20, orderby: "PeriodoPresentacion desc", filter: "Activo" }));
-store.dispatch(getMedidas({}));
-store.dispatch(getPresentacionsEstados({}));
 
 let actual = new Date();
 let mesActual = actual.getMonth() + 1;
@@ -61,18 +54,27 @@ periodos.forEach((element) => {
     }
 });
 
-store.dispatch(listaMensuales(periodosMensuales));
-const periodoMensualActual = actual * 100 + mesActual;
-store.dispatch(setMensual(periodoMensualActual));
+setTimeout(() => {
+    store.dispatch(getFacturasEstados({ orderby: "Descripcion" }));
+    store.dispatch(getTipoComprobantes({ filter: "CodigoSSS ne '00'" }));
+    store.dispatch(getFacturasRechazos({ orderby: "Descripcion" }));
+    store.dispatch(getPesentacionesCabecera({ top: 20, orderby: "PeriodoPresentacion desc", filter: "Activo" }));
+    store.dispatch(getMedidas({}));
+    store.dispatch(getPresentacionsEstados({}));
 
-let fechaDesde = new Date();
-fechaDesde.setMonth(fechaDesde.getMonth() - 1);
-let mesesPresentacion = [];
-for (let i = 0; i <= 5; i++) {
-    mesesPresentacion[i] = fechaDesde.getFullYear() * 100 + (fechaDesde.getMonth() + 1);
-    fechaDesde.setMonth(fechaDesde.getMonth() + 1);
-}
-store.dispatch(listaPeriodosPresentacion(mesesPresentacion));
+    store.dispatch(listaMensuales(periodosMensuales));
+    const periodoMensualActual = actual * 100 + mesActual;
+    store.dispatch(setMensual(periodoMensualActual));
+
+    let fechaDesde = new Date();
+    fechaDesde.setMonth(fechaDesde.getMonth() - 1);
+    let mesesPresentacion = [];
+    for (let i = 0; i <= 5; i++) {
+        mesesPresentacion[i] = fechaDesde.getFullYear() * 100 + (fechaDesde.getMonth() + 1);
+        fechaDesde.setMonth(fechaDesde.getMonth() + 1);
+    }
+    store.dispatch(listaPeriodosPresentacion(mesesPresentacion));
+}, 2000);
 
 if ("credentials" in navigator) {
     navigator.credentials

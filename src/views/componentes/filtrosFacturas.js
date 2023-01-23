@@ -211,14 +211,15 @@ export class filtrosFacturas extends connect(store, MEDIA_CHANGE, SCREEN, PERIOD
         sucursal.value = "";
         numero.value = "";
         estados.value = this.estado;
+        if (estados.value == "") estados.value = -1;
         prestador.value = "";
         integracion.value = -1;
         cuit.value = "";
 
         let filtro = "";
 
-        if (periodo.value != -1) {
-            filtro += "Expediente_Bono/Periodo eq " + periodo.value + " and ";
+        if (periodoh.value != -1) {
+            filtro += "Expediente_Bono/Periodo gt " + periodod.value + " and Expediente_Bono/Periodo ge " + periodoh.value;
         }
 
         if (orden.value != 0 && orden.value != "") {
