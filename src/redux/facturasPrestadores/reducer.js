@@ -23,7 +23,8 @@ import {
     REPRESENTAR_SUCCESS,
     GET_CANTIDAD_FACTURAS_SUCCESS,
     cantidadFacturas,
-    GET_CANTIDAD_FACTURAS
+    GET_CANTIDAD_FACTURAS,
+    GET_ORIGINAL_SUCCESS,
 } from "./actions";
 
 const initialState = {
@@ -53,7 +54,9 @@ const initialState = {
     facturasRechazadasSSSTimeStamp: null,
     facturasaRepresentarTimeStamp: null,
     cantidadFacturas: null,
-    cantidadFacturasTimeStamp: null
+    cantidadFacturasTimeStamp: null,
+    original: null,
+    originalTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -162,8 +165,12 @@ export const reducer = (state = initialState, action) => {
             newState.facturasaRepresentarTimeStamp = new Date().getTime();
             break;
         case GET_CANTIDAD_FACTURAS_SUCCESS:
-            newState.cantidadFacturas= action.payload.receive;
+            newState.cantidadFacturas = action.payload.receive;
             newState.cantidadFacturasTimeStamp = new Date().getTime();
+            break;
+        case GET_ORIGINAL_SUCCESS:
+            newState.original = action.payload.receive[0];
+            newState.originalTimeStamp = new Date().getTime();
             break;
     }
     return newState;

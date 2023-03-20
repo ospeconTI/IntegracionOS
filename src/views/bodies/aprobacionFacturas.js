@@ -9,7 +9,7 @@ import { select } from "../css/select";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { isInLayout } from "../../redux/screens/screenLayouts";
-import { get as getFacturas, getComplementaria, setSelected } from "../../redux/facturasPrestadores/actions";
+import { get as getFacturas, getComplementaria, getOriginal, setSelected } from "../../redux/facturasPrestadores/actions";
 import { PERSON, SEARCH } from "../../../assets/icons/svgs";
 import { filtrosFacturas } from "../componentes/filtrosFacturas";
 import { goTo } from "../../redux/routing/actions";
@@ -270,7 +270,11 @@ export class aprobacionFacturas extends connect(store, FACTURAS, MEDIA_CHANGE, S
         //if (e.path[0].id != "btnComplementaria") {
         if (e.composedPath()[0].id != "btnComplementaria") {
             store.dispatch(setSelected(e.currentTarget.item));
-            store.dispatch(goTo("detalleFactura"));
+            if (e.currentTarget.item.TipoComplementaria != "C") {
+                store.dispatch(goTo("detalleFactura"));
+            } else {
+                store.dispatch(getOriginal(e.currentTarget.item.IdFacturaPrestador));
+            }
         } else {
             store.dispatch(getComplementaria(e.currentTarget.item.IdFacturaPrestador));
         }

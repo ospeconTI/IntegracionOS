@@ -28,8 +28,9 @@ const APROBADO = "facturasPrestadores.aprobarTimeStamp";
 const RECHAZADO = "facturasPrestadores.rechazarTimeStamp";
 const MOTIVOSRECHAZO = "facturasPrestadoresRechazos.timeStamp";
 const PASAR_A_PENDIENTE_OS = "facturasPrestadores.pasarAPendienteOSTimeStamp";
+const ORIGINAL = "facturasPrestadores.originalTimeStamp";
 
-export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO, PASAR_A_PENDIENTE_OS, AMPAROS)(LitElement) {
+export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN, ESTADOS, COMPROBANTES, APROBADO, RECHAZADO, MOTIVOSRECHAZO, PASAR_A_PENDIENTE_OS, AMPAROS, ORIGINAL)(LitElement) {
     constructor() {
         super();
         this.area = "body";
@@ -43,6 +44,9 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         this.rechazos = null;
         this.modo = "";
         this.amparos = [];
+        this.original = null;
+        this.coeficiente = "";
+        this.importeOriginal = "";
     }
     static get styles() {
         return css`
@@ -148,7 +152,16 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
                     <div>Estado: ${this.factura.FacturasPrestadoresEstados ? this.factura.FacturasPrestadoresEstados.Descripcion : ""}</div>
                     <div>${this.factura.IdMotivoRechazo ? "Motivo: " + this.factura.FacturasPrestadoresRechazos.Descripcion : ""}</div>
                     <div .complementaria="${this.factura.IdFacturaPrestador}" @click="${this.complementaria}">
-                        ${this.factura.IdFacturaPrestador ? "Tipo: " + _tipoComplementarias[this.factura.TipoComplementaria] + " (" + this.factura.IdFacturaPrestador.toString() + ")" : ""}
+                        ${this.factura.IdFacturaPrestador
+                            ? "Tipo: " +
+                              _tipoComplementarias[this.factura.TipoComplementaria] +
+                              " (" +
+                              this.factura.IdFacturaPrestador.toString() +
+                              ") $" +
+                              this.importeOriginal +
+                              " - " +
+                              this.coeficiente
+                            : ""}
                     </div>
                     <div class="amparo">${this.amparos.find((a) => a.Id == this.factura.Expediente_Bono.Cabecera.Hiscli) ? html`${EXCLAMATION} Beneficiario en Gestión de Riesgo` : ""}</div>
                     <div class="afip" title="Verificado x AFIP" ?hidden="${!this.factura.VerificacionAfip}">${VERIFIED}</div>
@@ -580,6 +593,12 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
         if (name == AMPAROS) {
             this.amparos = state.vAmparos.entities;
+            this.update();
+        }
+        if (name == ORIGINAL) {
+            this.original = state.facturasPrestadores.original;
+            this.coeficiente = (this.original.Importe / this.factura.Importe).toFixed(2) + "%";
+            this.importeOriginal = this.original.Importe.toFixed(2);
             this.update();
         }
     }
