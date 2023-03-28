@@ -597,7 +597,7 @@ export class detalleFactura extends connect(store, FACTURA, MEDIA_CHANGE, SCREEN
         }
         if (name == ORIGINAL) {
             this.original = state.facturasPrestadores.original;
-            this.coeficiente = (this.original.Importe / this.factura.Importe).toFixed(2) + "%";
+            this.coeficiente = ((this.factura.Importe / this.original.Importe) * 100).toFixed(2) + "%";
             this.importeOriginal = this.original.Importe.toFixed(2);
             this.update();
         }
