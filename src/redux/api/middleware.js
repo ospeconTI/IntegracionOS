@@ -6,7 +6,15 @@ export const middleware =
     ({ dispatch, getState }) =>
     (next) =>
     (action) => {
-        const token = getState().autorizacion.usuario ? getState().autorizacion.usuario.Profiles[0].Token || "" : "";
+        const usuario = getState().autorizacion.usuario;
+        let token = "";
+        if (usuario) {
+            if (usuario.Profiles) {
+                if (usuario.Profiles[0]) {
+                    token = usuario.Profiles[0].Token;
+                }
+            }
+        }
         if (action.type === API_REQUEST) {
             const { ODataFetch, params, onSuccess, onError } = action.meta;
             params.token = token;
