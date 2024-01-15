@@ -64,6 +64,9 @@ export const GET_CANTIDAD_FACTURAS = "[facturasPrestadores] GET_CANTIDAD_FACTURA
 export const GET_CANTIDAD_FACTURAS_SUCCESS = "[facturasPrestadores] GET_CANTIDAD_FACTURAS_SUCCESS";
 export const GET_CANTIDAD_FACTURAS_ERROR = "[facturasPrestadores] GET_CANTIDAD_FACTURAS_ERROR";
 
+export const GET_ORIGINAL = "[facturasPrestadores] GET_ORIGINAL";
+export const GET_ORIGINAL_SUCCESS = "[facturasPrestadores] GET_ORIGINAL_SUCCESS";
+export const GET_ORIGINAL_ERROR = "[facturasPrestadores] GET_ORIGINAL_ERROR";
 
 export const get = (options) => ({
     type: GET,
@@ -71,6 +74,14 @@ export const get = (options) => ({
 });
 export const getComplementaria = (id) => ({
     type: GET_COMPLEMENTARIA,
+    options: {
+        filter: "Id eq " + id,
+        expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
+    },
+});
+
+export const getOriginal = (id) => ({
+    type: GET_ORIGINAL,
     options: {
         filter: "Id eq " + id,
         expand: "FacturasPrestadoresRechazos,prestado,SSS_TipoComprobantes,FacturasPrestadoresImagenes($expand=Documentacion),FacturasPrestadoresEstados,Expediente_Bono($expand=Cabecera($expand=Detalle($expand=SSS_Prestaciones)))",
@@ -154,5 +165,5 @@ export const representar = (facturas) => ({
 export const getCantidadFacturas = (desde, hasta) => ({
     type: GET_CANTIDAD_FACTURAS,
     desde: desde,
-    hasta: hasta
+    hasta: hasta,
 });

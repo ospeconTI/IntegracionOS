@@ -41,6 +41,9 @@ import {
     GET_CANTIDAD_FACTURAS,
     GET_CANTIDAD_FACTURAS_SUCCESS,
     GET_CANTIDAD_FACTURAS_ERROR,
+    GET_ORIGINAL,
+    GET_ORIGINAL_SUCCESS,
+    GET_ORIGINAL_ERROR,
 } from "./actions";
 
 import { getFacturasRechazadasSSS } from "../../redux/facturasPrestadores/actions";
@@ -106,6 +109,16 @@ export const getComplementaria =
         }
     };
 
+export const getOriginal =
+    ({ dispatch }) =>
+    (next) =>
+    (action) => {
+        next(action);
+        if (action.type === GET_ORIGINAL) {
+            dispatch(apiRequest(facturasPrestadoresFetch, action.options, GET_ORIGINAL_SUCCESS, GET_ORIGINAL_ERROR));
+        }
+    };
+
 export const getFacturaAndSelect =
     ({ dispatch }) =>
     (next) =>
@@ -162,6 +175,9 @@ export const processGetComplementaria =
         if (action.type === GET_COMPLEMENTARIA_SUCCESS) {
             dispatch(setSelected(action.payload.receive[0]));
             dispatch(goTo("detalleFacturaC"));
+        }
+        if (action.type === GET_ORIGINAL_SUCCESS) {
+            dispatch(goTo("detalleFactura"));
         }
     };
 export const processGetFacturaAndSelect =
@@ -375,4 +391,5 @@ export const middleware = [
     representar,
     representarSuccess,
     traerCantidadFacturas,
+    getOriginal,
 ];
