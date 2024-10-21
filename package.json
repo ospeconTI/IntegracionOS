@@ -1,6 +1,6 @@
 {
     "name": "integracion",
-    "version": "1.14.1",
+    "version": "1.14.4",
     "description": "Control Integración",
     "main": "./src/sandbox.js",
     "scripts": {
